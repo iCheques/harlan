@@ -70,7 +70,7 @@ harlan.addPlugin(controller => {
             let ids = _.reduceRight(_.pluck(_.pluck(data, 'value'), 'ids'), (a, b) => a.concat(b)),
                 more::results = controller.call('more::results', MAX_RESULTS),
                 skip = 0;
-            more::results.callback(cb => {
+            moreResults.callback(cb => {
                 let items = [],
                     currentIds = ids.slice(skip, skip + MAX_RESULTS);
 
@@ -119,8 +119,8 @@ harlan.addPlugin(controller => {
                 q.push(currentIds);
                 skip += MAX_RESULTS;
             });
-            more::results.appendTo(report.results());
-            more::results.show();
+            moreResults.appendTo(report.results());
+            moreResults.show();
         });
 
         let dataQuerys = _.groupBy(data, a => a._id.query),

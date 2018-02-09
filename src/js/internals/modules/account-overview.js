@@ -6,7 +6,7 @@ import buildURL from 'build-url';
 
 module.exports = controller => {
 
-    controller.endpoint.account::overview = 'SELECT FROM \'BIPBOPCOMPANYSREPORT\'.\'REPORT\'';
+    controller.endpoint.accountOverview = 'SELECT FROM \'BIPBOPCOMPANYSREPORT\'.\'REPORT\'';
 
     const colorPattern = {
         querys: Color('#ff6a33'),
@@ -88,7 +88,7 @@ module.exports = controller => {
             e.preventDefault();
             window.location.assign(buildURL(bipbop.webserviceAddress, {
                 queryParams: _.pick(Object.assign({}, ajaxQuery, {
-                    q: controller.endpoint.account::overview,
+                    q: controller.endpoint.accountOverview,
                     download: 'true',
                     apiKey: controller.server.apiKey(),
                     report
@@ -128,7 +128,7 @@ module.exports = controller => {
             dateEnd: end,
             contractType
         };
-        controller.serverCommunication.call(controller.endpoint.account::overview,
+        controller.serverCommunication.call(controller.endpoint.accountOverview,
             controller.call('loader::ajax', controller.call('error::ajax', {
                 cache: true,
                 data: ajaxQuery,

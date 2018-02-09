@@ -6,7 +6,7 @@ import buildURL from 'build-url';
 
 harlan.addPlugin(controller => {
 
-    controller.endpoint.my::icheques::account::overview = 'SELECT FROM \'ICHEQUESREPORT\'.\'REPORT\'';
+    controller.endpoint.myIChequesAccountOverview = 'SELECT FROM \'ICHEQUESREPORT\'.\'REPORT\'';
 
     const colorPattern = {
         querys: Color('#ff6a33'),
@@ -88,7 +88,7 @@ harlan.addPlugin(controller => {
             e.preventDefault();
             window.location.assign(buildURL(bipbop.webserviceAddress, {
                 queryParams: _.pick(Object.assign({}, ajaxQuery, {
-                    q: controller.endpoint.my::icheques::account::overview,
+                    q: controller.endpoint.myIChequesAccountOverview,
                     download: 'true',
                     apiKey: controller.server.apiKey(),
                     report
@@ -128,7 +128,7 @@ harlan.addPlugin(controller => {
             dateEnd: end,
             contractType
         };
-        controller.serverCommunication.call(controller.endpoint.my::icheques::account::overview,
+        controller.serverCommunication.call(controller.endpoint.myIChequesAccountOverview,
             controller.call('loader::ajax', controller.call('error::ajax', {
                 cache: true,
                 data: ajaxQuery,

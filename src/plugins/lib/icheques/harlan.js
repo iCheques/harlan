@@ -680,7 +680,7 @@ module.exports = controller => {
                 return;
             }
 
-            let xml::document = null;
+            let xmlDocument = null;
             let icon = $('<i />').addClass('fa fa-user-plus');
             let showing = false;
 
@@ -691,7 +691,7 @@ module.exports = controller => {
                 if (!$(this).hasClass('fa-plus-square-o')) {
                     icon.removeClass('fa-user-times');
                     icon.addClass('fa-user-plus');
-                    xml::document.remove();
+                    xmlDocument.remove();
                     showing = false;
                 }
             });
@@ -703,11 +703,11 @@ module.exports = controller => {
                     section[2].find('.fa-plus-square-o').click();
                     icon.addClass('fa-user-times');
                     icon.removeClass('fa-user-plus');
-                    result.element().prepend(xml::document);
+                    result.element().prepend(xmlDocument);
                 } else {
                     icon.removeClass('fa-user-times');
                     icon.addClass('fa-user-plus');
-                    xml::document.remove();
+                    xmlDocument.remove();
                 }
                 showing = !showing;
             });
@@ -752,7 +752,7 @@ module.exports = controller => {
         let scrollInterval = null;
         let scrolled = false;
 
-        more::results.callback(cb => {
+        moreResults.callback(cb => {
             let docs = _.map(documents.splice(0, documents.length > 5 ? 5 : documents.length), showDocument);
             if (docs.length && !scrollElement) scrollElement = docs[0];
 
@@ -773,12 +773,12 @@ module.exports = controller => {
             }, 100);
         });
 
-        $(element || '.app-content').append(more::results.element());
-        more::results.show();
+        $(element || '.app-content').append(moreResults.element());
+        moreResults.show();
 
-        if (scrollTo && !scrolled && more::results.element().is(':visible')) {
+        if (scrollTo && !scrolled && moreResults.element().is(':visible')) {
             $('html, body').animate({
-                scrollTop: more::results.element().offset().top
+                scrollTop: moreResults.element().offset().top
             }, 2000);
             scrolled = true;
         }

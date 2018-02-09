@@ -70,7 +70,7 @@ harlan.addPlugin(controller => {
                     })));
             });
 
-            more::results.element().insertAfter(result.element());
+            moreResults.element().insertAfter(result.element());
 
             let pushs = jdocument.find('BPQL > body push');
             if (pushs.length) {
@@ -78,11 +78,11 @@ harlan.addPlugin(controller => {
                     '1 processo' : `${numeral(usedCredits).format('0,')} processos`);
 
                 pushs.each((idx, node) => {
-                    more::results.append(controller.call('projuris::parse::result', node));
+                    moreResults.append(controller.call('projuris::parse::result', node));
                 });
             }
 
-            more::results.show();
+            moreResults.show();
         }
     }));
 

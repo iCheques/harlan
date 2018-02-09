@@ -258,7 +258,7 @@ module.exports = controller => {
                         }
                         $('.q').removeClass('loading');
                     });
-                }, controller.confs.instant::searchDelay);
+                }, controller.confs.instantSearchDelay);
             });
         });
     });

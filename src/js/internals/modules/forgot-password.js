@@ -12,7 +12,7 @@ owasp.config({
 
 module.exports = controller => {
 
-    controller.endpoint.forgot::password = 'SELECT FROM \'HARLANAUTHENTICATION\'.\'FORGOTPASSWORD\'';
+    controller.endpoint.forgotPassword = 'SELECT FROM \'HARLANAUTHENTICATION\'.\'FORGOTPASSWORD\'';
 
     controller.registerCall('forgot::password', callback => {
         const modal = controller.call('modal');
@@ -34,7 +34,7 @@ module.exports = controller => {
 
             usernameInput.removeClass('error');
 
-            controller.serverCommunication.call(controller.endpoint.forgot::password,
+            controller.serverCommunication.call(controller.endpoint.forgotPassword,
                 controller.call('error::ajax', controller.call('loader::ajax', {
                     data: {username},
                     success() {

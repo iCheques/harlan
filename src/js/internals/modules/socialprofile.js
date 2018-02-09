@@ -267,8 +267,8 @@ module.exports = controller => {
             result.element().addClass('network-screen');
             $(this).addClass('enabled');
 
-            let generate::relations = controller.call('generate::relations');
-            generate::relations.appendDocument(ccbusca, document);
+            let generateRelations = controller.call('generate::relations');
+            generateRelations.appendDocument(ccbusca, document);
 
             let network;
             let node;
@@ -286,7 +286,7 @@ module.exports = controller => {
                     node = null;
                 }
 
-                generate::relations.track(({nodes, edges, groups}) => {
+                generateRelations.track(({nodes, edges, groups}) => {
                     [network, node] = result.addNetwork(nodes, edges, {
                         groups
                     });
@@ -303,7 +303,7 @@ module.exports = controller => {
                                     data: {
                                         documento: pad(nodes[0].length > 11 ? 14 : 11, nodes[0], '0')
                                     },
-                                    success: data => generate::relations.appendDocument(data, nodes[0]),
+                                    success: data => generateRelations.appendDocument(data, nodes[0]),
                                     complete: () => callback()
                                 }, true));
 
@@ -335,7 +335,7 @@ module.exports = controller => {
 
             controller.server.call('SELECT FROM \'CBUSCA\'.\'CONSULTA\'', controller.call('loader::ajax', {
                 data: { documento : document },
-                success: data => generate::relations.appendDocument(data, document),
+                success: data => generateRelations.appendDocument(data, document),
                 complete: () => track()
             }, true));
         };

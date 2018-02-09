@@ -23,7 +23,7 @@ module.exports = controller => {
                 callback(search, autocomplete, () => {
                     input.removeClass('loading');
                 });
-            }, controller.confs.instant::searchDelay);
+            }, controller.confs.instantSearchDelay);
         });
     });
 };

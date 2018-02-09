@@ -136,7 +136,7 @@ module.exports = controller => {
                     }
                 });
 
-            }, controller.confs.instant::searchDelay);
+            }, controller.confs.instantSearchDelay);
         });
 
         return autocomplete;

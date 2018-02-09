@@ -154,7 +154,7 @@ module.exports = controller => {
         });
     };
 
-    const get::credit::card = (callback, {title, subtitle, paragraph, submit} = {}) => {
+    const getCreditCard = (callback, {title, subtitle, paragraph, submit} = {}) => {
         const modal = controller.call('modal');
         modal.title(title || 'Cartão de Crédito');
         modal.subtitle(subtitle || 'Configure seu Cartão de Crédito');
@@ -250,7 +250,7 @@ module.exports = controller => {
         });
     };
 
-    controller.registerCall('get::credit::card', (callback, config) => get::credit::card(callback, config));
+    controller.registerCall('get::credit::card', (callback, config) => getCreditCard(callback, config));
 
     controller.registerBootstrap('iugu::init', callback => {
         let alreadyLoaded = false;
@@ -280,7 +280,7 @@ module.exports = controller => {
                 return;
             }
 
-            get::credit::card(creditCard => {
+            getCreditCard(creditCard => {
                 Iugu.createPaymentToken(creditCard, paymentToken => {
                     if (paymentToken.errors) {
                         if (passesErrors) {

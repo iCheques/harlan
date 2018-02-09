@@ -1,6 +1,6 @@
 module.exports = controller => {
 
-    const xml::document = (document, database, table) => {
+    const xmlDocument = (document, database, table) => {
         const htmlNode = controller.importXMLDocument.import(document, database, table);
 
         const fnc = function (e) {
