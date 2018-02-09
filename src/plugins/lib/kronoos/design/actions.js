@@ -22,7 +22,7 @@ module.exports = controller => {
     $('.kronoos-action-clear').click(e => {
         e.preventDefault();
         $('.kronoos-q').val('');
-        controller.call('kronoos::clearAll');
+        controller.call('kronoos::clear::all');
     });
 
     $('.kronoos-action-minimize-all').click(e => {

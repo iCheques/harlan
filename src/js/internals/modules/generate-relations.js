@@ -279,9 +279,9 @@ module.exports = controller => {
         });
     };
 
-    controller.registerCall('generateRelations', () => new GenerateRelations());
+    controller.registerCall('generate::relations', () => new GenerateRelations());
 
-    controller.registerCall('generateRelations::createAdapter', (adapterName, adapter, group = null) => {
+    controller.registerCall('generate::relations::create::adapter', (adapterName, adapter, group = null) => {
         readAdapters[adapterName] = adapter;
         if (group) {
             Object.assign(groups, group);

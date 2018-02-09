@@ -2,6 +2,8 @@ import html2canvas from 'html2canvas';
 
 module.exports = controller => {
 
+    const enabled = false;
+
     controller.registerBootstrap('watch::onerror', cb => {
         cb();
         window.onerror = function(...args) {
@@ -12,6 +14,7 @@ module.exports = controller => {
 
     controller.registerTrigger('logs::onerror', 'callhome', (args, cb) => {
         cb();
+        if (!enabled) return;
         html2canvas(document.body).then(canvas => {
             controller.server.call('INSERT INTO \'HARLANAUTHENTICATION\'.\'BROWSERERROR\'', {
                 method: 'POST',

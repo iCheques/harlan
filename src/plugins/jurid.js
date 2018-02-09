@@ -8,7 +8,7 @@ harlan.addPlugin(controller => {
     controller.trigger('projuris::init');
     require('./styles/projuris.js');
 
-    controller.registerCall('loader::catchElement', () => []);
+    controller.registerCall('loader::catch::element', () => []);
 
     $('title').text('Teste @ SOFTWARE JURIDICO');
     $('.actions .container').prepend($('<div />').addClass('content support-phone').text('(xx) xxxx-xxxx (Suporte)').prepend($('<i />').addClass('fa fa-phone')));
@@ -52,7 +52,7 @@ harlan.addPlugin(controller => {
                 radial.element.addClass('attention animated flash');
             }
 
-            const moreResults = controller.call('moreResults', MAX_RESULTS).callback(callback => {
+            const more::results = controller.call('more::results', MAX_RESULTS).callback(callback => {
                 skip += MAX_RESULTS;
                 controller.serverCommunication.call('SELECT FROM \'PUSHJURISTEK\'.\'REPORT\'',
                     controller.call('loader::ajax', controller.call('error::ajax', {
@@ -63,14 +63,14 @@ harlan.addPlugin(controller => {
                         success: response => {
                             const items = [];
                             $('BPQL > body push', response).each((idx, node) => {
-                                items.push(controller.call('projuris::parseResult', node));
+                                items.push(controller.call('projuris::parse::result', node));
                             });
                             callback(items);
                         }
                     })));
             });
 
-            moreResults.element().insertAfter(result.element());
+            more::results.element().insertAfter(result.element());
 
             let pushs = jdocument.find('BPQL > body push');
             if (pushs.length) {
@@ -78,15 +78,15 @@ harlan.addPlugin(controller => {
                     '1 processo' : `${numeral(usedCredits).format('0,')} processos`);
 
                 pushs.each((idx, node) => {
-                    moreResults.append(controller.call('projuris::parseResult', node));
+                    more::results.append(controller.call('projuris::parse::result', node));
                 });
             }
 
-            moreResults.show();
+            more::results.show();
         }
     }));
 
-    controller.registerCall('projuris::parseResult', node => {
+    controller.registerCall('projuris::parse::result', node => {
         const jnode = $(node);
         const resultNode = controller.call('result');
         resultNode.addItem('Título', jnode.attr('label'));

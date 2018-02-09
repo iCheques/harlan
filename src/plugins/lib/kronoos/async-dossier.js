@@ -15,7 +15,7 @@ module.exports = controller => {
     let timeline;
     let dossiers = {};
 
-    controller.registerCall('kronoos::async::new', () => controller.call('kronoos::contractAccepted::app', () => {
+    controller.registerCall('kronoos::async::new', () => controller.call('kronoos::contract::accepted::app', () => {
         let name;
         controller.call('form', data =>
             controller.server.call('INSERT INTO \'DOSSIERKRONOOS\'.\'CAPTURE\'', controller.call('error::ajax', {
@@ -162,12 +162,12 @@ module.exports = controller => {
         $('.app-content').append(report.element());
     });
 
-    controller.registerTrigger('serverCommunication::websocket::dossierNew', 'dossierNew', (data, cb) => {
+    controller.registerTrigger('server::communication::websocket::dossier::new', 'dossierNew', (data, cb) => {
         cb();
         dossiers[data.documento] = parseDossier(data);
     });
 
-    controller.registerTrigger('serverCommunication::websocket::dossierUpdate', 'dossierUpdate', (data, cb) => {
+    controller.registerTrigger('server::communication::websocket::dossier::update', 'dossierUpdate', (data, cb) => {
         cb();
         let row = parseDossier(data);
         if (dossiers[data.documento]) {
@@ -176,7 +176,7 @@ module.exports = controller => {
         dossiers[data.documento] = row;
     });
 
-    controller.registerTrigger('serverCommunication::websocket::dossierDelete', 'dossierDelete', (data, cb) => {
+    controller.registerTrigger('server::communication::websocket::dossier::delete', 'dossierDelete', (data, cb) => {
         cb();
         if (dossiers[data.documento]) {
             dossiers[data.documento].remove();

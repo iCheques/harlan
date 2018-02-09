@@ -30,7 +30,7 @@ module.exports = controller => {
         .field('COUNT(1)')
         .where('CMC = ?', cmc.replace(MATCH_NON_DIGITS, '')).toString())[0].values[0] > 0;
 
-    controller.registerCall('icheques::check::alreadyExists', checkAlreadyExists);
+    controller.registerCall('icheques::check::already::exists', checkAlreadyExists);
 
     const getCMC7Storage = cmc7 => {
         cmc7 = cmc7.replace(MATCH_NON_DIGITS, '');
@@ -113,14 +113,14 @@ module.exports = controller => {
 
     let newCheckFormAction = null;
 
-    controller.registerCall('icheques::chequePicture::confirm', (imageData, callback) => {
+    controller.registerCall('icheques::cheque::picture::confirm', (imageData, callback) => {
         controller.confirm({
             title: 'Essa foto do seu cheque ficou realmente legal?',
             subtitle: 'Deseja prosseguir com essa imagem?',
             paragraph: 'Fotos de cheques de baixa qualidade, rasurados ou muito amassados serão descartadas.'
         },
         () => callback(imageData),
-        () => controller.call('icheques::chequePicture', callback), (modal, form) => {
+        () => controller.call('icheques::cheque::picture', callback), (modal, form) => {
             $('<img />', {
                 src: `data:image/jpeg;base64,${imageData}`,
                 style: 'max-width: 100%; display: block; margin: 14px auto;'
@@ -142,19 +142,19 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('icheques::chequePicture', (callback, force = false) => {
+    controller.registerCall('icheques::cheque::picture', (callback, force = false) => {
         if (controller.confs.isCordova || force) {
             controller.confirm({
                 title: 'Vamos tirar uma foto do seu cheque?',
                 subtitle: 'Com a foto do cheque podemos preencher alguns dados automaticamente.',
                 paragraph: 'Tire uma foto da frente do cheque onde o mesmo não esteja amassado e/ou dobrado, cheques rasurados podem não ser reconhecidos.'
             }, () => navigator.camera.getPicture(
-                (imageData) => controller.call('icheques::chequePicture::confirm', imageData, callback),
+                (imageData) => controller.call('icheques::cheque::picture::confirm', imageData, callback),
                 () => controller.alert({
                     title: 'Uoh! Não conseguimos capturar a foto do cheque.',
                     subtitle: 'Talvez não tenha autorizado nosso aplicativo a utilizar a câmera de seu dispositivo',
                     paragraph: 'Não tem problema, tentaremos novamente ou você pode cancelar e cadastrar manual seu cheque.'
-                }, () => controller.call('icheques::chequePicture', callback, force)), {
+                }, () => controller.call('icheques::cheque::picture', callback, force)), {
                     quality: 90,
                     destinationType: typeof Camera !== 'undefined' ? Camera.DestinationType.DATA_URL : null,
                 }), () => callback(null));
@@ -164,7 +164,7 @@ module.exports = controller => {
     });
 
     controller.registerCall('icheques::newcheck', (callback, cmcValue, cpfValue) => {
-        controller.call('icheques::chequePicture', image =>
+        controller.call('icheques::cheque::picture', image =>
             controller.call('icheques::imagetocmc', image, cmcValue, cpfValue, (cmcValue, cpfValue) =>
                 controller.call('icheques::newcheck::form', callback, cmcValue, cpfValue, image)));
     });
@@ -192,7 +192,7 @@ module.exports = controller => {
         modal.subtitle('Preencha as informações abaixo do cheque.');
         modal.addParagraph('Preencha e confirme as informações, você será notificado no e-mail assim que validarmos o cheque. Se tiver um scanner de cheques você pode usá-lo agora.');
 
-        modal.action('camera', () => controller.call('icheques::chequePicture', img => controller.call('icheques::imagetocmc', img, cmcValue, cpfValue, (cmcValue, cpfValue) => {
+        modal.action('camera', () => controller.call('icheques::cheque::picture', img => controller.call('icheques::imagetocmc', img, cmcValue, cpfValue, (cmcValue, cpfValue) => {
             image = img;
             showImage.show();
         }), true));

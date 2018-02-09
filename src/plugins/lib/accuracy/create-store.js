@@ -5,7 +5,7 @@ const PHONE_REGEX = /^[\(]?\d{2}[\)]?\s*\d{4}[\-]?\d{4,5}$/;
 
 module.exports = controller => {
 
-    controller.registerCall('accuracy::createStore', () => {
+    controller.registerCall('accuracy::create::store', () => {
         const form = controller.call('form', opts => {
             let formdata = new FormData();
             for (let key in opts) formdata.append(key, opts[key]);

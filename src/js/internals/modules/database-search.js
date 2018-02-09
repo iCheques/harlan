@@ -1,6 +1,6 @@
 module.exports = controller => {
 
-    controller.registerCall('databaseSearch::submit', args => {
+    controller.registerCall('database::search::submit', args => {
         const form = args[0];
         const tableJNode = args[1];
         const databaseJNode = args[2];
@@ -49,7 +49,7 @@ module.exports = controller => {
         const form = args[6];
 
         const results = section.find('.results');
-        const htmlNode = controller.call('xmlDocument', doc);
+        const htmlNode = controller.call('xml::document', doc);
         htmlNode.find('.xml2html').data('form', form.serializeArray());
 
         results.empty().append(htmlNode);

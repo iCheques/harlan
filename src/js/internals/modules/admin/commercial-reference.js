@@ -9,7 +9,7 @@ module.exports = controller => {
 
     let harmonizer = new Harmonizer();
 
-    controller.registerCall('admin::tagsViewer', (data = {}) => {
+    controller.registerCall('admin::tags::viewer', (data = {}) => {
         controller.server.call('SELECT FROM \'BIPBOPCOMPANYSREPORT\'.\'TAGS\'', {
             dataType: 'json',
             data,
@@ -23,7 +23,7 @@ module.exports = controller => {
                 const colors = harmonizer.harmonize('#cdfd9f', [...Array(dataset.length).keys()].map(i => i * 10));
                 const colorsHightlight = harmonizer.harmonize('#c0fc86', [...Array(dataset.length).keys()].map(i => i * 10));
 
-                controller.trigger('admin::tagsViewer', report);
+                controller.trigger('admin::tags::viewer', report);
                 report.paragraph('Através do gráfico ao lado pode se ver as tags comerciais mais utilizadas em sua aplicação. O usuário ou o administador podem editar as tags através dos dados cadastrais.');
                 $('.app-content').append(report.element());
 
@@ -63,7 +63,7 @@ module.exports = controller => {
                         cursor: 'pointer'
                     }).click(e => {
                         e.preventDefault();
-                        controller.call('admin::openCompanys', report, {
+                        controller.call('admin::open::companys', report, {
                             tag
                         });
                     });
@@ -72,7 +72,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('admin::commercialReference', (data = {}) => {
+    controller.registerCall('admin::commercial::reference', (data = {}) => {
         controller.server.call(controller.endpoint.commercialReferenceOverview, {
             dataType: 'json',
             data,
@@ -84,7 +84,7 @@ module.exports = controller => {
                 const colors = harmonizer.harmonize('#cdfd9f', [...Array(dataset.length).keys()].map(i => i * 10));
                 const colorsHightlight = harmonizer.harmonize('#c0fc86', [...Array(dataset.length).keys()].map(i => i * 10));
 
-                controller.trigger('admin::commercialReference', report);
+                controller.trigger('admin::commercial::reference', report);
                 report.paragraph('Através do gráfico ao lado pode se ver quem são as maiores referências comerciais para sua aplicação. O usuário ou o administador podem editar a referência comercial através dos dados cadastrais.');
                 $('.app-content').append(report.element());
 
@@ -124,7 +124,7 @@ module.exports = controller => {
                         cursor: 'pointer'
                     }).click(e => {
                         e.preventDefault();
-                        controller.call('admin::openCompanys', report, {
+                        controller.call('admin::open::companys', report, {
                             commercialReference
                         });
                     });

@@ -6,7 +6,7 @@ import buildURL from 'build-url';
 
 harlan.addPlugin(controller => {
 
-    controller.endpoint.myAccountOverview = 'SELECT FROM \'BIPBOPCOMPANYSREPORT\'.\'REPORT\'';
+    controller.endpoint.my::account::overview = 'SELECT FROM \'BIPBOPCOMPANYSREPORT\'.\'REPORT\'';
 
     const colorPattern = {
         querys: Color('#ff6a33'),
@@ -15,7 +15,7 @@ harlan.addPlugin(controller => {
         pushCreated: Color('#33c8ff'),
     };
 
-    controller.registerCall('myAccountOverview::dataset', responses => {
+    controller.registerCall('my::account::overview::dataset', responses => {
         const datasets = {};
         const labels = _.map(responses, item => {
             $(item).children('report').each((idx, value) => {
@@ -54,7 +54,7 @@ harlan.addPlugin(controller => {
         };
     });
 
-    controller.registerCall('myAccountOverview::filter', (username, report, callback, closeable = false) => {
+    controller.registerCall('my::account::overview::filter', (username, report, callback, closeable = false) => {
         const modal = controller.call('modal');
         modal.title('Filtros do Relatório');
         modal.subtitle('Modifique o Relatório');
@@ -73,7 +73,7 @@ harlan.addPlugin(controller => {
         form.element().submit(e => {
             e.preventDefault();
             modal.close();
-            controller.call('myAccountOverview', callback, report.element(),
+            controller.call('my::account::overview', callback, report.element(),
                 username,
                 /^\d{2}\/\d{2}\/\d{4}$/.test(dateStart.val()) ? dateStart.val() : null,
                 /^\d{2}\/\d{2}\/\d{4}$/.test(dateEnd.val()) ? dateEnd.val() : null,
@@ -83,12 +83,12 @@ harlan.addPlugin(controller => {
         modal.createActions().cancel();
     });
 
-    controller.registerCall('myAccountOverview::download', (ajaxQuery, labels) => {
+    controller.registerCall('my::account::overview::download', (ajaxQuery, labels) => {
         let download = report => e => {
             e.preventDefault();
             window.location.assign(buildURL(bipbop.webserviceAddress, {
                 queryParams: _.pick(Object.assign({}, ajaxQuery, {
-                    q: controller.endpoint.myAccountOverview,
+                    q: controller.endpoint.my::account::overview,
                     download: 'true',
                     apiKey: controller.server.apiKey(),
                     report
@@ -110,7 +110,7 @@ harlan.addPlugin(controller => {
         modal.createActions().cancel();
     });
 
-    controller.registerCall('myAccountOverview', (
+    controller.registerCall('my::account::overview', (
         callback,
         element,
         username,
@@ -128,12 +128,12 @@ harlan.addPlugin(controller => {
             dateEnd: end,
             contractType
         };
-        controller.serverCommunication.call(controller.endpoint.myAccountOverview,
+        controller.serverCommunication.call(controller.endpoint.my::account::overview,
             controller.call('loader::ajax', controller.call('error::ajax', {
                 cache: true,
                 data: ajaxQuery,
                 success(response) {
-                    const dataset = controller.call('myAccountOverview::dataset', $('BPQL > body > node', response));
+                    const dataset = controller.call('my::account::overview::dataset', $('BPQL > body > node', response));
                     const report = controller.call('report',
                         'Relatório de Consumo',
                         'Visualize informações sobre o uso da API',
@@ -151,11 +151,11 @@ harlan.addPlugin(controller => {
                     }
 
                     report.action('fa-cloud-download', () => {
-                        controller.call('myAccountOverview::download', ajaxQuery, dataset.datasets);
+                        controller.call('my::account::overview::download', ajaxQuery, dataset.datasets);
                     });
 
                     report.action('fa-filter', () => {
-                        controller.call('myAccountOverview::filter', username, report, callback, closeable);
+                        controller.call('my::account::overview::filter', username, report, callback, closeable);
                     });
                     callback(report);
 
@@ -170,7 +170,7 @@ harlan.addPlugin(controller => {
             })));
     });
 
-    controller.call('myAccountOverview', graph => {
+    controller.call('my::account::overview', graph => {
         graph.gamification('levelUp');
     });
 

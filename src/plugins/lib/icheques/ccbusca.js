@@ -3,7 +3,7 @@ import {CNPJ} from 'cpf_cnpj';
 
 module.exports = controller => {
 
-    controller.registerTrigger('mainSearch::submit', 'ccbusca', (val, cb) => {
+    controller.registerTrigger('main::search::submit', 'ccbusca', (val, cb) => {
         cb();
         if (!CNPJ.isValid(val) && !CPF.isValid(val)) {
             return;

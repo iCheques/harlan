@@ -95,7 +95,7 @@ module.exports = controller => {
 
         form.find('.content-filters').append(inputLine);
 
-        form.submit(controller.call('databaseSearch::submit', [form, tableJNode, databaseJNode, section]));
+        form.submit(controller.call('database::search::submit', [form, tableJNode, databaseJNode, section]));
 
         return form;
     };
@@ -204,7 +204,7 @@ module.exports = controller => {
         });
     };
 
-    controller.registerTrigger('findDatabase::instantSearch', 'findDatabase::instantSearch', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'find::database::instant::search', (args, callback) => {
         if (xhr && xhr.readyState != 4) {
             xhr.abort();
         }
@@ -252,13 +252,13 @@ module.exports = controller => {
 
                 searchId = setTimeout(() => {
                     $('.q').addClass('loading');
-                    controller.trigger('findDatabase::instantSearch', [search, autocomplete], (args, callback) => {
+                    controller.trigger('find::database::instant::search', [search, autocomplete], (args, callback) => {
                         if (typeof callback === 'function') {
                             callback();
                         }
                         $('.q').removeClass('loading');
                     });
-                }, controller.confs.instantSearchDelay);
+                }, controller.confs.instant::searchDelay);
             });
         });
     });

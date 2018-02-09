@@ -59,13 +59,13 @@ module.exports = controller =>  {
         };
 
         this.title = content =>  {
-            const h2 = $('<h2 />').text(content);
+            const h2 = $('<h2 />').html(content);
             modal.append(h2);
             return h2;
         };
 
         this.subtitle = content =>  {
-            const h3 = $('<h3 />').text(content);
+            const h3 = $('<h3 />').html(content);
             modal.append(h3);
             return h3;
         };
@@ -117,6 +117,7 @@ module.exports = controller =>  {
                 this.onClose();
             }
             modalContainer.remove();
+            return controller;
         };
 
         this.createActions = () =>  {

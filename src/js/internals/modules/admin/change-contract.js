@@ -1,13 +1,13 @@
 module.exports = controller => {
 
-    controller.registerCall('admin::changeContract', (companyNode, username, section) => {
+    controller.registerCall('admin::change::contract', (companyNode, username, section) => {
         const form = controller.call('form', opts => {
             opts.username = username;
             controller.serverCommunication.call('UPDATE \'BIPBOPCOMPANYS\'.\'CONTRACT\'',
                 controller.call('error::ajax', controller.call('loader::ajax', {
                     data: opts,
                     success: response => {
-                        controller.call('admin::viewCompany', $(response).find('BPQL > body > company'), section, 'replaceWith');
+                        controller.call('admin::view::company', $(response).find('BPQL > body > company'), section, 'replaceWith');
                     }
                 })));
         });
@@ -25,9 +25,9 @@ module.exports = controller => {
                         type: 'text',
                         placeholder: 'Contrato (R$)',
                         labelText: 'Valor do Contrato (R$)',
-                        mask: '000.000.000.000.000,00',
+                        mask: '000.000.000.000.000,0000',
                         optional: false,
-                        value : numeral(contrato.find('contrato:eq(1)').text() || '0.0').format('0,0.00'),
+                        value : numeral(contrato.find('contrato:eq(1)').text() || '0.0').format('0,0.0000'),
                         maskOptions: {
                             reverse: true
                         },
@@ -37,9 +37,9 @@ module.exports = controller => {
                         type: 'text',
                         placeholder: 'Consulta Excedente (R$)',
                         labelText: 'Consulta Excedente (R$)',
-                        mask: '000.000.000.000.000,00',
+                        mask: '000.000.000.000.000,0000',
                         optional: false,
-                        value : numeral(contrato.find('contrato:eq(3)').text() || '0.0').format('0,0.00'),
+                        value : numeral(contrato.find('contrato:eq(3)').text() || '0.0').format('0,0.0000'),
                         maskOptions: {
                             reverse: true
                         },
@@ -59,7 +59,7 @@ module.exports = controller => {
                         type: 'select',
                         labelText: 'Tipo de Contrato',
                         optional: false,
-                        list: controller.call('admin::roleTypes'),
+                        list: controller.call('admin::role::types'),
                         value : contrato.find('contrato:eq(4)').text()
                     }, {
                         name: 'roleQuerys',

@@ -8,7 +8,7 @@ const CONTRATO_ANTECIPADOR = '/legal/icheques/MINUTA___CONTRATO__ANTECIPADORA_DE
  */
 module.exports = controller => {
 
-    controller.registerTrigger('serverCommunication::websocket::authentication', 'icheques::contract::websocket::authentication', ({contractAccepted}, callback) => {
+    controller.registerTrigger('server::communication::websocket::authentication', 'icheques::contract::websocket::authentication', ({contractAccepted}, callback) => {
         callback();
 
         if (controller.serverCommunication.freeKey() || contractAccepted) {

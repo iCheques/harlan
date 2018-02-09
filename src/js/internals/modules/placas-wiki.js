@@ -1,6 +1,6 @@
 module.exports = controller => {
 
-    controller.registerTrigger('findDatabase::instantSearch', 'placasWiki::instantSearch', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'placasWiki::instant::search', (args, callback) => {
         callback();
 
         const placa = args[0];
@@ -11,7 +11,7 @@ module.exports = controller => {
             autocomplete.item('Placas.Wiki',
                 'Consulta a Placa de Veículo',
                 'Para encontrar, comentar e avaliar motoristas', null, null, true).addClass('database').click(() => {
-                controller.call('iframeEmbed::open', [`https://placas.wiki.br?p=${placa}`]);
+                controller.call('iframe::embed::open', [`https://placas.wiki.br?p=${placa}`]);
             });
 
         }

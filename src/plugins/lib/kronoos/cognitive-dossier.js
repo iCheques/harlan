@@ -27,7 +27,7 @@ export default class CognitiveDossier {
     }
 
     generateOutput(callback) {
-        this.parser.controller.trigger('kronoos::congitiveDossier', [callback, this]);
+        this.parser.controller.trigger('kronoos::congitive::dossier', [callback, this]);
         this.recuperaPessoaFisica(callback);
     }
 

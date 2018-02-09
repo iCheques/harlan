@@ -9,7 +9,7 @@ module.exports = controller => {
         const phone = form.addInput('phone', 'text', 'Telefone').mask('(00) 0000-00009');
         const pabx = form.addInput('ramal', 'text', 'Ramal').mask('0#');
         const contact = form.addInput('contato', 'text', 'Nome Contato');
-        const phoneType = form.addSelect('phoneType', 'Tipo do phone', controller.call('admin::contactTypes'));
+        const phoneType = form.addSelect('phoneType', 'Tipo do phone', controller.call('admin::contact::types'));
 
         form.element().submit(e => {
             e.preventDefault();
@@ -31,7 +31,7 @@ module.exports = controller => {
                         type: phoneType.val()
                     },
                     success: response => {
-                        controller.call('admin::viewCompany', $(response).find('BPQL > body > company'), section, 'replaceWith');
+                        controller.call('admin::view::company', $(response).find('BPQL > body > company'), section, 'replaceWith');
                         modal.close();
                     }
                 })));

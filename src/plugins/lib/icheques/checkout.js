@@ -47,7 +47,7 @@ module.exports = controller => {
         return n;
     };
 
-    controller.registerCall('icheques::databaseObject', databaseObject);
+    controller.registerCall('icheques::database::object', databaseObject);
 
     const insertDatabase = check => {
         if (Array.isArray(check)) {
@@ -71,14 +71,14 @@ module.exports = controller => {
         }
     };
 
-    controller.registerCall('icheques::insertDatabase', insertDatabase);
+    controller.registerCall('icheques::insert::database', insertDatabase);
 
     const calculateCheck = check => {
         if (!validCheck(check.cmc)) {
             return 0;
         }
 
-        if (controller.call('icheques::check::alreadyExists', check)) {
+        if (controller.call('icheques::check::already::exists', check)) {
             return 0;
         }
 
@@ -112,15 +112,15 @@ module.exports = controller => {
         return true;
     };
 
-    controller.registerCall('icheques::newCheck', newCheck);
-    controller.registerCall('icheques::calculateCheckValue', calculateCheck);
+    controller.registerCall('icheques::new::check', newCheck);
+    controller.registerCall('icheques::calculate::check::value', calculateCheck);
 
     controller.registerCall('icheques::checkout', storage => {
         if (!storage.length) {
             return;
         }
 
-        controller.call('icheques::calculateBill', storage, () => {
+        controller.call('icheques::calculate::bill', storage, () => {
             const q = async.queue(newCheck);
             const loaderUnregister = $.bipbopLoader.register();
             q.drain = () => {
@@ -134,12 +134,12 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('icheques::calculateBill', (checks, callback) => {
+    controller.registerCall('icheques::calculate::bill', (checks, callback) => {
         controller.server.call('SELECT FROM \'ICHEQUES\'.\'IPAYTHEBILL\'', controller.call('loader::ajax', {
             dataType: 'json',
             success: data => {
                 if (data) {
-                    controller.call('icheques::calculateBill::pay', checks, callback);
+                    controller.call('icheques::calculate::bill::pay', checks, callback);
                 } else {
                     callback();
                 }
@@ -147,7 +147,7 @@ module.exports = controller => {
         }));
     });
 
-    controller.registerCall('icheques::calculateBill::pay', (checks, callback) => {
+    controller.registerCall('icheques::calculate::bill::pay', (checks, callback) => {
         let total = 0;
         for (const i in checks) {
             total += calculateCheck(checks[i]);

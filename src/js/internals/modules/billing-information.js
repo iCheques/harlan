@@ -7,13 +7,13 @@ module.exports = controller => {
 
     let billingInformation;
 
-    controller.registerCall('billingInformation::need', (callback, validator) => {
+    controller.registerCall('billing::information::need', (callback, validator) => {
         controller.serverCommunication.call('SELECT FROM \'HARLAN\'.\'billingInformation\'',
             controller.call('error::ajax', controller.call('loader::ajax', {
                 success: response => {
                     if ((validator && !validator(response)) || !$('BPQL > body > has', response).length) {
-                        controller.call('billingInformation::changeAddress', () => {
-                            controller.call('billingInformation::need', callback, validator);
+                        controller.call('billing::information::change::address', () => {
+                            controller.call('billing::information::need', callback, validator);
                         }, response);
                         return;
                     }
@@ -22,11 +22,11 @@ module.exports = controller => {
             })));
     });
 
-    controller.registerCall('billingInformation::force', (callback, next) => {
+    controller.registerCall('billing::information::force', (callback, next) => {
         controller.serverCommunication.call('SELECT FROM \'HARLAN\'.\'billingInformation\'',
             controller.call('error::ajax', controller.call('loader::ajax', {
                 success: response => {
-                    controller.call('billingInformation::changeAddress', () => {
+                    controller.call('billing::information::change::address', () => {
                         if (callback) callback();
                         else
                             toastr.success('Os dados inseridos foram alterados com sucesso.', 'Seus dados foram alterados com sucesso.');
@@ -39,11 +39,11 @@ module.exports = controller => {
         cb();
         controller.interface.helpers.menu.add('Empresa', 'user').nodeLink.click(e => {
             e.preventDefault();
-            controller.call('billingInformation::force');
+            controller.call('billing::information::force');
         });
     });
 
-    controller.registerCall('billingInformation::changeAddress', (callback, response, next) => {
+    controller.registerCall('billing::information::change::address', (callback, response, next) => {
         const form = controller.call('form', opts => {
             controller.serverCommunication.call('UPDATE \'HARLAN\'.\'billingInformation\'',
                 controller.call('error::ajax', controller.call('loader::ajax', {

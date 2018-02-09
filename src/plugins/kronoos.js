@@ -1,7 +1,7 @@
 harlan.addPlugin(controller => {
 
     if (controller.confs.kronoos.isKronoos) {
-        controller.registerCall('admin::roleTypes', () => ({
+        controller.registerCall('admin::role::types', () => ({
             '': 'Tipo de Contrato',
             kronoosCustomer: 'Kronoos'
         }));

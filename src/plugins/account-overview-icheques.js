@@ -6,7 +6,7 @@ import buildURL from 'build-url';
 
 harlan.addPlugin(controller => {
 
-    controller.endpoint.myIChequesAccountOverview = 'SELECT FROM \'ICHEQUESREPORT\'.\'REPORT\'';
+    controller.endpoint.my::icheques::account::overview = 'SELECT FROM \'ICHEQUESREPORT\'.\'REPORT\'';
 
     const colorPattern = {
         querys: Color('#ff6a33'),
@@ -15,7 +15,7 @@ harlan.addPlugin(controller => {
         pushCreated: Color('#33c8ff'),
     };
 
-    controller.registerCall('myIChequesAccountOverview::dataset', responses => {
+    controller.registerCall('my::icheques::account::overview::dataset', responses => {
         const datasets = {};
         const labels = _.map(responses, item => {
             $(item).children('report').each((idx, value) => {
@@ -54,7 +54,7 @@ harlan.addPlugin(controller => {
         };
     });
 
-    controller.registerCall('myIChequesAccountOverview::filter', (username, report, callback, closeable = false) => {
+    controller.registerCall('my::icheques::account::overview::filter', (username, report, callback, closeable = false) => {
         const modal = controller.call('modal');
         modal.title('Filtros do Relatório');
         modal.subtitle('Modifique o Relatório');
@@ -73,7 +73,7 @@ harlan.addPlugin(controller => {
         form.element().submit(e => {
             e.preventDefault();
             modal.close();
-            controller.call('myIChequesAccountOverview', callback, report.element(),
+            controller.call('my::icheques::account::overview', callback, report.element(),
                 username,
                 /^\d{2}\/\d{2}\/\d{4}$/.test(dateStart.val()) ? dateStart.val() : null,
                 /^\d{2}\/\d{2}\/\d{4}$/.test(dateEnd.val()) ? dateEnd.val() : null,
@@ -83,12 +83,12 @@ harlan.addPlugin(controller => {
         modal.createActions().cancel();
     });
 
-    controller.registerCall('myIChequesAccountOverview::download', (ajaxQuery, labels) => {
+    controller.registerCall('my::icheques::account::overview::download', (ajaxQuery, labels) => {
         let download = report => e => {
             e.preventDefault();
             window.location.assign(buildURL(bipbop.webserviceAddress, {
                 queryParams: _.pick(Object.assign({}, ajaxQuery, {
-                    q: controller.endpoint.myIChequesAccountOverview,
+                    q: controller.endpoint.my::icheques::account::overview,
                     download: 'true',
                     apiKey: controller.server.apiKey(),
                     report
@@ -110,7 +110,7 @@ harlan.addPlugin(controller => {
         modal.createActions().cancel();
     });
 
-    controller.registerCall('myIChequesAccountOverview', (
+    controller.registerCall('my::icheques::account::overview', (
         callback,
         element,
         username,
@@ -128,12 +128,12 @@ harlan.addPlugin(controller => {
             dateEnd: end,
             contractType
         };
-        controller.serverCommunication.call(controller.endpoint.myIChequesAccountOverview,
+        controller.serverCommunication.call(controller.endpoint.my::icheques::account::overview,
             controller.call('loader::ajax', controller.call('error::ajax', {
                 cache: true,
                 data: ajaxQuery,
                 success(response) {
-                    const dataset = controller.call('myIChequesAccountOverview::dataset', $('BPQL > body > node', response));
+                    const dataset = controller.call('my::icheques::account::overview::dataset', $('BPQL > body > node', response));
                     const report = controller.call('report',
                         'Relatório de Consumo',
                         'Visualize informações sobre o uso da API',
@@ -151,11 +151,11 @@ harlan.addPlugin(controller => {
                     }
 
                     report.action('fa-cloud-download', () => {
-                        controller.call('myIChequesAccountOverview::download', ajaxQuery, dataset.datasets);
+                        controller.call('my::icheques::account::overview::download', ajaxQuery, dataset.datasets);
                     });
 
                     report.action('fa-filter', () => {
-                        controller.call('myIChequesAccountOverview::filter', username, report, callback, closeable);
+                        controller.call('my::icheques::account::overview::filter', username, report, callback, closeable);
                     });
                     callback(report);
 
@@ -170,7 +170,7 @@ harlan.addPlugin(controller => {
             })));
     });
 
-    controller.call('myIChequesAccountOverview', graph => {
+    controller.call('my::icheques::account::overview', graph => {
         graph.gamification('levelUp');
     });
 

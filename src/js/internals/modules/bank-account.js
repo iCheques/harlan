@@ -124,17 +124,17 @@ module.exports = controller => {
         });
     };
 
-    controller.registerCall('bankAccount::need', callback => {
+    controller.registerCall('bank::account::need', callback => {
         if (!controller.confs.user.bankAccount) {
-            controller.call('billingInformation::need', () => {
-                controller.call('bankAccount::update', callback);
+            controller.call('billing::information::need', () => {
+                controller.call('bank::account::update', callback);
             });
         } else {
             callback();
         }
     });
 
-    controller.registerCall('bankAccount::update', (callback, bank, endpoint, parameters = {}, formData = {}) => {
+    controller.registerCall('bank::account::update', (callback, bank, endpoint, parameters = {}, formData = {}) => {
 
         callback = callback || defaultCallback;
 

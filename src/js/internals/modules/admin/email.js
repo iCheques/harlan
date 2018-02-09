@@ -7,7 +7,7 @@ module.exports = controller => {
 
         const form = modal.createForm();
         const email = form.addInput('email', 'email', 'Endereço de E-mail');
-        const emailType = form.addSelect('emailType', 'Tipo do Email', controller.call('admin::contactTypes'));
+        const emailType = form.addSelect('emailType', 'Tipo do Email', controller.call('admin::contact::types'));
 
         form.element().submit(e => {
             e.preventDefault();
@@ -19,7 +19,7 @@ module.exports = controller => {
                         type: emailType.val()
                     },
                     success: response => {
-                        controller.call('admin::viewCompany', $(response).find('BPQL > body > company'), section, 'replaceWith');
+                        controller.call('admin::view::company', $(response).find('BPQL > body > company'), section, 'replaceWith');
                         modal.close();
                     }
                 })));

@@ -1,7 +1,15 @@
 import owasp from 'owasp-password-strength-test';
 
+owasp.config({
+    allowPassphrases       : true,
+    maxLength              : 128,
+    minLength              : 5,
+    minPhraseLength        : 20,
+    minOptionalTestsToPass : 2,
+});
+
 module.exports = controller => {
-    controller.registerCall('admin::changePassword', username => {
+    controller.registerCall('admin::change::password', username => {
         const modal = controller.call('modal');
         modal.title('Nova Senha Usuário');
         modal.subtitle('Digite a nova senha de usuário.');

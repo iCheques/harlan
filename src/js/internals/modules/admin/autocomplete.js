@@ -2,24 +2,24 @@ import sprintf from 'sprintf';
 
 module.exports = controller => {
 
-    controller.registerCall('admin::autocompleteCreateCompany', autocomplete => {
+    controller.registerCall('admin::autocomplete::create::company', autocomplete => {
         autocomplete.item('Criar novo Usuário',
             'Criação Manual de Usuário',
             'Adicionar manualmente cliente da API/Harlan')
             .addClass('admin-company admin-new-company')
             .click(e => {
                 e.preventDefault();
-                controller.call('admin::createCompany');
+                controller.call('admin::create::company');
             });
     });
 
-    controller.registerCall('admin::fillCompanysAutocomplete', (document, autocomplete) => {
+    controller.registerCall('admin::fill::companys::autocomplete', (document, autocomplete) => {
         $('BPQL > body > company', document).each((idx, company) => {
-            controller.call('admin::fillCompanyAutocomplete', company, autocomplete);
+            controller.call('admin::fill::company::autocomplete', company, autocomplete);
         });
     });
 
-    controller.registerCall('admin::fillCompanyAutocomplete', (companyNode, autocomplete) => {
+    controller.registerCall('admin::fill::company::autocomplete', (companyNode, autocomplete) => {
         const company = $(companyNode);
         const document = company.children('cnpj').text() || company.children('cpf').text();
 
@@ -30,7 +30,7 @@ module.exports = controller => {
             .click(e => {
                 e.preventDefault();
                 autocomplete.empty();
-                controller.call('admin::viewCompany', company);
+                controller.call('admin::view::company', company);
             });
     });
 

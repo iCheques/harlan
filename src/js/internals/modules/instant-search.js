@@ -1,6 +1,6 @@
 module.exports = controller => {
 
-    controller.registerCall('instantSearch', (input, callback, autocomplete = controller.call('autocomplete', input)) => {
+    controller.registerCall('instant::search', (input, callback, autocomplete = controller.call('autocomplete', input)) => {
         let searchLength;
         let searchId;
 
@@ -23,7 +23,7 @@ module.exports = controller => {
                 callback(search, autocomplete, () => {
                     input.removeClass('loading');
                 });
-            }, controller.confs.instantSearchDelay);
+            }, controller.confs.instant::searchDelay);
         });
     });
 };

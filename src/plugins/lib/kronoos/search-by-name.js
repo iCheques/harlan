@@ -10,17 +10,17 @@ module.exports = controller => {
     const INPUT = $('#kronoos-q');
     const KRONOOS_ACTION = $('#kronoos-action');
 
-    controller.registerCall('kronoos::searchByName', () => {
+    controller.registerCall('kronoos::search::by::name', () => {
         controller.alert({
             title: 'Risco de Homônimos',
             subtitle: 'Verifique se não é possível realizar a pesquisa por CPF ou CNPJ.',
             paragraph: `Recomendamos fortemente que as pesquisas de dossiê no Kronoos sejam realizadas
             através de um documento como CPF ou CNPJ. Isso porque as <strong>grafias de nomes podem se repetir</strong>.
             Você será direcionado a uma tela onde tentaremos dirimir homônimos através de um questionário.`
-        }, () => controller.call('kronoos::searchByName::firstForm'));
+        }, () => controller.call('kronoos::search::by::name::first::form'));
     });
 
-    controller.registerCall('kronoos::searchByName::capture', (formatDocument, name, modal) => {
+    controller.registerCall('kronoos::search::by::name::capture', (formatDocument, name, modal) => {
         controller.server.call('SELECT FROM \'CCBUSCA\'.\'CONSULTA\'', controller.call('error::ajax', controller.call('loader::ajax', {
             method: 'GET',
             data: {
@@ -62,13 +62,13 @@ module.exports = controller => {
         })), true);
     });
 
-    controller.registerCall('kronoos::searchByName::response', data => {
+    controller.registerCall('kronoos::search::by::name::response', data => {
         if (!data.length) {
             controller.alert({
                 title: 'Incapaz de inferir documentos.',
                 subtitle: 'Não foi possível localizar documentos com base nos dados informados.',
                 paragraph: 'Tente novamente com outros tipos de filtro.'
-            }, () => controller.call('kronoos::searchByName::firstForm'));
+            }, () => controller.call('kronoos::search::by::name::first::form'));
             return;
         }
         let peoples = _.mapObject(_.groupBy(data, i => i.values.cpfCnpj), i => _.pick(i[0].values, 'nome', 'cidade', 'estado'));
@@ -84,7 +84,7 @@ module.exports = controller => {
             let element = list.item('fa-vcard-o', [formatDocument,
                 peoples[document].nome, `${peoples[document].cidade || 'Indefinido'} / ${peoples[document].estado || 'Indefinido'}`
             ])
-                .click(controller.click('kronoos::searchByName::capture', formatDocument, peoples[document].nome, modal));
+                .click(controller.click('kronoos::search::by::name::capture', formatDocument, peoples[document].nome, modal));
             let ediv = element.find('div');
             ediv.eq(0).css('width', '150px');
             ediv.eq(1).css('width', '150px');
@@ -92,7 +92,7 @@ module.exports = controller => {
         modal.createActions().cancel();
     });
 
-    controller.registerCall('kronoos::searchByName::firstForm', () => {
+    controller.registerCall('kronoos::search::by::name::first::form', () => {
         var form = controller.call('form', (inputQuery) => {
             controller.server.call('SELECT FROM \'CBUSCA\'.\'FILTRO\'',
                 controller.call('error::ajax', controller.call('loader::ajax', {
@@ -100,7 +100,7 @@ module.exports = controller => {
                     dataType: 'json',
                     contentType: 'application/json',
                     data: JSON.stringify(_.mapObject(_.pick(inputQuery, x => !!x), y => y.toUpperCase())),
-                    success: data => controller.call('kronoos::searchByName::response', data)
+                    success: data => controller.call('kronoos::search::by::name::response', data)
                 })));
 
         });

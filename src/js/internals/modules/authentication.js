@@ -19,7 +19,7 @@ module.exports = controller => {
         else localForage.setItem('sessionId', value, cb);
     };
 
-    controller.registerCall('authentication::unsetSessionId', cb => setSessionId(null, cb));
+    controller.registerCall('authentication::unset::session::id', cb => setSessionId(null, cb));
 
     /**
      * Set the default page! \m/
@@ -142,10 +142,10 @@ module.exports = controller => {
         authenticate(apiKey, ret, cb);
     });
 
-    controller.registerTrigger('serverCommunication::websocket::authentication', 'username', (data, callback) =>  {
+    controller.registerTrigger('server::communication::websocket::authentication', 'username', (data, callback) =>  {
         $('#logged-user').text(data.username);
         controller.confs.user = data;
-        controller.trigger('serverCommunication::websocket::authentication::end', data);
+        controller.trigger('server::communication::websocket::authentication::end', data);
         callback();
     });
 

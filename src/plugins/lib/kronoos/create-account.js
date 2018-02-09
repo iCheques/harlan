@@ -9,7 +9,7 @@ var sprintf = require('sprintf');
 
 module.exports = controller => {
 
-    controller.registerCall('kronoos::createAccount::1', (data, callback, type = 'Account') => {
+    controller.registerCall('kronoos::create::account::one', (data, callback, type = 'Account') => {
         var modal = controller.call('modal');
         modal.fullscreen();
         modal.title('Crie sua conta Kronoos');
@@ -134,7 +134,7 @@ module.exports = controller => {
         actions.add('Voltar').click(e => {
             e.preventDefault();
             modal.close();
-            controller.call('kronoos::createAccount', callback);
+            controller.call('kronoos::create::account', callback);
         });
 
         actions.add('Cancelar').click(e => {
@@ -143,7 +143,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('kronoos::createAccount', (callback, contract, parameters = {}, type = 'Account') => {
+    controller.registerCall('kronoos::create::account', (callback, contract, parameters = {}, type = 'Account') => {
         var modal = controller.call('modal');
         modal.fullscreen();
         modal.title('Crie sua conta Kronoos');
@@ -205,7 +205,7 @@ module.exports = controller => {
                     },
                     success() {
                         modal.close();
-                        controller.call('kronoos::createAccount::1', Object.assign(parameters, {
+                        controller.call('kronoos::create::account::one', Object.assign(parameters, {
                             username: email,
                             email,
                             password
@@ -253,7 +253,7 @@ module.exports = controller => {
 
         actions.add('Criar Conta').click(e => {
             e.preventDefault();
-            controller.call('kronoos::createAccount', () => {
+            controller.call('kronoos::create::account', () => {
                 controller.call('kronoos::login', callback);
             });
             modal.close();
@@ -261,7 +261,7 @@ module.exports = controller => {
 
         actions.add('Esqueci minha Senha').click(e => {
             e.preventDefault();
-            controller.call('forgotPassword', () => {
+            controller.call('forgot::password', () => {
                 controller.call('kronoos::login', callback);
             });
             modal.close();
@@ -288,7 +288,7 @@ module.exports = controller => {
         });
 
         if (controller.query.createAccount) {
-            controller.call('kronoos::createAccount', null, controller.query.contractLocation || null,
+            controller.call('kronoos::create::account', null, controller.query.contractLocation || null,
                 {}, controller.query.createAccount || 'Account');
         }
     }

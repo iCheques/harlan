@@ -71,7 +71,7 @@ module.exports = controller => {
         }, configuration, screen);
     };
 
-    controller.registerCall('bipbop::createAccount::submit', (formData, creditCard) => {
+    controller.registerCall('bipbop::create::account::submit', (formData, creditCard) => {
         controller.call('confirm', {
             icon: 'wizard',
             title: 'Você aceita as condições de serviço?',
@@ -100,11 +100,11 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('bipbop::createAccount', email => {
+    controller.registerCall('bipbop::create::account', email => {
 
         const form = controller.call('form', formData => {
-            controller.call('getCreditCard', creditCard => {
-                controller.call('bipbop::createAccount::submit', formData, {
+            controller.call('get::credit::card', creditCard => {
+                controller.call('bipbop::create::account::submit', formData, {
                     'cc-nome': `${creditCard.first_name} ${creditCard.last_name}`,
                     cc: creditCard.number,
                     'cc-exp': `${creditCard.month} / ${creditCard.year}`,

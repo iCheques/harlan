@@ -47,7 +47,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('accuracy::checkin::sendImage', (cb, obj) => {
+    controller.registerCall('accuracy::checkin::send::image', (cb, obj) => {
         let formdata = new FormData();
         controller.accuracyServer.upload('saveImages', {
             token: obj[0].file,
@@ -67,7 +67,7 @@ module.exports = controller => {
             success: () => {
                 cb();
                 if (obj[0].uri) {
-                    controller.sync.job('accuracy::checkin::sendImage', null, obj);
+                    controller.sync.job('accuracy::checkin::send::image', null, obj);
                 }
             },
             error: () => cb('O envio fracassou, verifique sua conexão com a internet e entre em contato com o suporte')

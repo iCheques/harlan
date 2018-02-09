@@ -9,13 +9,13 @@ module.exports = controller => {
     controller.endpoint.createCompany = 'INSERT INTO \'BIPBOPCOMPANYS\'.\'COMPANY\'';
     controller.endpoint.commercialReferenceOverview = 'SELECT FROM \'BIPBOPCOMPANYSREPORT\'.\'COMMERCIALREFERENCE\'';
 
-    controller.registerCall('admin::roleTypes', () => ({
+    controller.registerCall('admin::role::types', () => ({
         '': 'Tipo de Contrato',
         avancado: 'Avançado',
         simples: 'Simples'
     }));
 
-    controller.registerTrigger('serverCommunication::websocket::authentication', 'admin::reference::websocket::authentication', ({adminOf}, callback) => {
+    controller.registerTrigger('server::communication::websocket::authentication', 'admin::reference::websocket::authentication', ({adminOf}, callback) => {
         callback();
 
         if (loaded || !adminOf || !adminOf.length) {
@@ -82,11 +82,11 @@ module.exports = controller => {
             })).addClass('gray-button');
 
             report.button('Criar Conta', () => {
-                controller.call('admin::createCompany');
+                controller.call('admin::create::company');
             });
 
             report.button('Abrir Contas', () => {
-                controller.call('admin::openCompanys', report);
+                controller.call('admin::open::companys', report);
             });
 
             report.gamification('accuracy');
@@ -97,8 +97,8 @@ module.exports = controller => {
         });
 
         controller.call('admin::index');
-        controller.call('admin::commercialReference');
-        controller.call('admin::tagsViewer');
+        controller.call('admin::commercial::reference');
+        controller.call('admin::tags::viewer');
         controller.trigger('admin');
     });
 };

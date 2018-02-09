@@ -1,30 +1,41 @@
 import _ from 'underscore';
 import sprintf from 'sprintf';
-import {
-    CPF,
-    CNPJ
-} from 'cpf_cnpj';
+import { CPF, CNPJ } from 'cpf_cnpj';
 import Promise from 'bluebird';
+import { compareTwoTexts } from 'text-sound-similarity';
 
 const LIMIT_RESULTS = 10;
 
 module.exports = controller => {
 
-    function drawList(list, d, skip, {next, back}, text, pagination, observation) {
-        let data = d;
+    const onCancel = () => {
+        controller.call('price::list');
+    };
 
+    function drawList({ modal, list, data, skip, pageActions, text, pagination, observation }) {
+        const { back, next } = pageActions;
         if (text) {
-            data = data.filter(x => (x.name, text) > 0.85);
+            data = data.filter(x => (compareTwoTexts(x.name, text) > 0.85));
         }
 
-        observation.text(`Foram localizados ${numeral(data.length).format('000.000.000.000.000,00')} resultados.`);
-        pagination.text(`Página ${(skip / LIMIT_RESULTS) + 1} de  ${(data.length / LIMIT_RESULTS) + 1}.`);
+        observation.text(`Foram localizados ${numeral(data.length).format('0,0')} resultados.`);
 
-        const b = data.slice(skip, skip + LIMIT_RESULTS).click();
+        const pages = Math.ceil((data.length / LIMIT_RESULTS) + 1);
+        if (pages > 1) {
+            pagination.show();
+            pagination.text(`Página ${Math.ceil((skip / LIMIT_RESULTS) + 1)} de ${pages}.`);
+        } else {
+            pagination.hide();
+        }
+
+        const b = data.slice(skip, skip + LIMIT_RESULTS);
 
         list.empty();
         for (const item of b) {
-            list.add('fa-item', [item.name, numeral(item.price/100.).format('$ 0,0.00'), item.key]).click(controller.call('price::update'));
+            list.add('fa-edit', [item.name, numeral(item.price/100.).format('$ 0,0.00'), item.key]).click((e) => {
+                e.preventDefault();
+                modal.close().call('price::update', item);
+            });
         }
 
         back[skip <= 0 ? 'hide' :  'show']();
@@ -64,7 +75,7 @@ module.exports = controller => {
                 },
                 [{
                     name: 'persist',
-                    optional: false,
+                    optional: true,
                     type: 'select',
                     placeholder: 'Estado',
                     list: {
@@ -79,7 +90,7 @@ module.exports = controller => {
                     type: 'text',
                     placeholder: 'Valor (R$)',
                     labelText: 'Valor (R$)',
-                    mask: '000.000.000.000.000,00',
+                    mask: '000.000.000.000.000,0000',
                     maskOptions: {
                         reverse: true
                     },
@@ -102,25 +113,31 @@ module.exports = controller => {
         }]
     };
 
-    const register = data => controller.server.call('INSERT INTO \'PRICETABLE\'.\'PRODUCT\'', controller.call('error::ajax', {
+    const register = data => controller.server.promise('INSERT INTO \'PRICETABLE\'.\'PRODUCT\'', {
         dataType: 'json',
         data
-    }));
+    }).catch(e => toastr.error(e.push ? String(e) : 'Não foi possível configurar o preço, tente novamente mais tarde.'));
 
-    controller.registerCall('price::create', () => controller.promise('form::callback', formDescription).then(register).then(data => controller.call('alert', {
-        icon: 'moneyBag',
-        title: `Cobrança adicionada com sucesso para ${data.name} - <small>${data.key}</small>.`,
-        subtitle: 'O preço foi configurado e passar a surtir efeito desde já.',
-    })));
+    controller.registerCall('price::create', () =>
+        controller.promise('form::callback', formDescription, onCancel).then(register)
+            .then(data => controller.call('alert', {
+                icon: 'moneyBag',
+                title: `Cobrança adicionada com sucesso para ${data.name}. - <small>${data.key}</small>`,
+                subtitle: 'O preço foi configurado e passar a surtir efeito desde já.',
+            }))
+            .then(() => controller.call('price::list')));
 
-    controller.registerCall('price::update', (c) => {
-        Promise.resolve(controller.call('form', d => d))
-            .tap(form => form.setValues(c))
-            .tap(form => form.configure(formDescription));
-    });
+    controller.registerCall('price::update', (priceData) =>
+        controller.promise('form::callback', formDescription, priceData, onCancel).then(register)
+            .then(data => controller.call('alert', {
+                icon: 'moneyBag',
+                title: `Cobrança adicionada com sucesso para ${data.name}. - <small>${data.key}</small>`,
+                subtitle: 'O preço foi configurado e passar a surtir efeito desde já.',
+            })).then(() => controller.call('price::list')));
 
     controller.registerCall('price::list', () => controller.serverCommunication.call('SELECT FROM \'PRICETABLE\'.\'PRODUCTS\'',
-        controller.call('error::ajax', { dataType: 'json' })).then(data => {
+        controller.call('error::ajax', { dataType: 'json' })).then((response) => {
+        const data = _.values(response);
         const modal = controller.call('modal');
         modal.title('Gestão de Preços');
         modal.subtitle('Crie e Modifique Preços');
@@ -130,36 +147,42 @@ module.exports = controller => {
 
         const search = form.addInput('price', 'text', 'Preço que você procura');
         const list = form.createList();
+        list.element().addClass('list-price');
 
         let skip = 0;
         let text = null;
 
         const actions = modal.createActions();
-        actions.cancel();
-        actions.add('Criar Preço').click(controller.click('price::create'));
 
-        const results = actions.observation();
+        actions.cancel();
+
+        actions.add('Criar Preço').click((e) => {
+            e.preventDefault();
+            modal.close().call('price::create');
+        });
+
+        const pagination = actions.observation();
         const observation = actions.observation();
 
-        const pageActions = {
+        const drawObject = { modal, list, data, skip: 0, pageActions: {
             next: actions.add('Próxima Página').click(() => {
-                skip += LIMIT_RESULTS;
-                drawList(modal, list, data, skip, pageActions, text);
+                drawObject.skip += LIMIT_RESULTS;
+                drawList(drawObject);
             }).hide(),
 
             back: actions.add('Página Anterior').click(() => {
-                skip -= LIMIT_RESULTS;
-                drawList(modal, list, data, skip, pageActions, text);
+                drawObject.skip -= LIMIT_RESULTS;
+                drawList(drawObject);
             }).hide()
-        };
+        }, text: null, pagination, observation };
 
-        controller.call('instantSearch', search, (query, autocomplete, callback) => {
-            text = query;
+        controller.call('instant::search', search, (query, autocomplete, callback) => {
+            drawObject.text = query;
             skip = 0;
-            drawList(modal, list, data, skip, pageActions, text);
+            drawList(drawObject);
         });
 
-        drawList(modal, list, data, skip, pageActions, text);
+        drawList(drawObject);
     }));
 
 };

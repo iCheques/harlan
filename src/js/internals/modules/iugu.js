@@ -154,7 +154,7 @@ module.exports = controller => {
         });
     };
 
-    const getCreditCard = (callback, {title, subtitle, paragraph, submit} = {}) => {
+    const get::credit::card = (callback, {title, subtitle, paragraph, submit} = {}) => {
         const modal = controller.call('modal');
         modal.title(title || 'Cartão de Crédito');
         modal.subtitle(subtitle || 'Configure seu Cartão de Crédito');
@@ -250,7 +250,7 @@ module.exports = controller => {
         });
     };
 
-    controller.registerCall('getCreditCard', (callback, config) => getCreditCard(callback, config));
+    controller.registerCall('get::credit::card', (callback, config) => get::credit::card(callback, config));
 
     controller.registerBootstrap('iugu::init', callback => {
         let alreadyLoaded = false;
@@ -269,7 +269,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('iugu::requestPaymentToken', (callback, passesErrors, password) => {
+    controller.registerCall('iugu::request::payment::token', (callback, passesErrors, password) => {
         if (!loaded) {
             return iuguError();
         }
@@ -280,7 +280,7 @@ module.exports = controller => {
                 return;
             }
 
-            getCreditCard(creditCard => {
+            get::credit::card(creditCard => {
                 Iugu.createPaymentToken(creditCard, paymentToken => {
                     if (paymentToken.errors) {
                         if (passesErrors) {
@@ -291,7 +291,7 @@ module.exports = controller => {
                                 /* toast error */
                                 toastr.error(errors[i]);
                             }
-                            controller.call('iugu::requestPaymentToken', callback, passesErrors, password);
+                            controller.call('iugu::request::payment::token', callback, passesErrors, password);
                         }
                         return;
                     }

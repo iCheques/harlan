@@ -2,7 +2,7 @@ module.exports = controller => {
 
     var report = null;
 
-    controller.registerTrigger('serverCommunication::websocket::authentication', 'icheques', (data, callback) => {
+    controller.registerTrigger('server::communication::websocket::authentication', 'icheques', (data, callback) => {
         callback();
 
         if (report) {
@@ -35,7 +35,7 @@ module.exports = controller => {
         autocomplete.item('E-mail Marketing (não SPAM)', null, 'Eu recebi um e-mail marketing muito banaca de vocês.').click(fill('E-mail Marketing'));
         autocomplete.item('Um Amigo Apresentou', null, 'Um camarada meu apresentou o iCheques e agora virei fã.').click(fill('Referência de um Amigo'));
 
-        controller.call('instantSearch', samaritano, (search, ac, cb) => {
+        controller.call('instant::search', samaritano, (search, ac, cb) => {
             controller.serverCommunication.call('SELECT FROM \'ICHEQUESAUTHENTICATION\'.\'ReferenceAutocomplete\'', {
                 data: {input: search},
                 success(doc) {

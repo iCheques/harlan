@@ -29,7 +29,7 @@ module.exports = controller => {
     let hasBlockedBead = false;
     let hasProcessingOnes = false;
 
-    controller.registerTrigger('findDatabase::instantSearch', 'antecipate', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'antecipate', (args, callback) => {
         callback();
 
         let [text, modal] = args;
@@ -47,7 +47,7 @@ module.exports = controller => {
             });
     });
 
-    controller.registerCall('icheques::antecipate::checksIsEmpty', () => {
+    controller.registerCall('icheques::antecipate::checks::is::empty', () => {
         let modal = controller.call('modal');
 
         modal.title('Você não selecionou nenhum cheque');
@@ -99,7 +99,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerTrigger('serverCommunication::websocket::authentication', 'icheques::commercialReference', (data, callback) => {
+    controller.registerTrigger('server::communication::websocket::authentication', 'icheques::commercialReference', (data, callback) => {
         commercialReference = data.commercialReference;
         callback();
     });
@@ -138,7 +138,7 @@ module.exports = controller => {
         // Ordenando pelo número do cheque
         checks = _.sortBy(checks, 'number');
 
-        controller.call('billingInformation::need', () => {
+        controller.call('billing::information::need', () => {
             const noAmmountChecks = _.filter(checks, ({ammount}) => !ammount);
 
             if (noAmmountChecks.length) {
@@ -150,7 +150,7 @@ module.exports = controller => {
                     paragraph: 'Tudo que precisar ser editado com o valor será aberto para que você possa repetir esta operação, edite e tente novamente.',
                 }, () => {
                     const q = queue((check, cb) => {
-                        controller.call('icheques::item::setAmmount', check, cb, form => {
+                        controller.call('icheques::item::set::ammount', check, cb, form => {
                             form.actions.add('Parar Edição').click(e => {
                                 form.close(false);
                                 cb('stop', check);
@@ -310,7 +310,7 @@ module.exports = controller => {
             updateList(modal, pageActions, results, pagination, list, checks, PAGINATE_FILTER, skip, text, checksSum);
         });
 
-        controller.call('instantSearch', search, (query, autocomplete, callback) => {
+        controller.call('instant::search', search, (query, autocomplete, callback) => {
             text = query;
             skip = 0;
             updateList(modal, pageActions, results, pagination, list, checks, PAGINATE_FILTER, skip, text, checksSum, callback);
@@ -324,7 +324,7 @@ module.exports = controller => {
             if (checks.length || totalAmmount <= 0) {
                 controller.call('icheques::antecipate::show', data, checks, profile);
             } else {
-                controller.call('icheques::antecipate::checksIsEmpty');
+                controller.call('icheques::antecipate::checks::is::empty');
             }
             modal.close();
         });

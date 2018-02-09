@@ -71,6 +71,6 @@ module.exports = controller => {
 
     navigator.camera = navigator.camera || {};
     navigator.camera.getPicture = navigator.camera.getPicture || getPicture;
-    controller.registerCall('takePicture', getPicture);
+    controller.registerCall('take::picture', getPicture);
 
 };

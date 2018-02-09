@@ -50,7 +50,7 @@ module.exports = controller => {
     const KRONOOS_SEARCH_BY_NAME = $('.kronoos-application .icon');
     const KRONOOS_DEPTH = $('.kronoos-application .depth');
 
-    KRONOOS_SEARCH_BY_NAME.click(controller.click('kronoos::searchByName'));
+    KRONOOS_SEARCH_BY_NAME.click(controller.click('kronoos::search::by::name'));
 
     KRONOOS_DEPTH.addClass(`fa-thermometer-${depth}`);
     KRONOOS_DEPTH.click(e => {
@@ -78,7 +78,7 @@ module.exports = controller => {
     });
 
     var clearAll;
-    controller.registerCall('kronoos::clearAll', clearAll = () => {
+    controller.registerCall('kronoos::clear::all', clearAll = () => {
 
         for (let parser of parsers) {
             parser.kill();
@@ -120,7 +120,7 @@ module.exports = controller => {
         SEARCH_BAR.addClass('full').removeClass('minimize');
     });
 
-    controller.registerTrigger('kronoos::changeResult', (data, callback) => {
+    controller.registerTrigger('kronoos::change::result', (data, callback) => {
         callback();
         if (!brief) return;
         if (!brief.list.is(':empty')) return;
@@ -142,7 +142,7 @@ module.exports = controller => {
         e.preventDefault();
         clearAll();
 
-        controller.call('kronoos::contractAccepted::app', () => {
+        controller.call('kronoos::contract::accepted::app', () => {
 
             let document = INPUT.val();
 
@@ -235,7 +235,7 @@ module.exports = controller => {
         SEARCH_BAR.css('background-image', `url(${photos[Math.floor(Math.random() * photos.length)]})`);
     }, 15000);
 
-    controller.registerCall('kronoos::smartBackground', (cbuscaData) => {
+    controller.registerCall('kronoos::smart::background', (cbuscaData) => {
         photosQueue = async.queue((picture, callback) => {
             if (picture.width < SEARCH_BAR.width() || picture.height < SEARCH_BAR.height()) {
                 callback();
@@ -366,7 +366,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerTrigger('serverCommunication::websocket::email', (opts, cb) => {
+    controller.registerTrigger('server::communication::websocket::email', (opts, cb) => {
         cb();
         /* aqui vamos receber os PDF's do TJSP */
     });

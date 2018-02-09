@@ -3,13 +3,13 @@ module.exports = controller => {
     let xhr;
 
     const onDocumentSuccess = (sectionDocumentGroup, current_id, element) => ret => {
-        const append = controller.call('xmlDocument', ret);
+        const append = controller.call('xml::document', ret);
         append.data('on-remove', element);
         append.data('save-id', current_id);
         sectionDocumentGroup[1].append(append);
     };
 
-    controller.registerTrigger('findDocument::show', 'findDocument::show', (args, callback) => {
+    controller.registerTrigger('find::document::show', 'find::document::show', (args, callback) => {
         callback();
 
         const name = args[0];
@@ -45,7 +45,7 @@ module.exports = controller => {
     });
 
     const items = [];
-    controller.registerTrigger('findDatabase::instantSearch', 'findDocument::instantSearch', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'findDocument::instant::search', (args, callback) => {
         if (xhr && xhr.readyState != 4) {
             xhr.abort();
         }
@@ -76,7 +76,7 @@ module.exports = controller => {
                     items.push(args[1].item(title,
                         subtitle,
                         description, null, null, true).addClass('saved').click(function () {
-                        controller.trigger('findDocument::show', [title, subtitle, $.map(codes, code => $(code).text()), this]);
+                        controller.trigger('find::document::show', [title, subtitle, $.map(codes, code => $(code).text()), this]);
                     }));
                 });
             },
@@ -86,7 +86,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('findDocument::autocomplete', args => {
+    controller.registerCall('find::document::autocomplete', args => {
         const fieldName = args[0];
         const fieldDescription = args[1];
         let searchId;
@@ -136,7 +136,7 @@ module.exports = controller => {
                     }
                 });
 
-            }, controller.confs.instantSearchDelay);
+            }, controller.confs.instant::searchDelay);
         });
 
         return autocomplete;

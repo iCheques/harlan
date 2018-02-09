@@ -38,7 +38,7 @@ harlan.addPlugin(controller => {
         }
     ];
 
-    controller.registerTrigger('findDatabase::instantSearch', 'inboundMarketing', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'inbound::marketing', (args, callback) => {
         callback();
         let [argument, autocomplete] = args;
         if (!/inbound/i.test(argument)) return;
@@ -46,15 +46,15 @@ harlan.addPlugin(controller => {
             'Gestão de Mensagens de E-mail Marketing',
             'Adicionar, remover ou alterar e-mails marketing enviados a leads e clientes.')
             .addClass('admin-company admin-new-company')
-            .click(controller.click('inboundMarketing'));
+            .click(controller.click('inbound::marketing'));
     });
 
     let appendList = (list, data) => {
         let item = list.add('fa-envelope-open-o', [data.trigger, data.name, data.description]);
-        item.click(controller.click('inboundMarketing::open', list, data, item));
+        item.click(controller.click('inbound::marketing::open', list, data, item));
     };
 
-    controller.registerCall('inboundMarketing::open', (list, data, item) => controller.call('form', data => {
+    controller.registerCall('inbound::marketing::open', (list, data, item) => controller.call('form', data => {
         controller.server.call(updateInbound, controller.call('error::ajax', {
             data,
             success: data => appendList(list, data)
@@ -80,7 +80,7 @@ harlan.addPlugin(controller => {
         }]
     }).setValues(data));
 
-    controller.registerCall('inboundMarketing', () => {
+    controller.registerCall('inbound::marketing', () => {
         let modal = controller.call('modal');
         modal.gamification('checkPoint');
         modal.title('Administrador de Inbound Marketing');
@@ -93,11 +93,11 @@ harlan.addPlugin(controller => {
         }));
 
         let actions = modal.createActions();
-        actions.add('Criar e-mail').click(controller.click('inboundMarketing::create', list));
+        actions.add('Criar e-mail').click(controller.click('inbound::marketing::create', list));
         actions.cancel();
     });
 
-    controller.registerCall('inboundMarketing::create', list => controller.call('form', data => {
+    controller.registerCall('inbound::marketing::create', list => controller.call('form', data => {
         controller.server.call(createInbound, controller.call('error::ajax', {
             dataType: 'json',
             data,

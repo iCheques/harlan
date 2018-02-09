@@ -14,7 +14,7 @@ var CMC7_MASK = new StringMask('00000000 0000000000 000000000000');
 
 module.exports = controller => {
 
-    controller.registerTrigger('findDatabase::instantSearch', 'icheques::search::document', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'icheques::search::document', (args, callback) => {
         var expr = squel.expr();
         var format;
 
@@ -30,7 +30,7 @@ module.exports = controller => {
         }
 
         var query = squel.select().from('ICHEQUES_CHECKS').where(expr).toString();
-        var databaseResult = controller.call('icheques::resultDatabase', controller.database.exec(query)[0]);
+        var databaseResult = controller.call('icheques::result::database', controller.database.exec(query)[0]);
 
         if (!databaseResult.values.length) {
             callback();
@@ -47,12 +47,12 @@ module.exports = controller => {
         callback();
     });
 
-    controller.registerCall('icheques::resultClick', result => e => {
+    controller.registerCall('icheques::result::click', result => e => {
         e.preventDefault();
         controller.call('icheques::show', [result], null, null, true);
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'icheques::search::cmc7', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'icheques::search::cmc7', (args, callback) => {
         let [search, autocomplete] = args;
         callback();
 
@@ -71,7 +71,7 @@ module.exports = controller => {
             });
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'icheques::search', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'icheques::search', (args, callback) => {
         var searchString = sprintf('%s%%', args[0]);
 
         var query = squel.select()
@@ -88,14 +88,14 @@ module.exports = controller => {
                     .and('OBSERVATION LIKE ?', sprintf('%%%s%%', args[0]))
                 )).toString();
 
-        var databaseResult = controller.call('icheques::resultDatabase', controller.database.exec(query)[0]);
+        var databaseResult = controller.call('icheques::result::database', controller.database.exec(query)[0]);
 
         for (var i in databaseResult.values) {
             args[1].item('iCheques', 'Relatório Geral de Cheques',
                 sprintf('Documento: %s Cheque: %s', databaseResult.values[i].cpf || databaseResult.values[i].cnpj,
                     CMC7_MASK.apply(databaseResult.values[i].cmc)))
                 .addClass('icheque')
-                .click(controller.call('icheques::resultClick', databaseResult.values[i]));
+                .click(controller.call('icheques::result::click', databaseResult.values[i]));
         }
 
         callback();

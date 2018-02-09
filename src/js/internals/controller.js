@@ -3,6 +3,7 @@ import assert from 'assert';
 import url from 'url';
 import _ from 'underscore';
 import Promise from 'bluebird';
+import pad from 'array-pad';
 
 import Sync from './library/sync';
 
@@ -107,13 +108,7 @@ module.exports = function() {
         return this;
     };
 
-    this.listCalls = regex => {
-        regex = regex || /.*/;
-        for (let key in calls) {
-            if (regex.test(key)) {
-            }
-        }
-    };
+    this.listCalls = regex => calls.filter((v, title) => (regex || /.*/).test(title));
 
     this.reference = name => (...parameters) => this.call(name, ...parameters);
 
@@ -135,7 +130,17 @@ module.exports = function() {
         return data;
     };
 
-    this.promise = Promise.promisify((...d) => this.call(...d));
+    /* notice - Harlan invert promise (data, err) */
+    this.promise = Promise.promisify((...d) => {
+        const callback = d.pop();
+        d.push((...args) => {
+            let cbArgs = pad(args, 2, null);
+            cbArgs.reverse();
+
+            return callback(...cbArgs);
+        });
+        this.call(...d);
+    });
 
     this.run = (cb) => {
         const calls = bootstrapCalls; /* prevent race cond */
@@ -168,5 +173,9 @@ module.exports = function() {
         this.sync.register(this.confs.syncInterval); /* register sync */
     });
 
-    return this;
+    return new Proxy(this, {
+        get: function (target, name) {
+            return target.reference(name.replace(/[A-Z]/, (x) => `::${x.toLowerCase()}`));
+        }
+    });
 };

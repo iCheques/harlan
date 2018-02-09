@@ -4,7 +4,7 @@ let loaderRegister = 0;
 let loaderUnregister = null;
 
 module.exports = controller => {
-    controller.unregisterTriggers('serverCommunication::websocket::sendMessage');
+    controller.unregisterTriggers('server::communication::websocket::send::message');
     controller.unregisterTrigger('authentication::authenticated', 'inbox');
 
     controller.confs.subaccount.icons = ['fa-key', 'fa-folder-open'];
@@ -21,7 +21,7 @@ module.exports = controller => {
     /* Cadastrar no Login */
     $('.login .actions').append($('<li />').append($('<a />').text('Cadastrar').click(e => {
         e.preventDefault();
-        controller.call('icheques::createAccount', data => {
+        controller.call('icheques::create::account', data => {
             const modal = controller.call('modal');
             modal.title('Você completou sou cadastro no iCheques');
             modal.subtitle('Parabéns! Sua conta foi criada com sucesso.');
@@ -87,7 +87,7 @@ module.exports = controller => {
 
         const element = $(this);
 
-        controller.call('icheques::createAccount', data => {
+        controller.call('icheques::create::account', data => {
             const modal = controller.call('modal');
             modal.title('Você completou sou cadastro no iCheques');
             modal.subtitle('Parabéns! Sua conta foi criada com sucesso.');

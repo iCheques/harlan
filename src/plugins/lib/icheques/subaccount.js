@@ -2,7 +2,7 @@ module.exports = controller => {
 
     controller.endpoint.subaccountCreate = 'INSERT INTO \'IChequesProfile\'.\'SUBACCOUNT\'';
 
-    controller.call('subaccount::formDescription', {
+    controller.call('subaccount::form::description', {
         title: 'Criação de Subconta',
         subtitle: 'Preencha os dados abaixo.',
         paragraph: 'As subchaves possibilitam você trabalhar em um cadastro independente.',

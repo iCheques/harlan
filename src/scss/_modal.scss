@@ -83,6 +83,7 @@
     //     }
     // }
     .actions {
+      clear: both;
         text-align: center;
         margin-top: 10px;
         &:last-child li {
@@ -95,7 +96,7 @@
     }
     form ul.list {
         display: table;
-        table-layout: fixed;
+        table-layout: auto;
         width: 100%;
         background-color: darken(#fff, 1%);
         font-size: 15px;
@@ -133,7 +134,7 @@
             & > * {
                 display: table-cell;
                 vertical-align: middle;
-                word-break: normal;
+                word-break: break-word;
                 overflow: hidden;
             }
         }

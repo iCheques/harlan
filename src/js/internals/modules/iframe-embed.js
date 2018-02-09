@@ -13,7 +13,7 @@ module.exports = controller => {
      * Quando o módulo é colocado
      * embedded a caixa de consulta deve desaparecer
      */
-    controller.registerCall('iframeEmbed', () => {
+    controller.registerCall('iframe::embed', () => {
         if (window !== window.top) {
             return true;
         }
@@ -23,7 +23,7 @@ module.exports = controller => {
     /**
      * Abre um iFrame
      */
-    controller.registerCall('iframeEmbed::open', args => {
+    controller.registerCall('iframe::embed::open', args => {
         const location = args[0];
         let title = args[1];
 
@@ -41,9 +41,9 @@ module.exports = controller => {
     /**
      * Quando o projeto se torna whitelabel
      */
-    controller.registerBootstrap('iframeEmbed::whitelabel', callback => {
+    controller.registerBootstrap('iframe::embed::whitelabel', callback => {
         callback();
-        if (!controller.call('iframeEmbed') && controller.query.whitelabel) {
+        if (!controller.call('iframe::embed') && controller.query.whitelabel) {
             $('#scroll-down').hide();
         }
     });
@@ -60,7 +60,7 @@ module.exports = controller => {
      * Abre um iFrame
      * @param {callback} callback Callback fnc
      */
-    controller.registerBootstrap('iframeEmbed::open', callback => {
+    controller.registerBootstrap('iframe::embed::open', callback => {
         callback();
 
         $(window).resize(onResize);

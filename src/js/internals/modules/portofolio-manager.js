@@ -2,7 +2,7 @@ export default controller => {
 
     let webSocket;
 
-    controller.registerCall('portofolioManager::init', () => {
+    controller.registerCall('portofolio::manager::init', () => {
         webSocket = controller.serverCommunication.webSocket();
         controller.interface.helpers.activeWindow('.portofolio');
     });

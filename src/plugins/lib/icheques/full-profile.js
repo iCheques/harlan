@@ -33,7 +33,7 @@ module.exports = controller => {
         });
 
         let lastData = {};
-        controller.call('billingInformation::force', () => {
+        controller.call('billing::information::force', () => {
             controller.server.call('SELECT FROM \'ICHEQUESPROFILE\'.\'PROFILE\'', {
                 dataType: 'json',
                 success: ret => {

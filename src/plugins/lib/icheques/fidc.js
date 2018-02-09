@@ -170,7 +170,7 @@ module.exports = controller => {
                         printWindow.print();
                     }],
                     [!value.approved ? 'fa-check' : 'fa-edit', !value.approved ? 'Aceitar' : 'Editar', () => {
-                        controller.confirm({}, () => controller.call('icheques::fidc::allowedCompany::edit', value, t));
+                        controller.confirm({}, () => controller.call('icheques::fidc::allowed::company::edit', value, t));
                     }],
                     ['fa-times', 'Recusar', () => {
                         controller.confirm({}, () => {
@@ -208,11 +208,11 @@ module.exports = controller => {
                 showing[value.company.username] = t;
             };
 
-            controller.registerTrigger('serverCommunication::websocket::ichequesFIDCPermissionUpdate', 'fidc', (data, cb) => {
+            controller.registerTrigger('server::communication::websocket::icheques::fidc::permission::update', 'fidc', (data, cb) => {
                 cb();
                 show(data);
             });
-            controller.registerTrigger('serverCommunication::websocket::ichequesFIDCPermission', 'fidc', (data, cb) => {
+            controller.registerTrigger('server::communication::websocket::icheques::fidc::permission', 'fidc', (data, cb) => {
                 cb();
                 show(data);
             });
@@ -295,7 +295,7 @@ module.exports = controller => {
                     }
                 })));
 
-            controller.registerTrigger('serverCommunication::websocket::ichequesFIDCOperation', 'open', (args, call) => {
+            controller.registerTrigger('server::communication::websocket::icheques::fidc::operation', 'open', (args, call) => {
                 call();
                 args.created = moment.unix(args.created);
                 controller.call('icheques::fidc::operation::decision', args);
@@ -316,7 +316,7 @@ module.exports = controller => {
         globalReport = report.element();
     });
 
-    controller.registerTrigger('serverCommunication::websocket::ichequeFIDC', 'update', (data, cb) => {
+    controller.registerTrigger('server::communication::websocket::icheque::fidc', 'update', (data, cb) => {
         cb();
         data.created = moment.unix(data.created);
         if (data.expire) {
@@ -326,7 +326,7 @@ module.exports = controller => {
         controller.call('icheques::fidc::status', data);
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'icheques::fidc::configure', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'icheques::fidc::configure', (args, callback) => {
         callback();
 
         const [text, autocomplete] = args;
@@ -345,7 +345,7 @@ module.exports = controller => {
     });
 
     controller.registerCall('fidc::configure', () => {
-        controller.call('billingInformation::need', () => {
+        controller.call('billing::information::need', () => {
             const modal = controller.call('modal');
             const gamification = modal.gamification('moneyBag');
             let logoImage = null;
@@ -429,7 +429,7 @@ module.exports = controller => {
                     paragraph: 'o contrato de serviço estão disponíveis <a target=\'_blank\' href=\'/legal/icheques/MINUTA___CONTRATO__ANTECIPADORA_DE_CHEQUES.pdf\' title=\'contrato de serviço\'>neste link</a>, após a leitura clique em confirmar para acessar sua conta. O aceite é fundamental para que possamos disponibilizar todos os nossos serviços e você assim desfrutar de todos os benefícios iCheques.',
                     confirmText: 'Aceitar'
                 }, () => {
-                    controller.call('billingInformation::need', () => {
+                    controller.call('billing::information::need', () => {
                         controller.server.call('INSERT INTO \'ICHEQUESFIDC\'.\'COMPANY\'', controller.call('error::ajax', controller.call('loader::ajax', {
                             method: 'POST',
                             data: {
@@ -522,7 +522,7 @@ module.exports = controller => {
             return report;
         });
 
-        controller.registerTrigger('serverCommunication::websocket::ichequeFIDC::admin', 'admin', (data, cb) => {
+        controller.registerTrigger('server::communication::websocket::icheque::fidc::admin', 'admin', (data, cb) => {
             cb();
             data.name = data.company.nome || data.company.responsavel;
             controller.call('icheques::fidc::enable', data);
@@ -770,7 +770,7 @@ module.exports = controller => {
         $('.app-content').append(report.element());
     });
 
-    controller.registerCall('icheques::fidc::allowedCompany::edit', (value, t) => {
+    controller.registerCall('icheques::fidc::allowed::company::edit', (value, t) => {
         const form = controller.call('form', formData => {
             if (!formData.processingOnes) delete formData.processingOnes;
             if (!formData.blockedBead) delete formData.blockedBead;

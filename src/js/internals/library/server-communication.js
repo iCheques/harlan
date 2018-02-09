@@ -4,20 +4,15 @@
  */
 
 import SHA256 from 'crypto-js/sha256';
+import _ from 'underscore';
+
+const BipbopError = Error.extend('BipbopError', 0);
 
 export default function (controller) {
 
-    if (controller.confs.websocketAddress)
-        bipbop.websocketAddress = controller.confs.websocketAddress;
-
-    if (controller.confs.webserviceAddress)
-        bipbop.webserviceAddress = controller.confs.webserviceAddress;
-
-    if (controller.query.webserviceAddress)
-        bipbop.webserviceAddress = controller.query.webserviceAddress;
-
-    if (controller.query.websocketAddress)
-        bipbop.websocketAddress = controller.query.websocketAddress;
+    Object.assign(bipbop, 
+        _.pick(controller.confs, 'websocketAddress', 'webserviceAddress'),
+        _.pick(controller.query, 'websocketAddress', 'webserviceAddress'));
 
     /**
      * Api Key
@@ -34,7 +29,7 @@ export default function (controller) {
      * @returns {undefined}
      */
     const defaultCallback = (data, event) => {
-        controller.trigger('serverCommunication::websocket::event', event);
+        controller.trigger('server::communication::websocket::event', event);
         if (data.method) {
             controller.trigger(`serverCommunication::websocket::${data.method}`, data.data);
         }
@@ -42,7 +37,7 @@ export default function (controller) {
 
     /* BIPBOP WebSocket */
     this.webSocket = bipbop.webSocket(bipbopApiKey, defaultCallback, ws => {
-        controller.trigger('serverCommunication::websocket::open', ws);
+        controller.trigger('server::communication::websocket::open', ws);
     });
 
     this.freeKey = () => bipbopApiKey === BIPBOP_FREE;
@@ -63,12 +58,32 @@ export default function (controller) {
     /* Retorna o XHR da requisição AJAX */
     this.call = (query, configuration) => {
         let conf = Object.assign({method: 'POST'}, configuration);
-        controller.trigger('serverCommunication::call', [query, conf]);
-        return $.bipbop(query, bipbopApiKey, conf).always((...args) => controller.trigger('serverCommunication::responseComplete', [query, configuration, args]));
+        controller.trigger('server::communication::call', [query, conf]);
+        return $.bipbop(query, bipbopApiKey, conf)
+            .always((...args) => controller.trigger('server::communication::response::complete', [query, configuration, args]));
     };
+
+    this.promise = (query, configuration) => Promise.resolve()
+        .then(() => this.call(query, controller.call('error::ajax', Object.assign(configuration, {
+            error() {
+                throw new BipbopError('Não foi possível processar a sua requisição');
+            },
+            bipbopError(exceptionType, exceptionMessage, exceptionCode, push) {
+                throw new BipbopError.extend(`BipbopError${exceptionType}`, exceptionCode)({
+                    exceptionMessage,
+                    exceptionCode,
+                    push,
+                    toString() {
+                        return exceptionMessage;
+                    }
+                });
+            }
+        }), false)));
 
     /* ALIAS */
     this.request = this.call;
 
     return this;
 };
+
+export { BipbopError };

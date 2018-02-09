@@ -9,7 +9,7 @@ harlan.addPlugin(controller => {
     controller.interface.helpers.logo.empty().append($('<div />').addClass('logo-projuris'));
     require('./styles/projuris.js');
 
-    controller.registerCall('loader::catchElement', function() {
+    controller.registerCall('loader::catch::element', function() {
         return [];
     });
 
@@ -56,7 +56,7 @@ harlan.addPlugin(controller => {
                 radial.element.addClass('attention animated flash');
             }
 
-            var moreResults = controller.call('moreResults', MAX_RESULTS).callback(callback => {
+            var more::results = controller.call('more::results', MAX_RESULTS).callback(callback => {
                 skip += MAX_RESULTS;
                 controller.serverCommunication.call('SELECT FROM \'PUSHJURISTEK\'.\'REPORT\'',
                     controller.call('loader::ajax', controller.call('error::ajax', {
@@ -67,14 +67,14 @@ harlan.addPlugin(controller => {
                         success: response => {
                             var items = [];
                             $('BPQL > body push', response).each((idx, node) => {
-                                items.push(controller.call('projuris::parseResult', node));
+                                items.push(controller.call('projuris::parse::result', node));
                             });
                             callback(items);
                         }
                     })));
             });
 
-            moreResults.element().insertAfter(result.element());
+            more::results.element().insertAfter(result.element());
 
             let pushs = jdocument.find('BPQL > body push');
             if (pushs.length) {
@@ -82,15 +82,15 @@ harlan.addPlugin(controller => {
                     '1 processo' : numeral(usedCredits).format('0,') + ' processos');
 
                 pushs.each((idx, node) => {
-                    moreResults.append(controller.call('projuris::parseResult', node));
+                    more::results.append(controller.call('projuris::parse::result', node));
                 });
             }
 
-            moreResults.show();
+            more::results.show();
         }
     }));
 
-    controller.registerCall('projuris::parseResult', node => {
+    controller.registerCall('projuris::parse::result', node => {
         var jnode = $(node);
         var resultNode = controller.call('result');
         resultNode.addItem('Título', jnode.attr('label'));

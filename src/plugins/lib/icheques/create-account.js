@@ -10,7 +10,7 @@ import sprintf from 'sprintf';
 module.exports = controller => {
 
     const referenceAutocomplete = input => {
-        controller.call('instantSearch', input, (value, autocomplete, callback) => {
+        controller.call('instant::search', input, (value, autocomplete, callback) => {
             controller.serverCommunication.call('SELECT FROM \'ICHEQUES\'.\'REFERENCEAUTOCOMPLETE\'', {
                 data: {
                     input: value
@@ -32,7 +32,7 @@ module.exports = controller => {
         });
     };
 
-    controller.registerCall('icheques::createAccount::1', (data, callback) => {
+    controller.registerCall('icheques::create::account::one', (data, callback) => {
         const modal = controller.call('modal');
         modal.title('Crie sua conta iCheques');
         modal.subtitle('Informe os dados abaixo para que possamos continuar');
@@ -158,7 +158,7 @@ module.exports = controller => {
         actions.add('Voltar').click(e => {
             e.preventDefault();
             modal.close();
-            controller.call('icheques::createAccount', callback);
+            controller.call('icheques::create::account', callback);
         });
 
         actions.add('Cancelar').click(e => {
@@ -167,7 +167,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('icheques::createAccount', (callback, contract, parameters = {}) => {
+    controller.registerCall('icheques::create::account', (callback, contract, parameters = {}) => {
         const modal = controller.call('modal');
 
         modal.title('Crie sua conta iCheques');
@@ -229,7 +229,7 @@ module.exports = controller => {
                     },
                     success: () => {
                         modal.close();
-                        controller.call('icheques::createAccount::1', Object.assign(parameters, {
+                        controller.call('icheques::create::account::one', Object.assign(parameters, {
                             username: email,
                             email,
                             password
@@ -276,7 +276,7 @@ module.exports = controller => {
 
         actions.add('Criar Conta').click(e => {
             e.preventDefault();
-            controller.call('icheques::createAccount', () => {
+            controller.call('icheques::create::account', () => {
                 controller.call('icheques::login', callback);
             });
             modal.close();
@@ -284,7 +284,7 @@ module.exports = controller => {
 
         actions.add('Esqueci minha Senha').click(e => {
             e.preventDefault();
-            controller.call('forgotPassword', () => {
+            controller.call('forgot::password', () => {
                 controller.call('icheques::login', callback);
             });
             modal.close();

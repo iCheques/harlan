@@ -7,7 +7,7 @@ let company = null;
 
 module.exports = controller => {
 
-    controller.registerTrigger('serverCommunication::websocket::authentication', 'icheques::ban::register', (currentCompany, callback) => {
+    controller.registerTrigger('server::communication::websocket::authentication', 'icheques::ban::register', (currentCompany, callback) => {
         callback();
         company = currentCompany;
     });

@@ -6,7 +6,7 @@ import buildURL from 'build-url';
 
 module.exports = controller => {
 
-    controller.endpoint.accountOverview = 'SELECT FROM \'BIPBOPCOMPANYSREPORT\'.\'REPORT\'';
+    controller.endpoint.account::overview = 'SELECT FROM \'BIPBOPCOMPANYSREPORT\'.\'REPORT\'';
 
     const colorPattern = {
         querys: Color('#ff6a33'),
@@ -15,7 +15,7 @@ module.exports = controller => {
         pushCreated: Color('#33c8ff'),
     };
 
-    controller.registerCall('accountOverview::dataset', responses => {
+    controller.registerCall('account::overview::dataset', responses => {
         const datasets = {};
         const labels = _.map(responses, item => {
             $(item).children('report').each((idx, value) => {
@@ -54,7 +54,7 @@ module.exports = controller => {
         };
     });
 
-    controller.registerCall('accountOverview::filter', (username, report, callback, closeable = false) => {
+    controller.registerCall('account::overview::filter', (username, report, callback, closeable = false) => {
         const modal = controller.call('modal');
         modal.title('Filtros do Relatório');
         modal.subtitle('Modifique o Relatório');
@@ -73,7 +73,7 @@ module.exports = controller => {
         form.element().submit(e => {
             e.preventDefault();
             modal.close();
-            controller.call('accountOverview', callback, report.element(),
+            controller.call('account::overview', callback, report.element(),
                 username,
                 /^\d{2}\/\d{2}\/\d{4}$/.test(dateStart.val()) ? dateStart.val() : null,
                 /^\d{2}\/\d{2}\/\d{4}$/.test(dateEnd.val()) ? dateEnd.val() : null,
@@ -83,12 +83,12 @@ module.exports = controller => {
         modal.createActions().cancel();
     });
 
-    controller.registerCall('accountOverview::download', (ajaxQuery, labels) => {
+    controller.registerCall('account::overview::download', (ajaxQuery, labels) => {
         let download = report => e => {
             e.preventDefault();
             window.location.assign(buildURL(bipbop.webserviceAddress, {
                 queryParams: _.pick(Object.assign({}, ajaxQuery, {
-                    q: controller.endpoint.accountOverview,
+                    q: controller.endpoint.account::overview,
                     download: 'true',
                     apiKey: controller.server.apiKey(),
                     report
@@ -110,7 +110,7 @@ module.exports = controller => {
         modal.createActions().cancel();
     });
 
-    controller.registerCall('accountOverview', (
+    controller.registerCall('account::overview', (
         callback,
         element,
         username,
@@ -128,12 +128,12 @@ module.exports = controller => {
             dateEnd: end,
             contractType
         };
-        controller.serverCommunication.call(controller.endpoint.accountOverview,
+        controller.serverCommunication.call(controller.endpoint.account::overview,
             controller.call('loader::ajax', controller.call('error::ajax', {
                 cache: true,
                 data: ajaxQuery,
                 success(response) {
-                    const dataset = controller.call('accountOverview::dataset', $('BPQL > body > node', response));
+                    const dataset = controller.call('account::overview::dataset', $('BPQL > body > node', response));
                     const report = controller.call('report',
                         'Relatório de Consumo',
                         'Visualize informações sobre o uso da API',
@@ -151,11 +151,11 @@ module.exports = controller => {
                     }
 
                     report.action('fa-cloud-download', () => {
-                        controller.call('accountOverview::download', ajaxQuery, dataset.datasets);
+                        controller.call('account::overview::download', ajaxQuery, dataset.datasets);
                     });
 
                     report.action('fa-filter', () => {
-                        controller.call('accountOverview::filter', username, report, callback, closeable);
+                        controller.call('account::overview::filter', username, report, callback, closeable);
                     });
                     callback(report);
 
@@ -170,14 +170,14 @@ module.exports = controller => {
             })));
     });
 
-    controller.registerTrigger('serverCommunication::websocket::authentication', 'accountOverview', ({adminOf, contrato}, cb) => {
+    controller.registerTrigger('server::communication::websocket::authentication', 'account::overview', ({adminOf, contrato}, cb) => {
         cb();
         if ((adminOf && adminOf.length) || contrato[4] === 'free') {
             return;
         }
 
-        controller.unregisterTrigger('serverCommunication::websocket::authentication', 'accountOverview');
-        controller.call('accountOverview', graph => {
+        controller.unregisterTrigger('server::communication::websocket::authentication', 'account::overview');
+        controller.call('account::overview', graph => {
             graph.gamification('levelUp');
         });
     });

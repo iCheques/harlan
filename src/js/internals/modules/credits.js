@@ -103,12 +103,12 @@ module.exports = controller =>  {
         callback();
     });
 
-    controller.registerTrigger('serverCommunication::websocket::authentication', 'credits', (data, callback) =>  {
+    controller.registerTrigger('server::communication::websocket::authentication', 'credits', (data, callback) =>  {
         changeCredits(data && data.credits ? data.credits : 0);
         callback();
     });
 
-    controller.registerTrigger('serverCommunication::websocket::credits', 'credits', (data, callback) =>  {
+    controller.registerTrigger('server::communication::websocket::credits', 'credits', (data, callback) =>  {
         changeCredits(data && data.credits ? data.credits : 0);
         callback();
     });
@@ -122,14 +122,14 @@ module.exports = controller =>  {
         form.element().submit(e =>  {
             e.preventDefault();
             modal.close();
-            controller.call('credits::charge::creditCard', value, quantity, description, callback);
+            controller.call('credits::charge::credit::card', value, quantity, description, callback);
         });
 
         form.addSubmit('creditcard', 'Cartão de Crédito');
         form.addSubmit('bankslip', 'Boleto Bancário').click(e =>  {
             e.preventDefault();
             modal.close();
-            controller.call('credits::charge::bankSlip', value, quantity, description);
+            controller.call('credits::charge::bank::slip', value, quantity, description);
         });
 
         modal.createActions().add(controller.i18n.system.cancel()).click(e =>  {
@@ -138,7 +138,7 @@ module.exports = controller =>  {
         });
     });
 
-    controller.registerCall('credits::charge::bankSlip', (value, quantity, description) =>  {
+    controller.registerCall('credits::charge::bank::slip', (value, quantity, description) =>  {
         const unregister = $.bipbopLoader.register();
         controller.serverCommunication.call('SELECT FROM \'HarlanCredits\'.\'PurchaseBankSlip\'', controller.call('error::ajax', {
             data: {
@@ -160,12 +160,12 @@ module.exports = controller =>  {
         }));
     });
 
-    controller.registerCall('credits::charge::creditCard', (value, quantity, description, callback) =>  {
+    controller.registerCall('credits::charge::credit::card', (value, quantity, description, callback) =>  {
         controller.call('authentication::need', () => {
             callback = callback || defaultChargeCallback;
             quantity = quantity || 1;
 
-            controller.call('iugu::requestPaymentToken', ({id}) => {
+            controller.call('iugu::request::payment::token', ({id}) => {
                 controller.serverCommunication.call('SELECT FROM \'HARLANCREDITS\'.\'PURCHASE\'',
                     controller.call('error::ajax', controller.call('loader::ajax', {
                         data: {
@@ -184,7 +184,7 @@ module.exports = controller =>  {
 
     controller.registerCall('credits::buy', (minValue, callback) =>  {
         controller.call('authentication::need', () => {
-            controller.call('billingInformation::need', () => {
+            controller.call('billing::information::need', () => {
                 minValue = minValue || 0;
                 const modal = controller.call('modal');
 

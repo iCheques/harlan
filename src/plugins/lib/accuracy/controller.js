@@ -102,7 +102,7 @@ module.exports = controller => {
                     href: '#'
                 }).text('Cadastrar Loja').click(e => {
                     e.preventDefault();
-                    controller.call('accuracy::createStore');
+                    controller.call('accuracy::create::store');
                 })));
             });
 

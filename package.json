@@ -1,25 +1,19 @@
 {
   "name": "Harlan",
-  "version": "1.0.0",
   "description": "Harlan é o sistema modular que permite você automatizar toda sua governança cadastral da nuvem.",
-  "main": "gulpfile.js",
-  "scripts": {
-    "serve": "cd Server/web && python -m SimpleHTTPServer",
-    "build": "gulp build",
-    "clean": "git clean -dfx"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@bitbucket.org:bipbop/harlan.git"
-  },
+  "version": "1.0.0",
   "author": {
     "name": "BIPBOP",
-    "email": "desenvolvimento@bipbop.com.br",
-    "url": "http://www.bipbop.com.br/"
+    "email": "tech@bipbop.com.br",
+    "url": "https://www.bipbop.com.br/"
   },
-  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bipbop/harlan/issues",
+    "email": "tech@bipbop.com.br"
+  },
   "dependencies": {
     "apk-signer": "^0.1.0",
+    "array-pad": "0.0.1",
     "array-to-sentence": "^1.1.0",
     "async": "^2.6.0",
     "babel-core": "^6.26.0",
@@ -81,6 +75,7 @@
     "genderize": "^1.5.2",
     "geolib": "^2.0.24",
     "glob": "^7.1.2",
+    "google-closure-compiler-js": "^20180204.0.0",
     "google-maps": "^3.2.1",
     "greenlet": "^0.1.0",
     "gulp": "^3.9.1",
@@ -117,7 +112,7 @@
     "gulp-sass": "^3.1.0",
     "gulp-shell": "^0.6.5",
     "gulp-size": "^3.0.0",
-    "gulp-sourcemaps": "^2.6.3",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-strip-debug": "^2.0.0",
     "gulp-task-list": "0.0.2",
     "gulp-texttojs": "^1.0.3",
@@ -177,6 +172,7 @@
     "stream-http": "^2.7.2",
     "streamqueue": "^1.1.2",
     "string-mask": "^0.3.0",
+    "text-sound-similarity": "^1.0.2",
     "to-arraybuffer": "^1.0.1",
     "to-markdown": "^3.1.1",
     "true-html-escape": "1.0.0",
@@ -191,6 +187,7 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vivus": "^0.4.3",
+    "watchify": "^3.10.0",
     "web3": "^1.0.0-beta2",
     "webworker-threads": "^0.7.13",
     "weevil": "^0.1.2",
@@ -200,5 +197,23 @@
     "xlsx-populate": "^1.11.0",
     "xml-query": "^1.4.0",
     "xml-reader": "^2.4.3"
+  },
+  "homepage": "https://www.harlan.com.br/",
+  "keywords": [
+    "api",
+    "crm",
+    "erp",
+    "frontend"
+  ],
+  "license": "MIT",
+  "main": "gulpfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:bipbop/harlan.git"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "clean": "git clean -dfx",
+    "serve": "cd Server/web && python -m SimpleHTTPServer"
   }
 }

@@ -89,5 +89,5 @@ const MoreResults = function (maxItems) {
 };
 
 module.exports = controller => {
-    controller.registerCall('moreResults', (maxItems) =>  new MoreResults(maxItems));
+    controller.registerCall('more::results', (maxItems) =>  new MoreResults(maxItems));
 };

@@ -5,7 +5,7 @@ import {CNPJ} from 'cpf_cnpj';
 
 module.exports = controller => {
 
-    controller.registerCall('admin::createAccount::formDescription', () => ({
+    controller.registerCall('admin::create::account::form::description', () => ({
         title: 'Criação de Conta',
         subtitle: 'Preencha os dados abaixo.',
         gamification: 'magicWand',
@@ -193,7 +193,7 @@ module.exports = controller => {
                     type: 'text',
                     placeholder: 'Contrato (R$)',
                     labelText: 'Valor do Contrato (R$)',
-                    mask: '000.000.000.000.000,00',
+                    mask: '000.000.000.000.000,0000',
                     optional: false,
                     maskOptions: {
                         reverse: true
@@ -204,7 +204,7 @@ module.exports = controller => {
                     type: 'text',
                     placeholder: 'Consulta Excedente (R$)',
                     labelText: 'Consulta Excedente (R$)',
-                    mask: '000.000.000.000.000,00',
+                    mask: '000.000.000.000.000,0000',
                     optional: false,
                     maskOptions: {
                         reverse: true
@@ -216,7 +216,7 @@ module.exports = controller => {
                     type: 'select',
                     labelText: 'Tipo de Contrato',
                     optional: false,
-                    list: controller.call('admin::roleTypes')
+                    list: controller.call('admin::role::types')
                 }, {
                     name: 'roleQuerys',
                     type: 'text',
@@ -292,7 +292,7 @@ module.exports = controller => {
         }]
     }));
 
-    controller.registerCall('admin::createCompany', description => {
+    controller.registerCall('admin::create::company', description => {
         const form = controller.call('form', opts => {
             controller.serverCommunication.call(controller.endpoint.createCompany,
                 controller.call('error::ajax', controller.call('loader::ajax', {
@@ -308,12 +308,12 @@ module.exports = controller => {
                         modal.createActions().add('Criar outra Conta').click(e => {
                             e.preventDefault();
                             modal.close();
-                            controller.call('admin::createCompany');
+                            controller.call('admin::create::company');
                         });
                     }
                 })));
         });
-        form.configure(description || controller.call('admin::createAccount::formDescription'));
+        form.configure(description || controller.call('admin::create::account::form::description'));
     });
 
 };

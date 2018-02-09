@@ -17,7 +17,7 @@ module.exports = controller => {
                     paragraph: 'Registre suas informações de bilhetagem e tente novamente.',
                     confirmText: 'Informações de Bilhetagem'
                 }, () => {
-                    controller.call('billingInformation::force');
+                    controller.call('billing::information::force');
                 });
                 return;
             case e.ExceptionDatabase.insufficientFunds:

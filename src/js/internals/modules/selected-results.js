@@ -1,5 +1,5 @@
 module.exports = controller => {
-    controller.registerCall('selectedResults', () => {
+    controller.registerCall('selected::results', () => {
         
         const result = $('.result');
         if (result.length === 1) {

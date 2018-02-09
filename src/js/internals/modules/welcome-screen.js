@@ -10,7 +10,7 @@ module.exports = controller => {
         const form = modal.createForm();
         form.element().submit(e => {
             e.preventDefault();
-            controller.call('bipbop::createAccount');
+            controller.call('bipbop::create::account');
             modal.close();
         });
 
@@ -63,28 +63,28 @@ module.exports = controller => {
         elements.push(modal.imageParagraph('/images/wizard_1.svg', 'Conectar seus cadastros na nuvem permite você que fique sempre atento quando uma informação mudar, saiba sempre a situação de seus clientes e fornecedores para realizar seus negócios com segurança.', null, null));
         nextBack(modal, () => {
             deleteElements(elements);
-            controller.call('welcomescreen::wizard::1', modal);
+            controller.call('welcomescreen::wizard::one', modal);
         }, () => {
             deleteElements(elements);
             controller.call('welcomescreen::email', modal);
         }, elements);
     });
 
-    controller.registerCall('welcomescreen::wizard::1', modal => {
+    controller.registerCall('welcomescreen::wizard::one', modal => {
         modal = createModal(modal);
         const elements = [];
         elements.push(modal.subtitle('Acompanhe a evolução e o risco.'));
         elements.push(modal.imageParagraph('/images/wizard_2.svg', 'Acompanhe em tempo real e evolução e o risco de seus cadastros, se mantenha informado de eventuais problemas com nosso PUSH que permite receber atualizações onde quer quer você esteja.', null, null));
         nextBack(modal, () => {
             deleteElements(elements);
-            controller.call('welcomescreen::wizard::2', modal);
+            controller.call('welcomescreen::wizard::two', modal);
         }, () => {
             deleteElements(elements);
             controller.call('welcomescreen::wizard', modal);
         }, elements);
     });
 
-    controller.registerCall('welcomescreen::wizard::2', modal => {
+    controller.registerCall('welcomescreen::wizard::two', modal => {
         modal = createModal(modal);
         const elements = [];
         elements.push(modal.subtitle('Sistema open-source e modular.'));
@@ -93,7 +93,7 @@ module.exports = controller => {
             modal.close();
         }, () => {
             deleteElements(elements);
-            controller.call('welcomescreen::wizard::1', modal);
+            controller.call('welcomescreen::wizard::one', modal);
         }, elements);
     });
 

@@ -5,7 +5,7 @@ import {CNPJ} from 'cpf_cnpj';
 
 module.exports = controller => {
 
-    controller.registerCall('admin::changeCompany', (companyNode, username, section) => {
+    controller.registerCall('admin::change::company', (companyNode, username, section) => {
         const form = controller.call('form', opts => {
             opts.username = username;
             controller.serverCommunication.call('UPDATE \'BIPBOPCOMPANYS\'.\'COMPANY\'',
@@ -13,7 +13,7 @@ module.exports = controller => {
                     data: opts,
                     success: response => {
                         
-                        controller.call('admin::viewCompany', $(response).find('BPQL > body > company'), section, 'replaceWith');
+                        controller.call('admin::view::company', $(response).find('BPQL > body > company'), section, 'replaceWith');
                     }
                 })));
         });

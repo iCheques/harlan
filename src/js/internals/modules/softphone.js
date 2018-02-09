@@ -10,7 +10,7 @@ let cachedPCConfig /* cached peer connection config */;
 
 module.exports = controller => {
 
-    controller.registerTrigger('findDatabase::instantSearch', 'softphone', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'softphone', (args, callback) => {
         callback();
         let [text, modal] = args;
 
@@ -175,7 +175,7 @@ module.exports = controller => {
         controller.call('softphone::disconnect');
     });
 
-    controller.registerTrigger('softphone::registrationFailed', 'softphone', (data, cb) => {
+    controller.registerTrigger('softphone::registration::failed', 'softphone', (data, cb) => {
         cb();
         controller.call('softphone::disconnect');
     });
@@ -262,7 +262,7 @@ module.exports = controller => {
                     session.connection.close();
                     session.terminate();
                 } else {
-                    controller.call('softphone::terminateCalls');
+                    controller.call('softphone::terminate::calls');
                 }
             } finally {
                 if (onEnd) onEnd();
@@ -349,7 +349,7 @@ module.exports = controller => {
         });
     };
 
-    controller.registerCall('softphone::terminateCalls', callback => {
+    controller.registerCall('softphone::terminate::calls', callback => {
         if (!useragent) {
             if (callback) callback();
             return;

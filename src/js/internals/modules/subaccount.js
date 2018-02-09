@@ -202,7 +202,7 @@ module.exports = controller => {
             acc.find('.fa-edit').click((e) => {
                 e.preventDefault();
                 modal.close();
-                controller.call('admin::viewCompany', item);
+                controller.call('admin::view::company', item);
             });
             acc.find('.fa-folder-open').click(controller.click('confirm', {
                 icon: 'powerUp',
@@ -324,7 +324,7 @@ module.exports = controller => {
         };
 
         updateList(modal, pageActions, results, pagination, list, true, 5, skip, text, null, false, companyNode, username, section);
-        controller.call('instantSearch', search, (query, autocomplete, callback) => {
+        controller.call('instant::search', search, (query, autocomplete, callback) => {
             text = query;
             skip = 0;
             updateList(modal, pageActions, results, pagination, list, false, 5, skip, text, callback, true, companyNode, username, section);
@@ -339,7 +339,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('subaccount::formDescription', newDescription => {
+    controller.registerCall('subaccount::form::description', newDescription => {
         formDescription = newDescription;
     });
 };

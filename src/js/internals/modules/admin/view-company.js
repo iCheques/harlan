@@ -20,7 +20,7 @@ module.exports = controller => {
                         pabx
                     },
                     success: response => {
-                        controller.call('admin::viewCompany', $(response).find('BPQL > body > company'), section, 'replaceWith');
+                        controller.call('admin::view::company', $(response).find('BPQL > body > company'), section, 'replaceWith');
                     }
                 });
             });
@@ -38,7 +38,7 @@ module.exports = controller => {
                         email
                     },
                     success: response => {
-                        controller.call('admin::viewCompany', $(response).find('BPQL > body > company'), section, 'replaceWith');
+                        controller.call('admin::view::company', $(response).find('BPQL > body > company'), section, 'replaceWith');
                     }
                 });
             });
@@ -126,7 +126,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('admin::viewCompany', (companyNode, element, method, minimized) => {
+    controller.registerCall('admin::view::company', (companyNode, element, method, minimized) => {
         const company = $(companyNode);
 
         const name = company.children('nome').text();
@@ -231,9 +231,9 @@ module.exports = controller => {
         const contrato = company.children('contrato');
 
         appendContractItem('Dia Vencimento', contrato.find('contrato:eq(0)').text() || '1');
-        appendContractItem('Valor', numeral(contrato.find('contrato:eq(1)').text() || '0').format('$0,0.00'));
+        appendContractItem('Valor', numeral(contrato.find('contrato:eq(1)').text() || '0').format('$0,0.0000'));
         appendContractItem('Pacote de Consultas', contrato.find('contrato:eq(2)').text() || '0');
-        appendContractItem('Valor da Consulta Excedente', numeral(contrato.find('contrato:eq(3)').text() || '0').format('$0,0.00'));
+        appendContractItem('Valor da Consulta Excedente', numeral(contrato.find('contrato:eq(3)').text() || '0').format('$0,0.0000'));
 
         appendContractItem('Tipo do Contrato', changeCase.titleCase(contrato.find('contrato:eq(4)').text()));
         appendContractItem('Criação', moment.unix(parseInt(contrato.find('contrato:eq(5)').text())).fromNow());
@@ -292,7 +292,7 @@ module.exports = controller => {
 
             clearInterval(showInterval);
 
-            controller.trigger('admin::viewCompany', {
+            controller.trigger('admin::view::company', {
                 actions,
                 companyNode,
                 username,
@@ -300,13 +300,13 @@ module.exports = controller => {
             });
 
             controller.call('tooltip', actions, 'Editar').append($('<i />').addClass('fa fa-edit'))
-                .click(controller.click('admin::changeCompany', companyNode, username, section));
+                .click(controller.click('admin::change::company', companyNode, username, section));
 
             controller.call('tooltip', actions, 'Subcontas').append($('<i />').addClass('fa fa-users'))
                 .click(controller.click('subaccount::list', companyNode, username, section));
 
             controller.call('tooltip', actions, 'Editar Contrato').append($('<i />').addClass('fa fa-briefcase'))
-                .click(controller.click('admin::changeContract', companyNode, username, section));
+                .click(controller.click('admin::change::contract', companyNode, username, section));
 
             controller.call('tooltip', actions, 'Tags').append($('<i />').addClass('fa fa-tags'))
                 .click(controller.click('admin::tags', username));
@@ -317,7 +317,7 @@ module.exports = controller => {
             });
 
             controller.call('tooltip', actions, 'Editar Endereço').append($('<i />').addClass('fa fa-map'))
-                .click(controller.click('admin::changeAddress', companyNode, username, section));
+                .click(controller.click('admin::change::address', companyNode, username, section));
 
             controller.call('tooltip', actions, 'Dados Bancários').append($('<i />').addClass('fa fa-bank')).click(e => {
                 controller.serverCommunication.call('SELECT FROM \'BIPBOPCOMPANYS\'.\'bankAccount\'', {
@@ -326,7 +326,7 @@ module.exports = controller => {
                         username
                     },
                     success: data => {
-                        controller.call('bankAccount::update', null, !data ? {} : data, 'UPDATE \'BIPBOPCOMPANYS\'.\'bankAccount\'', {
+                        controller.call('bank::account::update', null, !data ? {} : data, 'UPDATE \'BIPBOPCOMPANYS\'.\'bankAccount\'', {
                             username
                         }, {
                             documento: cnpj ? CNPJ.format(cnpj) : CPF.format(cpf),
@@ -385,7 +385,7 @@ module.exports = controller => {
 
             controller.call('tooltip', actions, 'Nova Senha').append($('<i />').addClass('fa fa-asterisk')).click(e => {
                 e.preventDefault();
-                controller.call('admin::changePassword', username);
+                controller.call('admin::change::password', username);
             });
 
             controller.call('tooltip', actions, 'Bloquear/Desbloquear').append(lockSymbol).click(doLocking);

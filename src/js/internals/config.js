@@ -30,7 +30,7 @@ module.exports = {
             'painel.icheques.com.br'
         ]
     },
-    instantSearchDelay: 500, /* ms */
+    instant::searchDelay: 500, /* ms */
     animatedShowTable: 300,
     hideAutocomplete: 300,
     iugu: {

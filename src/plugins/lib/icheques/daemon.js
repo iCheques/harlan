@@ -2,7 +2,7 @@ module.exports = controller => {
 
     let modal;
 
-    controller.registerTrigger('findDatabase::instantSearch', 'icheques::daemon', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'icheques::daemon', (args, callback) => {
 
         if (!/(wba|daemon)/i.test(args[0])) {
             callback();

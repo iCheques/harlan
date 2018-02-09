@@ -23,7 +23,7 @@ module.exports = controller => {
         $('body > .site .action-login').click(window($('.login')));
         $('body > .site .action-sales').click(newWindow('http://www.bipbop.com.br/#contato'));
         $('body > .site .action-buy').click(() => {
-            controller.call('bipbop::createAccount');
+            controller.call('bipbop::create::account');
         });
 
         $('body > .site .action-evaluate').click(e => {

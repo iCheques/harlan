@@ -6,7 +6,7 @@
 
 module.exports = controller => {
 
-    controller.registerCall('kronoos::contractAccepted', (...args) => {
+    controller.registerCall('kronoos::contract::accepted', (...args) => {
         controller.call('confirm', {
             title: 'Você aceita com o contrato de serviço?',
             subtitle: 'Para continuar é necessário que você aceite o contrato de serviço desta ferramenta.',
@@ -16,23 +16,23 @@ module.exports = controller => {
 
     });
 
-    controller.registerCall('kronoos::contractAccepted::app', (valid, ...args) => {
+    controller.registerCall('kronoos::contract::accepted::app', (valid, ...args) => {
         if (controller.confs.kronoos.isKronoos) {
             valid();
             return;
         }
-        controller.call('kronoos::contractAccepted', valid, ...args);
+        controller.call('kronoos::contract::accepted', valid, ...args);
     });
 
     if (controller.confs.kronoos.isKronoos) {
-        controller.registerTrigger('serverCommunication::websocket::authentication', 'kronoos::contract::websocket::authentication', (data, callback) => {
+        controller.registerTrigger('server::communication::websocket::authentication', 'kronoos::contract::websocket::authentication', (data, callback) => {
             callback();
 
             if (controller.serverCommunication.freeKey() || data.contractAccepted) {
                 return;
             }
 
-            controller.call('kronoos::contractAccepted', () => {
+            controller.call('kronoos::contract::accepted', () => {
                 controller.serverCommunication.call('SELECT FROM \'KRONOOS\'.\'CONTRACTACCEPTED\'');
                 controller.call('alert', {
                     icon: 'pass',

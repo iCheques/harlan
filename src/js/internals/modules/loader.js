@@ -14,7 +14,7 @@ module.exports = controller => {
         animations: ['animated rotateIn', 'animated rotateOut']
     };
 
-    controller.registerCall('loader::catchElement', () => $('.logo:visible span'));
+    controller.registerCall('loader::catch::element', () => $('.logo:visible span'));
 
     const afterExecution = () => {
         animationElement.removeClass(controller.confs.loader.animations[counter++ % controller.confs.loader.animations.length]);
@@ -25,7 +25,7 @@ module.exports = controller => {
 
     controller.registerCall('loader::register', () => {
         if (!loaderRegister) {
-            animationElement = controller.call('loader::catchElement');
+            animationElement = controller.call('loader::catch::element');
             if (!animationElement.length) {
                 $('.q').addClass('loading');
                 return;

@@ -19,12 +19,12 @@ module.exports = controller => {
 
     controller.registerTrigger('call::authentication::loggedin', 'canAntecipate', (args, callback) => {
         callback();
-        controller.call('icheques::canAntecipate');
+        controller.call('icheques::can::antecipate');
     });
 
     let element = null;
 
-    controller.registerCall('icheques::cantAntecipate', () => {
+    controller.registerCall('icheques::cant::antecipate', () => {
         const report = controller.call('report',
             'Você procura antecipar cheques?',
             'Receba o dinheiro antes, não espere até o vencimento.',
@@ -43,10 +43,10 @@ module.exports = controller => {
         $('.app-content').prepend(element);
     });
 
-    controller.registerCall('icheques::canAntecipate', () => {
+    controller.registerCall('icheques::can::antecipate', () => {
         const [ammount, count] = controller.database.exec(checkQuery)[0].values[0];
         if (!count) {
-            controller.call('icheques::cantAntecipate');
+            controller.call('icheques::cant::antecipate');
             return;
         }
 
@@ -57,7 +57,7 @@ module.exports = controller => {
                 `Com o iCheques você pode solicitar a antecipação dos seus <strong>${count}</strong> ${count == 1 ? 'cheque de valor' : 'cheques que somam'} <strong>${numeral(ammount/100).format('$0,0.00')}<\/strong> através de uma das nossas antecipadoras. Clique no botão abaixo para iniciar o processo.`);
 
         report.button('Solicitar Antecipação', () => {
-            const checks = controller.call('icheques::resultDatabase', controller.database.exec(obtainChecks)[0]).values;
+            const checks = controller.call('icheques::result::database', controller.database.exec(obtainChecks)[0]).values;
             controller.call('icheques::antecipate', checks);
         }).addClass('green-button');
 
@@ -73,13 +73,13 @@ module.exports = controller => {
     controller.registerTrigger('icheques::deleted',
         'canAntecipate', (obj, cb) => {
             cb();
-            controller.call('icheques::canAntecipate');
+            controller.call('icheques::can::antecipate');
         });
 
-    controller.registerTrigger('serverCommunication::websocket::ichequeUpdate',
+    controller.registerTrigger('server::communication::websocket::icheque::update',
         'canAntecipate', (obj, cb) => {
             cb();
-            controller.call('icheques::canAntecipate');
+            controller.call('icheques::can::antecipate');
         });
 
 };

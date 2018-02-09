@@ -32,7 +32,7 @@ module.exports = controller => {
     };
 
     controller.registerTrigger('authentication::authenticated', 'inbox', checkbox);
-    controller.registerTrigger('serverCommunication::websocket::sendMessage', 'inbox', checkbox);
+    controller.registerTrigger('server::communication::websocket::send::message', 'inbox', checkbox);
 
     controller.registerBootstrap('inbox', callback => {
         callback();
@@ -200,7 +200,7 @@ module.exports = controller => {
         };
 
         updateList(modal, pageActions, results, pagination, list, 5, skip, text);
-        controller.call('instantSearch', search, (query, autocomplete, callback) => {
+        controller.call('instant::search', search, (query, autocomplete, callback) => {
             text = query;
             skip = 0;
             updateList(modal, pageActions, results, pagination, list, 5, skip, text, callback, false);

@@ -188,7 +188,7 @@ var AccountOverview = function(closeable) {
             return;
         }
 
-        controller.call('icheques::resultDatabase', query);
+        controller.call('icheques::result::database', query);
         controller.call('icheques::antecipate', query.values);
     };
 
@@ -203,7 +203,7 @@ var AccountOverview = function(closeable) {
         if (!query || !query.values) {
             return;
         }
-        controller.call('icheques::resultDatabase', query);
+        controller.call('icheques::result::database', query);
         query = query.values;
         let sum = 0;
         for (let check of query) {
@@ -385,7 +385,7 @@ var AccountOverview = function(closeable) {
 
     report.newAction('fa-cloud-download', () => {
         controller.call('icheques::ban::generate',
-            controller.call('icheques::resultDatabase', controller.database.exec(squel
+            controller.call('icheques::result::database', controller.database.exec(squel
                 .select()
                 .from('ICHEQUES_CHECKS')
                 .where(expression)
@@ -621,11 +621,11 @@ AccountOverview.prototype.about = {
 module.exports = c => {
     controller = c;
 
-    controller.registerTrigger('icheques::deleted', 'draw::accountOverview', (obj, cb) => {
+    controller.registerTrigger('icheques::deleted', 'draw::account::overview', (obj, cb) => {
         async.parallel(updateRegister, cb);
     });
 
-    controller.registerTrigger('icheques::update', 'draw::accountOverview', (obj, cb) => {
+    controller.registerTrigger('icheques::update', 'draw::account::overview', (obj, cb) => {
         async.parallel(updateRegister, cb);
     });
 

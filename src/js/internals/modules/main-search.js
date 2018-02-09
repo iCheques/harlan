@@ -4,7 +4,7 @@ module.exports = controller => {
         $('.main-search').each((i, v) => {
             $(v).submit(function (e) {
                 e.preventDefault();
-                controller.trigger('mainSearch::submit', $(this).find('.input-q').val());
+                controller.trigger('main::search::submit', $(this).find('.input-q').val());
             });
         });
     });

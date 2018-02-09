@@ -1,21 +1,21 @@
 harlan.addPlugin(controller => {
 
-    controller.registerCall('admin::roleTypes', () => ({
+    controller.registerCall('admin::role::types', () => ({
         '': 'Tipo de Contrato',
         ichequeCustomer: 'iCheques'
     }));
 
     $(controller.confs.container).addClass('icheques-extension');
 
-    controller.unregisterTrigger('serverCommunication::websocket::authentication', 'accountOverview');
+    controller.unregisterTrigger('server::communication::websocket::authentication', 'account::overview');
 
-    controller.registerCall('accountOverview', () => {});
+    controller.registerCall('account::overview', () => {});
 
     controller.confs.debtCollector = 'juridico@pgn.srv.br';
     controller.confs.ccf = true;
     controller.confs.iugu.token = 'b3ed1c2a-ee7b-47d2-ab4d-7e8fba14e933';
     controller.confs.smartsupp = controller.confs.isCordova ? '' : '6da797e6b8bcf7dce984a4787ca27fe5d5f2b179';
-    controller.endpoint.forgotPassword = 'SELECT FROM \'ICHEQUESAUTHENTICATION\'.\'FORGOTPASSWORD\'';
+    controller.endpoint.forgot::password = 'SELECT FROM \'ICHEQUESAUTHENTICATION\'.\'FORGOTPASSWORD\'';
     controller.endpoint.adminReport = 'SELECT FROM \'ICHEQUESREPORT\'.\'REPORT\'';
     controller.endpoint.commercialReferenceOverview = 'SELECT FROM \'IChequesReport\'.\'COMMERCIALREFERENCE\' WHERE \'CACHE\' = \'DISABLED\'';
 
@@ -25,7 +25,7 @@ harlan.addPlugin(controller => {
         moreMonths: 30
     });
 
-    controller.registerCall('admin::contactTypes', () => ({
+    controller.registerCall('admin::contact::types', () => ({
         financeiro: 'Ambos',
         comercial: 'Operações',
         tecnico: 'Ocorrências'

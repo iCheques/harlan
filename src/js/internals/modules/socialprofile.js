@@ -155,7 +155,7 @@ module.exports = controller => {
         });
     };
 
-    controller.registerTrigger('socialprofile::queryList', 'socialprofile', (args, cb) => {
+    controller.registerTrigger('socialprofile::query::list', 'socialprofile', (args, cb) => {
         cb();
         let item = args.timeline.add(null, 'Obter informações socioeconômicas e de perfil na internet.',
             'Informações relacionadas ao aspecto econômico e social do indivíduo inferidas a partir do comportamento online e público. Qualifica em ordem de grandeza e confiabilidade entregando índices sociais, econômicos, jurídico, consumerista e comportamental.', [
@@ -191,7 +191,7 @@ module.exports = controller => {
             ]);
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'socialprofile', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'socialprofile', (args, callback) => {
         let [text, modal] = args;
         let isCPF = CPF.isValid(text);
 
@@ -267,8 +267,8 @@ module.exports = controller => {
             result.element().addClass('network-screen');
             $(this).addClass('enabled');
 
-            let generateRelations = controller.call('generateRelations');
-            generateRelations.appendDocument(ccbusca, document);
+            let generate::relations = controller.call('generate::relations');
+            generate::relations.appendDocument(ccbusca, document);
 
             let network;
             let node;
@@ -286,7 +286,7 @@ module.exports = controller => {
                     node = null;
                 }
 
-                generateRelations.track(({nodes, edges, groups}) => {
+                generate::relations.track(({nodes, edges, groups}) => {
                     [network, node] = result.addNetwork(nodes, edges, {
                         groups
                     });
@@ -303,7 +303,7 @@ module.exports = controller => {
                                     data: {
                                         documento: pad(nodes[0].length > 11 ? 14 : 11, nodes[0], '0')
                                     },
-                                    success: data => generateRelations.appendDocument(data, nodes[0]),
+                                    success: data => generate::relations.appendDocument(data, nodes[0]),
                                     complete: () => callback()
                                 }, true));
 
@@ -335,7 +335,7 @@ module.exports = controller => {
 
             controller.server.call('SELECT FROM \'CBUSCA\'.\'CONSULTA\'', controller.call('loader::ajax', {
                 data: { documento : document },
-                success: data => generateRelations.appendDocument(data, document),
+                success: data => generate::relations.appendDocument(data, document),
                 complete: () => track()
             }, true));
         };
@@ -471,7 +471,7 @@ module.exports = controller => {
 
         newMark('fa-share-alt', 'Relações', openGraph(report, ccbusca, document));
 
-        controller.trigger('socialprofile::queryList', {
+        controller.trigger('socialprofile::query::list', {
             report,
             timeline,
             name,
@@ -543,7 +543,7 @@ module.exports = controller => {
             })));
     });
 
-    controller.registerTrigger('socialprofile::queryList', 'certidaoCNPJ', ({document, report}, cb) => {
+    controller.registerTrigger('socialprofile::query::list', 'certidaoCNPJ', ({document, report}, cb) => {
         if (!CNPJ.isValid(document)) {
             cb();
             return;
@@ -553,7 +553,7 @@ module.exports = controller => {
                 documento: document
             },
             success: ret => {
-                report.results.append(controller.call('xmlDocument', ret, 'RFB', 'CERTIDAO'));
+                report.results.append(controller.call('xml::document', ret, 'RFB', 'CERTIDAO'));
             },
             complete: () => {
                 cb();

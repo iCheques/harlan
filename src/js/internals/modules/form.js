@@ -2,17 +2,16 @@ const EMPTY_REGEX = /^\s*$/;
 
 import assert from 'assert';
 import _ from 'underscore';
-import {
-    camelCase
-} from 'change-case';
+import { camelCase } from 'change-case';
 import async from 'async';
 
-const FormError = Error.extend('Error', 500);
-const FormCancel = Error.extend('FormError', 500);
+const FormError = Error.extend('FormError', 500);
+const FormCancel = FormError.extend('FormCancel', 500);
 
 module.exports = controller => {
 
     let GenerateForm = function(callback, onCancel) {
+        this.onCancel = onCancel;
 
         let currentScreen = 0;
         let configuration = null;
@@ -344,7 +343,7 @@ module.exports = controller => {
         };
 
         this.close = (defaultAction = true) => {
-            if (onCancel && defaultAction) onCancel();
+            if (this.onCancel && defaultAction) this.onCancel();
             if (this.onClose) this.onClose();
             if (modal) {
                 modal.close();
@@ -397,8 +396,19 @@ module.exports = controller => {
 
     controller.registerCall('form', (...parameters) => new GenerateForm(...parameters));
 
-    controller.registerCall('form::callback', (parameters, callback) => new GenerateForm(callback, () => {
+    const defaultOnCancel = () => {
         throw new FormCancel();
-    }).configure(parameters));
+    };
+
+    controller.registerCall('form::callback', (...args) => {
+        const callback = args.pop();
+        const onCancel = args.pop();
+        const configuration = args.shift();
+        const values = args.shift();
+
+        let form = new GenerateForm(callback, onCancel || defaultOnCancel);
+        if (configuration) form.configure(configuration);
+        if (values) form.setValues(values);
+    });
 
 };

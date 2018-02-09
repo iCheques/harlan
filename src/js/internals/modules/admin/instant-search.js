@@ -3,15 +3,15 @@ const ADMIN_COMPANY = /(^|\s)(admi?n?i?s?t?r?a?r?)($|\s)/i;
 const PRICE_TABLE = /(^|\s)(preço)($|\s)/i;
 
 module.exports = controller => {
-    controller.registerTrigger('findDatabase::instantSearch', 'admin::createCompany', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'admin::create::company', (args, callback) => {
         callback();
         const [argument, autocomplete] = args;
         if (CREATE_COMPANY.test(argument)) {
-            controller.call('admin::autocompleteCreateCompany', autocomplete);
+            controller.call('admin::autocomplete::create::company', autocomplete);
         }
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'admin::price', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'admin::price', (args, callback) => {
         callback();
         const [argument, autocomplete] = args;
         if (!PRICE_TABLE.test(argument)) {
@@ -25,7 +25,7 @@ module.exports = controller => {
             .click(controller.click('price::list'));
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'admin::index', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'admin::index', (args, callback) => {
         callback();
         const [argument, autocomplete] = args;
         if (!ADMIN_COMPANY.test(argument)) {
@@ -39,7 +39,7 @@ module.exports = controller => {
             .click(controller.click('admin::index'));
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'findCompany::tag', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'findCompany::tag', (args, callback) => {
         callback();
         let [query, autocompleter] = args;
         if (!/^tag/i.test(query)) {
@@ -69,7 +69,7 @@ module.exports = controller => {
                             $('BPQL > body > company', response).each((idx, companyNode) => {
                                 const company = $(companyNode);
                                 const document = company.children('cnpj').text() || company.children('cpf').text();
-                                controller.call('admin::viewCompany', company);
+                                controller.call('admin::view::company', company);
                             });
                         }
                     });
@@ -79,7 +79,7 @@ module.exports = controller => {
             });
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'admin::postPaid', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'admin::postPaid', (args, callback) => {
         callback();
         const [argument, autocomplete] = args;
         if (argument.length < 3 || !/(pós|pago)/.test(argument)) {
@@ -100,14 +100,14 @@ module.exports = controller => {
                         $('BPQL > body > company', response).each((idx, companyNode) => {
                             const company = $(companyNode);
                             const document = company.children('cnpj').text() || company.children('cpf').text();
-                            controller.call('admin::viewCompany', company);
+                            controller.call('admin::view::company', company);
                         });
                     }
                 });
             });
     });
 
-    controller.registerTrigger('findDatabase::instantSearch', 'admin::listCompany', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'admin::listCompany', (args, callback) => {
         const [argument, autocomplete] = args;
         if (argument.length < 3) {
             callback();
@@ -119,7 +119,7 @@ module.exports = controller => {
                 data: argument,
                 limit: 3
             },
-            success: (response) => controller.call('admin::fillCompanysAutocomplete', response, autocomplete),
+            success: (response) => controller.call('admin::fill::companys::autocomplete', response, autocomplete),
             complete: () => callback()
         });
     });

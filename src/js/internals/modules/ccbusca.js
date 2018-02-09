@@ -5,7 +5,7 @@ import async from 'async';
 module.exports = controller => {
 
     controller.registerCall('ccbusca::enable', () => {
-        controller.registerTrigger('mainSearch::submit', 'ccbusca', (val, cb) => {
+        controller.registerTrigger('main::search::submit', 'ccbusca', (val, cb) => {
             cb();
             if (!CNPJ.isValid(val) && !CPF.isValid(val)) {
                 return;
@@ -67,7 +67,7 @@ module.exports = controller => {
             printWindow.print();
         });
 
-        const juntaEmpresaHTML = controller.call('xmlDocument', ret, 'CCBUSCA', 'DOCUMENT');
+        const juntaEmpresaHTML = controller.call('xml::document', ret, 'CCBUSCA', 'DOCUMENT');
         juntaEmpresaHTML.find('.container').first().addClass('xml2html')
             .data('document', $(ret))
             .data('form', [{
@@ -91,7 +91,7 @@ module.exports = controller => {
             let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
             let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
             appendMessage(`total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}`);
-            sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'SEEKLOC', 'CCF'));
+            sectionDocumentGroup[1].append(controller.call('xml::document', ret, 'SEEKLOC', 'CCF'));
         }))();
 
         ((() => {
@@ -108,7 +108,7 @@ module.exports = controller => {
                 .map(p => parseInt($(p).text()))
                 .reduce((a, b) => a + b, 0);
             appendMessage(`total de protestos: ${totalProtestos}`);
-            sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'IEPTB', 'WS'));
+            sectionDocumentGroup[1].append(controller.call('xml::document', ret, 'IEPTB', 'WS'));
         }))();
     });
 };

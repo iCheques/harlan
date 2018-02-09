@@ -41,7 +41,7 @@ module.exports = controller => {
             .from('ICHEQUES_CHECKS')
             .where(squel.expr().or('CMC = ?', searchString)).toString();
 
-        let databaseResult = controller.call('icheques::resultDatabase', controller.database.exec(query)[0]);
+        let databaseResult = controller.call('icheques::result::database', controller.database.exec(query)[0]);
         if (!databaseResult.values.length) {
             controller.alert({
                 title: 'Não foi possível localizar o cheque.',
@@ -137,7 +137,7 @@ module.exports = controller => {
         updateAjax(null, 0);
     });
 
-    controller.registerCall('icheques::debtCollector', check => {
+    controller.registerCall('icheques::debt::collector', check => {
         let inputExpire;
         let dispachEvent = (formData) => {
             check.expire = moment(inputExpire.val(), 'DD/MM/YYYY').format('YYYYMMDD');
@@ -187,7 +187,7 @@ module.exports = controller => {
             }]
         });
 
-        let sendBill = () => controller.call('bankAccount::need', collectBill);
+        let sendBill = () => controller.call('bank::account::need', collectBill);
         let createList = (modal, form) => {
             inputExpire = form.addInput('Vencimento', 'text', 'Vencimento do Cheque').mask('00/00/0000').val(moment(check.expire, 'YYYYMMDD').format('DD/MM/YYYY'));
             inputExpire.pikaday();
@@ -233,7 +233,7 @@ module.exports = controller => {
     });
 
     const registerSocket = () => {
-        controller.registerTrigger('serverCommunication::websocket::ichequeUpdate', 'icheques::pushUpdate', (data, callback) => {
+        controller.registerTrigger('server::communication::websocket::icheque::update', 'icheques::pushUpdate', (data, callback) => {
             callback();
 
             const dbResponse = controller.database.exec(squel
@@ -242,7 +242,7 @@ module.exports = controller => {
                 .where('PUSH_ID = ?', data.pushId).toString());
 
             if (!dbResponse.length) {
-                controller.call('icheques::insertDatabase', data);
+                controller.call('icheques::insert::database', data);
                 return;
             }
 
@@ -250,7 +250,7 @@ module.exports = controller => {
                 .update()
                 .table('ICHEQUES_CHECKS')
                 .where('PUSH_ID = ?', data.pushId)
-                .setFields(controller.call('icheques::databaseObject', data)).toString());
+                .setFields(controller.call('icheques::database::object', data)).toString());
 
             controller.trigger('icheques::update', data);
             controller.call('icheques::item::upgrade', data);
@@ -293,7 +293,7 @@ module.exports = controller => {
                         .tap(storage => {
                             continueLoop = storage.length >= QUERY_LIMIT;
                         })
-                        .then(storage => controller.call('icheques::insertDatabase', storage))
+                        .then(storage => controller.call('icheques::insert::database', storage))
                         .then(() => cb())
                         .catch(error => cb(error));
                 },
@@ -396,7 +396,7 @@ module.exports = controller => {
             $('<i />').addClass('fa fa-life-buoy')).click(e => {
             e.preventDefault();
             if (!check.debtCollector) {
-                controller.call('icheques::debtCollector', check);
+                controller.call('icheques::debt::collector', check);
             } else {
                 controller.confirm({
                     title: 'Você deseja REMOVER o cheque da cobrança?',
@@ -622,7 +622,7 @@ module.exports = controller => {
 
                     });
 
-                    section[1].append(controller.call('xmlDocument', ret));
+                    section[1].append(controller.call('xml::document', ret));
                 }
             });
 
@@ -643,7 +643,7 @@ module.exports = controller => {
                     .reduce((a, b) => a + b, 0);
                 section[0].find('h3').text(mensagem += ` Total de Protestos: ${totalProtestos}.`);
                 section[0].addClass('warning');
-                section[1].append(controller.call('xmlDocument', ret));
+                section[1].append(controller.call('xml::document', ret));
             }
         });
 
@@ -680,7 +680,7 @@ module.exports = controller => {
                 return;
             }
 
-            let xmlDocument = null;
+            let xml::document = null;
             let icon = $('<i />').addClass('fa fa-user-plus');
             let showing = false;
 
@@ -691,7 +691,7 @@ module.exports = controller => {
                 if (!$(this).hasClass('fa-plus-square-o')) {
                     icon.removeClass('fa-user-times');
                     icon.addClass('fa-user-plus');
-                    xmlDocument.remove();
+                    xml::document.remove();
                     showing = false;
                 }
             });
@@ -699,15 +699,15 @@ module.exports = controller => {
             icon.click(e => {
                 e.preventDefault();
                 if (!showing) {
-                    xmlDocument = controller.call('xmlDocument', ret, 'CCBUSCA', 'CONSULTA');
+                    xml::document = controller.call('xml::document', ret, 'CCBUSCA', 'CONSULTA');
                     section[2].find('.fa-plus-square-o').click();
                     icon.addClass('fa-user-times');
                     icon.removeClass('fa-user-plus');
-                    result.element().prepend(xmlDocument);
+                    result.element().prepend(xml::document);
                 } else {
                     icon.removeClass('fa-user-times');
                     icon.addClass('fa-user-plus');
-                    xmlDocument.remove();
+                    xml::document.remove();
                 }
                 showing = !showing;
             });
@@ -716,7 +716,7 @@ module.exports = controller => {
         return section[0];
     };
 
-    controller.registerCall('icheques::resultDatabase', databaseResult => {
+    controller.registerCall('icheques::result::database', databaseResult => {
         if (!databaseResult) {
             return [{
                 columns: [],
@@ -739,20 +739,20 @@ module.exports = controller => {
         if (!query) {
             return;
         }
-        controller.call('icheques::resultDatabase', query);
+        controller.call('icheques::result::database', query);
         controller.call('icheques::show', query.values, callback, element);
     });
 
     controller.registerCall('icheques::show', (storage, callback, element, scrollTo = false) => {
         const documents = _.pairs(_.groupBy(storage, ({cpf, cnpj}) => cpf || cnpj));
 
-        const moreResults = controller.call('moreResults', 5);
+        const more::results = controller.call('more::results', 5);
 
         let scrollElement = null;
         let scrollInterval = null;
         let scrolled = false;
 
-        moreResults.callback(cb => {
+        more::results.callback(cb => {
             let docs = _.map(documents.splice(0, documents.length > 5 ? 5 : documents.length), showDocument);
             if (docs.length && !scrollElement) scrollElement = docs[0];
 
@@ -773,12 +773,12 @@ module.exports = controller => {
             }, 100);
         });
 
-        $(element || '.app-content').append(moreResults.element());
-        moreResults.show();
+        $(element || '.app-content').append(more::results.element());
+        more::results.show();
 
-        if (scrollTo && !scrolled && moreResults.element().is(':visible')) {
+        if (scrollTo && !scrolled && more::results.element().is(':visible')) {
             $('html, body').animate({
-                scrollTop: moreResults.element().offset().top
+                scrollTop: more::results.element().offset().top
             }, 2000);
             scrolled = true;
         }
@@ -816,7 +816,7 @@ module.exports = controller => {
         upgrade(item);
     });
 
-    controller.registerTrigger('serverCommunication::websocket::ichequeUnset', 'icheques::pushDelete', (data, callback) => {
+    controller.registerTrigger('server::communication::websocket::icheque::unset', 'icheques::pushDelete', (data, callback) => {
         callback();
 
         controller.database.exec(squel

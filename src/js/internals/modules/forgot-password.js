@@ -12,9 +12,9 @@ owasp.config({
 
 module.exports = controller => {
 
-    controller.endpoint.forgotPassword = 'SELECT FROM \'HARLANAUTHENTICATION\'.\'FORGOTPASSWORD\'';
+    controller.endpoint.forgot::password = 'SELECT FROM \'HARLANAUTHENTICATION\'.\'FORGOTPASSWORD\'';
 
-    controller.registerCall('forgotPassword', callback => {
+    controller.registerCall('forgot::password', callback => {
         const modal = controller.call('modal');
         modal.title('Recupere sua senha');
         modal.subtitle('Insira seus dados para prosseguir');
@@ -34,11 +34,11 @@ module.exports = controller => {
 
             usernameInput.removeClass('error');
 
-            controller.serverCommunication.call(controller.endpoint.forgotPassword,
+            controller.serverCommunication.call(controller.endpoint.forgot::password,
                 controller.call('error::ajax', controller.call('loader::ajax', {
                     data: {username},
                     success() {
-                        controller.call('forgotPassword::code', callback, username);
+                        controller.call('forgot::password::code', callback, username);
                         modal.close();
                     }
                 })));
@@ -51,7 +51,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('forgotPassword::code', (callback, username) => {
+    controller.registerCall('forgot::password::code', (callback, username) => {
         const modal = controller.call('modal');
         modal.title('Confirmação de Conta');
         modal.subtitle('Digite o código que recebeu em seu e-mail');
@@ -125,14 +125,14 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('changePassword', () => {
+    controller.registerCall('change::password', () => {
 
     });
 
-    controller.registerBootstrap('forgotPassword', callback => {
+    controller.registerBootstrap('forgot::password', callback => {
         callback();
         $('#forgot-password').click(() => {
-            controller.call('forgotPassword');
+            controller.call('forgot::password');
         });
     });
 };

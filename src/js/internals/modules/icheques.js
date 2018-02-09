@@ -13,7 +13,7 @@ module.exports = controller => {
 
         callback();
 
-        controller.registerTrigger('serverCommunication::websocket::authentication::end', 'kronoosPlugin', (args, callbackAuthentication) => {
+        controller.registerTrigger('server::communication::websocket::authentication::end', 'kronoosPlugin', (args, callbackAuthentication) => {
             callbackAuthentication();
             if (/federal\s*invest/i.test(controller.confs.user.commercialReference)) return;
             kronoosCall(args);

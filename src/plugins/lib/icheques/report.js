@@ -30,7 +30,7 @@ module.exports = controller => {
         });
     }
 
-    controller.registerTrigger('findDatabase::instantSearch', 'icheques::report', (args, callback) => {
+    controller.registerTrigger('find::database::instant::search', 'icheques::report', (args, callback) => {
         callback();
         for (var i in dictReports) {
             if (!dictReports[i].findRegex.test(args[0]))

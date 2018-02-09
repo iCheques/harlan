@@ -104,7 +104,7 @@ module.exports = controller => {
                 actions: [
                     ['Fotografar', modal => {
                         modal.close();
-                        controller.call('icheques::chequePicture', image => {
+                        controller.call('icheques::cheque::picture', image => {
                             if (!image) return;
                             controller.serverCommunication.call('UPDATE \'ICHEQUES\'.\'PHOTO\'',
                                 controller.call('error::ajax', {
@@ -183,7 +183,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('icheques::item::setAmmount', (check, callback, edit = null) => {
+    controller.registerCall('icheques::item::set::ammount', (check, callback, edit = null) => {
         controller.call('icheques::item::edit', check, callback, false, edit);
     });
 

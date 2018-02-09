@@ -1,10 +1,10 @@
 module.exports = controller => {
 
-    controller.registerTrigger('admin::commercialReference', 'icheques', (report, callback) => {
+    controller.registerTrigger('admin::commercial::reference', 'icheques', (report, callback) => {
         callback();
         report.newAction('fa-filter', () => {
             let form = controller.call('form', data => {
-                controller.call('admin::commercialReference', data);
+                controller.call('admin::commercial::reference', data);
                 report.close();
             });
             form.configure({

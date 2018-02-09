@@ -22,7 +22,7 @@ module.exports = controller => {
 
         let checkbox;
 
-        form.element().submit(e => {
+        form.element().submit((e) => {
             e.preventDefault();
             if (checkbox && !checkbox[1].is(':checked')) {
                 checkbox[0].addClass('error shake shake-constant');
