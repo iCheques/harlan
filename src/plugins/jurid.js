@@ -52,7 +52,7 @@ harlan.addPlugin(controller => {
                 radial.element.addClass('attention animated flash');
             }
 
-            const more::results = controller.call('more::results', MAX_RESULTS).callback(callback => {
+            const moreResults = controller.call('more::results', MAX_RESULTS).callback(callback => {
                 skip += MAX_RESULTS;
                 controller.serverCommunication.call('SELECT FROM \'PUSHJURISTEK\'.\'REPORT\'',
                     controller.call('loader::ajax', controller.call('error::ajax', {

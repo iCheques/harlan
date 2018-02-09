@@ -68,6 +68,7 @@ module.exports = controller => {
         try {
             controller.database.exec(squel.insert().into('ICHEQUES_CHECKS').setFields(databaseObject(check)).toString());
         } catch (e) {
+            /* pass */
         }
     };
 

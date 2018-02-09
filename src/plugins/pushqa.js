@@ -68,7 +68,7 @@ harlan.addPlugin(controller => {
 
         report.button('Abrir Consultas', () => {
             let ids = _.reduceRight(_.pluck(_.pluck(data, 'value'), 'ids'), (a, b) => a.concat(b)),
-                more::results = controller.call('more::results', MAX_RESULTS),
+                moreResults = controller.call('more::results', MAX_RESULTS),
                 skip = 0;
             moreResults.callback(cb => {
                 let items = [],

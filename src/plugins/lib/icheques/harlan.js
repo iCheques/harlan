@@ -699,7 +699,7 @@ module.exports = controller => {
             icon.click(e => {
                 e.preventDefault();
                 if (!showing) {
-                    xml::document = controller.call('xml::document', ret, 'CCBUSCA', 'CONSULTA');
+                    xmlDocument = controller.call('xml::document', ret, 'CCBUSCA', 'CONSULTA');
                     section[2].find('.fa-plus-square-o').click();
                     icon.addClass('fa-user-times');
                     icon.removeClass('fa-user-plus');
@@ -746,7 +746,7 @@ module.exports = controller => {
     controller.registerCall('icheques::show', (storage, callback, element, scrollTo = false) => {
         const documents = _.pairs(_.groupBy(storage, ({cpf, cnpj}) => cpf || cnpj));
 
-        const more::results = controller.call('more::results', 5);
+        const moreResults = controller.call('more::results', 5);
 
         let scrollElement = null;
         let scrollInterval = null;
