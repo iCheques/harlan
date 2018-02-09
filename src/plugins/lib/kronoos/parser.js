@@ -932,8 +932,8 @@ export default class KronoosParse {
         }
 
         this.showCBusca();
-        this.generate::relations = this.call('generate::relations');
-        this.generate::relations.appendDocument(this.ccbuscaData, this.cpf_cnpj);
+        this.generateRelations = this.call('generate::relations');
+        this.generateRelations.appendDocument(this.ccbuscaData, this.cpf_cnpj);
         this.cpf_cnpjs[this.cpf_cnpj] = true;
         this.graphTrack();
 
@@ -2221,7 +2221,7 @@ export default class KronoosParse {
                         nire
                     },
                     success: data => {
-                        this.generate::relations.appendDocument(data, cpf_cnpj);
+                        this.generateRelations.appendDocument(data, cpf_cnpj);
                     },
                     complete: () => callback()
                 }));
@@ -2245,7 +2245,7 @@ export default class KronoosParse {
                     mostrarTodos: 1
                 },
                 success: data => {
-                    this.generate::relations.appendDocument(data, cpf_cnpj);
+                    this.generateRelations.appendDocument(data, cpf_cnpj);
                     if (sideQuest) {
                         let ptrCallback = callback;
                         callback = () => sideQuest(data, ptrCallback);
@@ -2288,7 +2288,7 @@ export default class KronoosParse {
         //     dontAskAgain = {},
         //     defaultActionSearch = {};
 
-        this.taskGraphTrack = async.timesSeries(this.depth, (i, callback) => this.generate::relations.track(data => {
+        this.taskGraphTrack = async.timesSeries(this.depth, (i, callback) => this.generateRelations.track(data => {
             let elements = [];
             _.map(data.nodes, node => {
                 let formatted_document = pad(node.id.length > 11 ? 14 : 11, node.id, '0');
@@ -2336,7 +2336,7 @@ export default class KronoosParse {
                                     documento: document
                                 },
                                 success: data => {
-                                    this.generate::relations.appendDocument(data, cpf_cnpj);
+                                    this.generateRelations.appendDocument(data, cpf_cnpj);
                                     callback();
                                 },
                                 error: (...args) => {
@@ -2407,7 +2407,7 @@ export default class KronoosParse {
                 paragraph: 'É provável que não tenhamos metadados suficientes para realizar esta pesquisa.'
             }, obj));
 
-            this.generate::relations.track(data => async.each(data.nodes, (node, cb) => {
+            this.generateRelations.track(data => async.each(data.nodes, (node, cb) => {
                 let document = pad(14, CNPJ.strip(node.id), '0');
                 if (!CNPJ.isValid(document)) return cb();
                 this.serverCall('SELECT FROM \'RFBCNPJANDROID\'.\'CERTIDAO\'', this.loader('fa-archive', `Atualizando nome do CNPJ ${CNPJ.format(document)} - ${node.label}`, {
