@@ -28,24 +28,6 @@ module.exports = controller => {
         controller.interface.helpers.activeWindow('.site');
     });
 
-    // controller.registerTrigger("bootstrap::end", "authentication::centralized", (obj, callback) => {
-    //     const loginElement = $(".login");
-    //
-    //     let centralizedLogin = () => {
-    //         if (loginElement.height() < $(window).height())
-    //             loginElement.css({top: '50%', 'margin-top' : (loginElement.height() / 2) * - 1});
-    //     };
-    //
-    //     callback();
-    //
-    //     let loginVisible = setInterval(() => {
-    //         if (loginElement.is(":visible"))
-    //             clearInterval(loginVisible);
-    //         centralizedLogin();
-    //         $(window).on('resize', centralizedLogin);
-    //     }, 500); /* @TODO verifica a cada 500ms, substituir no futuro por evento de login */
-    // });
-
     /**
      * Registra o formulário
      */
@@ -114,7 +96,6 @@ module.exports = controller => {
     });
 
     var authenticate = (key, ret, cb) => getSessionId(storedKey => {
-        cb = cb || (s => console.debug(`authentication ${s ? 'success' : 'failed'}`));
         key = key || storedKey;
         if (!key) {
             cb(false);
@@ -132,7 +113,7 @@ module.exports = controller => {
             controller.trigger('authentication::authenticated::end');
         });
 
-        cb(true);
+        if (cb) cb(true);
     });
 
     /**

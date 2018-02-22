@@ -1,3 +1,5 @@
+// @flow
+
 const LENGTH_REGEX = /%+/g;
 const JOB_REGEX = /%([^%]+)/g;
 

@@ -39,7 +39,9 @@ module.exports = (locale, controller) => {
     try {
         moment.locale(language);
         numeral.locale(numeralConversor[language]);
-    } catch (e) {}
+    } catch (e) {
+        /* pass */
+    }
 
     const validLanguage = validLanguages[language];
     validLanguage.pikaday = validPikaday[language];

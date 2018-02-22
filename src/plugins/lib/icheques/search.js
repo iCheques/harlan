@@ -32,7 +32,7 @@ module.exports = controller => {
         var query = squel.select().from('ICHEQUES_CHECKS').where(expr).toString();
         var databaseResult = controller.call('icheques::result::database', controller.database.exec(query)[0]);
 
-        if (!databaseResult.values.length) {
+        if (!databaseResult.values || !databaseResult.values.length) {
             callback();
             return;
         }
