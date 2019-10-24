@@ -21,6 +21,7 @@ module.exports = controller => {
         if (tags.indexOf('no-veiculos') === -1) veiculosCall();
         statuspageCall();
         monitoramentoCall();
+        harlan.call('monitoramentoPDF::print');
     }).fail(() => {
         callback();
         failAlert();
