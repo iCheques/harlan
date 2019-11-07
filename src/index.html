@@ -2,17 +2,20 @@
 <html>
     <head>
         <script src="/js/app-installer.js" async></script>
-        <title data-i18n="index.title">Harlan | Desfrute de todo potencial da informação</title>
-        <meta name="description" content="Através do Harlan você utiliza toda informação a seu favor de maneira prática e rápida">
-        @@include("static-template/head.tpl")
+        <title data-i18n="index.title">CreditHub|Seu Hub de Crédito</title>
+        <meta name="description" content="Monitoramos seus cheques, só assim você tem certeza que os cheques que recebeu continuam bons.">
+        <link rel="manifest" href="manifest-icheques.json">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <link rel="shortcut icon" href="/images/icheques/favicon.png"/>
+        <link href="//fonts.googleapis.com/css?family=Poiret+One|Open+Sans:400italic,400,300,600,700,800|Open+Sans+Condensed:300,700" rel="stylesheet" type="text/css" />
+        <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/app.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/5981736.js"></script>
     </head>
     <body>
-        <!-- Mantém para evitar Ajax -->
         <div id="install-screen" class="progress hide">
             @@include("static-template/progress.tpl")
-        </div>
-        <div class="site hide">
-            @@include("static-template/site.tpl")
         </div>
         <div class="login hide">
             @@include("static-template/login.tpl")
