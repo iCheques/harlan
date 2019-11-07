@@ -3,15 +3,14 @@ module.exports = controller => {
     controller.registerCall('icheques::welcome', ret => {
 
         var report = controller.call('report',
-            'Seja bem vindo ao iCheques',
-            'Cheque sem susto.',
-            'O iCheques é uma ferramenta desenvolvida para você evitar inadimplência em sua carteira de cheques e tambem possibilita a antecipação com seus parceiros financeiros.',
+            'Seja bem vindo ao CreditHub',
+            'Somos seu mais novo Hub de crédito que reune diversas consultas avançadas e ajudamos a antecipar seus cheques ou duplicatas com +300 Financeiras por todo Brasil.',
             false);
 
         if (!controller.confs.isCordova) {
             report.button('Adicionar Cheque', () => {
                 controller.call('icheques::newcheck');
-            }).addClass('green-button');
+            }).addClass('credithub-button');
 
             report.button('Dados Cadastrais', () => {
                 controller.call('icheques::form::company');
