@@ -165,6 +165,7 @@ label {
         background: red;
         display: inline-block;
         background: url("../images/harlan.png");
+        background-position: center;
     }
 }
 
@@ -1064,6 +1065,18 @@ textarea {
                 background-color: lighten(rgb(52, 163, 54), 12%);
             }
         }
+
+        &.credithub-button {
+            background-color: #004a84;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+            box-shadow: 1px 1px 1px rgb(210, 210, 210);
+            border: none;
+
+            &:hover {
+                background-color: #0186ef;
+            }
+        }
     }
 
     &[type="checkbox"] {
@@ -1602,7 +1615,7 @@ input.link {
     width: 166px;
     height: 166px;
     display: inline-block;
-    background: url("../images/gamification.svg");
+    background: url("../images/gamification.png");
     background-position: 50px 50px;
     background-size: 1180px 1204px;
     @media (max-width: 600px) {
@@ -1856,7 +1869,7 @@ a.help {
 .row {
     display: flex;
 }
-  
+
 .column {
     flex: 50%;
 }
