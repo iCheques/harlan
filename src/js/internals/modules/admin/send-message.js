@@ -21,7 +21,7 @@ module.exports = controller => {
             let progress = modal.addProgress();
 
             let sended = 0;
-            each(apiKeys, (apiKey, callback) => $.bipbop('INSERT INTO \'TRIGGER\'.\'TRIGGER\'', apiKey, controller.call('error::ajax', {
+            eachLimit(apiKeys, 5, (apiKey, callback) => $.bipbop('INSERT INTO \'TRIGGER\'.\'TRIGGER\'', apiKey, controller.call('error::ajax', {
                 method: 'POST',
                 data: JSON.stringify([trigger, {}, moment().unix() + 10]),
                 contentType: 'application/json; charset=utf-8',
