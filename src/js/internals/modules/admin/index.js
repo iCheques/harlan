@@ -50,6 +50,7 @@ module.exports = controller => {
                 let total = 0;
                 doUntil(callback => controller.serverCommunication.call('SELECT FROM \'BIPBOPCOMPANYS\'.\'LIST\'', {
                     data: Object.assign({
+                        limit: 500,
                         skip: apiKeys.length
                     }, filter),
                     success: data => {

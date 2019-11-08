@@ -1,4 +1,4 @@
-import each from 'async/each';
+import eachLimit from 'async/each';
 
 module.exports = controller => {
 
@@ -74,7 +74,7 @@ module.exports = controller => {
             let progress = modal.addProgress();
 
             let sended = 0;
-            each(apiKeys, (apiKey, callback) => $.bipbop('INSERT INTO \'TRIGGER\'.\'TRIGGER\'', apiKey, controller.call('error::ajax', {
+            eachLimit(apiKeys, 5, (apiKey, callback) => $.bipbop('INSERT INTO \'TRIGGER\'.\'TRIGGER\'', apiKey, controller.call('error::ajax', {
                 method: 'POST',
                 data: JSON.stringify(['inbound', Object.assign({
                     filename: 'email-marketing.md' /* formato markdown */
