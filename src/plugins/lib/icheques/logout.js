@@ -14,7 +14,7 @@ module.exports = controller => {
                 location.reload(true); /* prevent information leak */
             });
         } else {
-            window.location = 'https://www.icheques.com.br/';
+            window.location = `http://www.${window.location.hostname.replace('painel.','')}/`;
         }
     });
 
