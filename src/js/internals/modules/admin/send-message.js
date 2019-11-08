@@ -1,4 +1,4 @@
-import eachLimit from 'async/each';
+import eachLimit from 'async/eachLimit';
 
 module.exports = controller => {
 
