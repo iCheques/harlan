@@ -38,7 +38,7 @@ module.exports = controller => {
         });
     })));
 
-    document.title = 'CreditHub|Seu Hub de Crédito';
+    document.title = 'CreditHub | Seu Hub de Crédito';
     controller.interface.helpers.changeFavicon('/images/icheques/favicon.png');
     require('../../styles/icheques.js');
 
