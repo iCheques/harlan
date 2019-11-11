@@ -14,7 +14,12 @@ module.exports = controller => {
                 location.reload(true); /* prevent information leak */
             });
         } else {
-            window.location = 'https://www.icheques.com.br/';
+            controller.call('authentication::unsetSessionId', () => {
+                controller.trigger('authentication::logout::end');
+                if (navigator.serviceWorker && navigator.serviceWorker.controller)
+                    navigator.serviceWorker.controller.postMessage(null);
+                    window.location = 'https://www.credithub.com.br/';
+            });            
         }
     });
 

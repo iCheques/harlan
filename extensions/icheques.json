@@ -24,7 +24,7 @@
     "browser_action": {
         "default_title": "Analisar Cheques"
     },
-    "homepage_url": "http://www.icheques.com.br/",
+    "homepage_url": "http://www.credithub.com.br/",
     "permissions": ["activeTab", "notifications", "tabs", "*://*/*"],
     "version_name": "Beta",
     "web_accessible_resources": [
