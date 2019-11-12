@@ -23,6 +23,12 @@
             </ul>
             <ul>
                 <li>
+                    <a href="http://credithub.statuspage.io/" target="_blank" id="action-show-status"><i class="fa fa-signal"></i></a>
+                    <div class="mdl-tooltip" for="action-show-modules" data-i18n="index.modules">
+                        Situação do Sistema
+                    </div>
+                </li>
+                <li>
                     <a href="#" id="action-show-modules"><i class="fa fa-cubes"></i></a>
                     <div class="mdl-tooltip" for="action-show-modules" data-i18n="index.modules">
                         Módulos
