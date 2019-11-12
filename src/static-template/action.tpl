@@ -24,7 +24,7 @@
             <ul>
                 <li>
                     <a href="http://credithub.statuspage.io/" target="_blank" id="action-show-status"><i class="fa fa-signal"></i></a>
-                    <div class="mdl-tooltip" for="action-show-modules" data-i18n="index.modules">
+                    <div class="mdl-tooltip" for="action-show-status" data-i18n="index.status">
                         Situação do Sistema
                     </div>
                 </li>
