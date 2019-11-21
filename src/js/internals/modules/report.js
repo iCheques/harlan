@@ -119,7 +119,7 @@ module.exports = controller => {
                                 <td class="mdl-data-table__cell--non-numeric">${consultas.veiculos}</td>
                                 <td class="mdl-data-table__cell--non-numeric">${consultas.cpf_cnpj}</td>
                                 <td class="mdl-data-table__cell--non-numeric">${consultas.imoveis}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.refin + consultas.serasa}</td>
+                                <td class="mdl-data-table__cell--non-numeric">${consultas.refin}</td>
                             </tr>
                         </tbody>
                     </table>`;
