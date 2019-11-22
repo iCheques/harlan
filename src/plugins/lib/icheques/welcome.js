@@ -1,6 +1,11 @@
 module.exports = controller => {
 
+
     controller.registerCall('icheques::welcome', ret => {
+        var ichequesReport = controller.call('report',
+            'Adicione um cheque para monitorá-lo até seu vencimento',
+            'A iCheques é a forma mais segura para aceitar e antecipar cheques. Entramos dentro do Banco e consultamos AO VIVO o status do cheque, repetindo a consulta até o vencimento. Alertamos caso mudar o status do cheque.',
+            false);
 
         var report = controller.call('report',
             'Seja bem vindo ao CreditHub',
@@ -8,7 +13,7 @@ module.exports = controller => {
             false);
 
         if (!controller.confs.isCordova) {
-            report.button('Adicionar Cheque', () => {
+            ichequesReport.button('Adicionar Cheque', () => {
                 controller.call('icheques::newcheck');
             }).addClass('credithub-button');
 
@@ -27,9 +32,12 @@ module.exports = controller => {
         }
 
         report.gamification('shield');
+        ichequesReport.gamification('shield').addClass('icheques-shield');
 
+        $('.app-content').prepend(ichequesReport.element());
         $('.app-content').prepend(report.element());
     });
+
 
 
     controller.registerCall('icheques::changeplan', () => {
