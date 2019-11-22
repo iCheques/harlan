@@ -54,6 +54,12 @@ module.exports = controller => {
             callback(sectionDocumentGroup[0]);
         }
 
+        controller.call('tooltip', sectionDocumentGroup[2], 'Download PDF').append($('<i />').addClass('fa fa-download')).click(e => {
+            e.preventDefault();
+            const html = sectionDocumentGroup[0].html();
+            harlan.call('relatorioAnalitico::print', html, true);
+        });
+
         controller.call('tooltip', sectionDocumentGroup[2], 'Imprimir').append($('<i />').addClass('fa fa-print')).click(e => {
             e.preventDefault();
             const html = sectionDocumentGroup[0].html();
