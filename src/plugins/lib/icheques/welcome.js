@@ -120,8 +120,8 @@ module.exports = controller => {
                     break;
                 case 'diamante':
                     list.item('fa-check', 'Franquia ILIMITADA de Consultas CPF/CNPJ/Cheques.');
-                    list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
                     list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
+                    list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
                     list.item('fa-money', 'Mensalidade: R$ 990,99/mês.  Pós-Pago');
                     break;
                 case 'flex':
