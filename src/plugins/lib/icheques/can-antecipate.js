@@ -28,9 +28,9 @@ module.exports = controller => {
         const report = controller.call('report',
             'Cotar Taxas e Limites para Antecipação',
             'Receba o dinheiro antes, não espere até o vencimento. CNPJ obrigatório.',
-            'Na iCheques você preenche seu cadastro PJ e envia ele, gratuitamente e com 1-click, para dezenas de Financeiras.  Encontre as melhores taxas e limites na iCheques sem dor de cabeça!');
+            'No CreditHub você preenche seu cadastro PJ e envia ele, gratuitamente e com 1-click, para dezenas de Financeiras.  Encontre as melhores taxas e limites no CreditHub sem dor de cabeça!');
 
-        report.button('Cotar taxas e limites', () => {
+        report.button('Cotar Taxas e Limites', () => {
             controller.call('icheques::register::all');
         }).addClass('credithub-button');
 

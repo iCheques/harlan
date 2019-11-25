@@ -379,7 +379,7 @@ var AccountOverview = function(closeable) {
         }
     };
 
-    report.newAction('fa-print', printDocuments, 'Imprimir Documentos');
+    report.newAction('fa-print', printDocuments, 'Imprimir Cheques em Carteira');
     report.newAction('fa-folder-open', openDocuments, 'Abrir Cheques');
     report.newAction('fa-money', antecipateAction, 'Antecipar Recebíveis');
 
@@ -504,7 +504,7 @@ var AccountOverview = function(closeable) {
         } else if (!_.without(datasetQueryStatus, 10, null).length) {
             status.html(messages.processing);
         } else if (!_.intersection(datasetQueryStatus, [null, 10, 1]).length) {
-            manipulationItens.push(report.button('Abrir Documentos', () => {
+            manipulationItens.push(report.button('Abrir Cheques', () => {
                 openDocuments();
             }).insertBefore(openButton).addClass('gray-button'));
             let situations = _.pluck(dataset, 'situation');
@@ -613,9 +613,9 @@ var AccountOverview = function(closeable) {
 };
 
 AccountOverview.prototype.about = {
-    title: 'Relatório da Conta',
-    subtitle: 'Situação dos Cheques Cadastrados',
-    description: 'Verifique os principais motivos dos cheques estarem ruins na sua carteira, sejam por sustação, cadastro incorreto e demais.'
+    title: 'Sua Carteira de Cheques',
+    subtitle: 'Cheques em Aberto e/ou Vencidos',
+    description: 'Abra todos cheques de sua carteira (Abrir Cheques) ou filtre o Cheque em questão clicando no botão Filtrar Cheques.  Voce também pode encontrar o cheque digitando seu CMC7, CMF/CNPJ ou numero do cheque no campo de busca.'
 };
 
 module.exports = c => {

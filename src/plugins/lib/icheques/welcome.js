@@ -8,8 +8,9 @@ module.exports = controller => {
             false);
 
         var report = controller.call('report',
-            'Seja bem vindo ao CreditHub',
-            'Somos seu mais novo Hub de crédito que reune diversas consultas avançadas e ajudamos a antecipar seus cheques ou duplicatas com +300 Financeiras por todo Brasil.',
+            'Seja bem vindo ao CreditHub - Seu mais novo Hub de Crédito!',
+            'O CreditHub reune diversas consultas avançadas e ajuda a antecipar seus Cheques ou Duplicatas com +300 Financeiras por todo Brasil.',
+            'Plano inicial - Bronze: Voce paga 3x mais caro.  Veja nossos Planos ao lado e economize até 70% com uma franquia.',
             false);
 
         if (!controller.confs.isCordova) {
@@ -17,11 +18,11 @@ module.exports = controller => {
                 controller.call('icheques::newcheck');
             }).addClass('credithub-button');
 
-            report.button('Dados Cadastrais', () => {
+            report.button('Dados Cadastrais (Emissão de NF)', () => {
                 controller.call('icheques::form::company');
             }).addClass('gray-button');
 
-            if (!harlan.confs.user.contrato[1]) report.button('Alterar Plano',
+            if (!harlan.confs.user.contrato[1]) report.button('Editar Assinatura',
                 () => controller.call('icheques::changeplan'))
                 .addClass('newplan-button');
         } else {
@@ -43,9 +44,9 @@ module.exports = controller => {
     controller.registerCall('icheques::changeplan', () => {
         const modal = controller.call('modal');
         modal.gamification('star');
-        modal.title('Solicitação de Alteração de Plano');
-        modal.subtitle('Solicite uma alteração de plano.');
-        modal.paragraph('Será aberto um chamado para alteração do plano em nosso comercial e você será respondido em até 24 (vinte e quatro) horas úteis.');
+        modal.title('Sua Assinatura CreditHub');
+        modal.subtitle('Vamos assinar uma franquia de consultas (Economia de até 70%)?');
+        modal.paragraph('Todos começam no Plano Bronze, sem mensalidade e pré-pago.  Nele voce paga 3x mais caro (R$1,50 invés de até R$0,50).  Escolha uma franquia abaixo e economize até 70%!');
 
         const form = modal.createForm();
         const plan = form.addSelect('planos', 'planos', {
@@ -62,7 +63,7 @@ module.exports = controller => {
                 reverse: true
             });
 
-        const reference = form.addInput('Referência Comercial', 'text', 'Referência Comercial')
+        const reference = form.addInput('Quem te ajudou / indicou?', 'text', 'Indicação / Ajuda de:')
             .magicLabel('Referência Comercial');
 
         form.element().submit(e => {
@@ -74,7 +75,7 @@ module.exports = controller => {
 
             if (vPlan === 'flex' && parseInt(vVolume, 10) < 50) {
                 volume.addClass('error');
-                toastr.error('Mínimo de 50 (cinquenta) consultas por mês.', 'Mínimo de Consultas');
+                toastr.error('Mínimo de 50 consultas por mês.', 'Mínimo de Consultas');
                 return;
             }
 
@@ -85,7 +86,7 @@ module.exports = controller => {
                     volume: vVolume,
                     reference: vReference,
                 },
-                success: () => toastr.success("Solicitada a alteração de plano, aguarde até 24 (vinte e quatro) horas até que nosso comercial responda.", "Solicitação realizada com sucesso.")
+                success: () => toastr.success("Aguarde até 24hrs para que nosso setor comercial responda.", "Pedido realizada com sucesso.")
             })));
 
             modal.close();
@@ -98,30 +99,35 @@ module.exports = controller => {
             list.empty();
             switch (plan.val()) {
                 case 'noplan':
-                    list.item('fa-check', 'R$ 1,50 consulta de CPF/CNPJ e cheques (até 5 meses).');
+                    list.item('fa-check', 'R$ 1,50 Consulta de CPF/CNPJ.');
+                    list.item('fa-check', 'R$ 1,50 Monitoramento de Cheques (até 5 meses) + R$0,30/mês excedente.');
+                    list.item('fa-check', 'R$ 1 Monitoramento de CPF/CNPJ (Gerencie Carteira).');
+                    list.item('fa-money', 'Mensalidade: R$ 0/mês. Pré-Pago');
                     break;
                 case 'prata':
-                    list.item('fa-check', '500 (quinhentas) consulta CPF/CNPJ e cheques.');
-                    list.item('fa-check', 'Prospecção automática (apenas financeiras).');
-                    list.item('fa-money', 'R$ 250,00 (duzentos e cinquenta reais) por mês.');
-                    list.item('fa-money', 'R$ 1,00 (um real) a consulta de CPF/CNPJ e cheque excedente (até 5 meses).');
+                    list.item('fa-check', 'Franquia de 500 Consultas de CPF/CNPJ/Cheques.');
+                    list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
+                    list.item('fa-money', 'R$ 1 Consulta de CPF/CNPJ/Cheque Excedente.');
+                    list.item('fa-money', 'Mensalidade: R$ 250/mês.  Pós-Pago');
                     break;
                 case 'ouro':
-                    list.item('fa-check', '1.000 (um mil) consulta CPF/CNPJ e cheques.');
-                    list.item('fa-check', 'Protestos e cheques sem fundo nas operações de duplicatas (apenas financeiras).');
-                    list.item('fa-check', 'Prospecção automática (apenas financeiras).');
-                    list.item('fa-money', 'R$ 500,00 (quinhentos reais) por mês.');
-                    list.item('fa-money', 'R$ 1,00 (um real) a consulta de CPF/CNPJ e cheque excedente (até 5 meses).');
+                    list.item('fa-check', 'Franquia de 1.000 Consultas de CPF/CNPJ/Cheques.');
+                    list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
+                    list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
+                    list.item('fa-money', 'R$ 1 Consulta de CPF/CNPJ/Cheque Excedente.');
+                    list.item('fa-money', 'Mensalidade: R$ 500/mês.  Pós-Pago');
                     break;
                 case 'diamante':
-                    list.item('fa-check', 'Consultas ILIMITADAS de CPF/CNPJ e cheques.');
-                    list.item('fa-check', 'Protestos e cheques sem fundo nas operações de duplicatas (apenas financeiras).');
-                    list.item('fa-check', 'Prospecção automática (apenas financeiras).');
-                    list.item('fa-money', 'R$ 999,99 (novecentos e noventa e nove reais) por mês.');
+                    list.item('fa-check', 'Franquia ILIMITADA de Consultas CPF/CNPJ/Cheques.');
+                    list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
+                    list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
+                    list.item('fa-money', 'Mensalidade: R$ 990,99/mês.  Pós-Pago');
                     break;
                 case 'flex':
-                    list.item('fa-check', 'Plano customizado (entraremos em contato).');
-                    list.item('fa-money', 'A partir de R$ 1,00 (um real) para consultas de CPF/CNPJ e cheques.');
+                    list.item('fa-check', 'Franquia Personalizada de Consultas CPF/CNPJ/Cheques.');
+                    list.item('fa-money', 'A partir de R$ 1/Consultas CPF/CNPJ/Cheques.');
+                    list.item('fa-money', 'R$ 1,50 Consulta de CPF/CNPJ/Cheque Excedente.');
+                    list.item('fa-money', 'Mensalidade: R$ X /mês.  Pós-Pago. Mínimo 50 consultas.');
                     volume.show();
                     break;
             }
