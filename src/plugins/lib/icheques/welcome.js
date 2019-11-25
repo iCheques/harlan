@@ -3,8 +3,9 @@ module.exports = controller => {
 
     controller.registerCall('icheques::welcome', ret => {
         var ichequesReport = controller.call('report',
-            'Adicione um cheque para monitorá-lo até seu vencimento',
-            'A iCheques é a forma mais segura para aceitar e antecipar cheques. Entramos dentro do Banco e consultamos AO VIVO o status do cheque, repetindo a consulta até o vencimento. Alertamos caso mudar o status do cheque.',
+            'iCheques - Cheque Sem Susto!',
+            'Consulta e Monitoramento Interbancário de Cheques até o Vencimento',
+            'Nunca mais receba cheques podres.  Consulta recorrente, AO VIVO, até o vencimento, dentro do Banco, e alertamos na troca de ocorrência.  Não há forma mais segura para aceitar cheques em seu negócio.',
             false);
 
         var report = controller.call('report',
