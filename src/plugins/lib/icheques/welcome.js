@@ -137,7 +137,7 @@ module.exports = controller => {
         setPlan();
         plan.change(setPlan);
 
-        form.addSubmit('submit', 'Alterar Plano');
+        form.addSubmit('submit', 'Solicitar Alteração de Plano');
         modal.createActions().cancel();
     });
 
