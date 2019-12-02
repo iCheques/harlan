@@ -21,6 +21,36 @@
                 <input class="button" type="reset" data-i18n-value="login.clear" value="Limpar">
             </div>
         </form>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--6-col"><a href="https://drive.google.com/open?id=1hlLtRQNbiE2qE-3fXn-zeZq3wC414dVu" style="
+                color: #ffffff;
+                font-family: Open Sans,sans-serif;
+                margin: 10px auto;
+                padding: 16px;
+                border: none;
+                border-bottom: 1px solid #e7e7e7;
+                font-size: 12px;
+                background: #3f51b5;
+                font-weight: 400;
+                box-sizing: border-box;
+                display: block;
+                text-decoration: none;
+            ">TERMOS DE SERVIÇO VAREJO</a></div>
+            <div class="mdl-cell mdl-cell--6-col"><a href="https://drive.google.com/open?id=1F-sgyAWvbd5CKVJoY-v088kDL-9Mxfed" style="
+                color: #ffffff;
+                font-family: Open Sans,sans-serif;
+                margin: 10px auto;
+                padding: 16px;
+                border: none;
+                border-bottom: 1px solid #e7e7e7;
+                font-size: 12px;
+                background: #ff4081;
+                font-weight: 400;
+                box-sizing: border-box;
+                display: block;
+                text-decoration: none;
+            ">TERMOS DE SERVIÇO FINANCEIRA</a></div>
+        </div>
         <ul class="actions">
             <li><a class="action-home" href="#" data-i18n="login.home">Home</a></li>
             <li><a id="forgot-password" href="#" data-i18n="login.forget-password">Esqueci minha Senha</a></li>
