@@ -179,8 +179,7 @@ module.exports = controller => {
         const inputPassword = form.addInput('password', 'password', 'Senha').magicLabel();
         const inputConfirmPassword = form.addInput('password-confirm', 'password', 'Confirmar Senha').magicLabel();
 
-        const inputAgree = form.addCheckbox('agree', sprintf('Eu li e aceito o <a href="%s" target="_blank">contrato de usuário</a>.',
-            contract || 'legal/icheques/MINUTA___CONTRATO__VAREJISTA___revisão_1_jcb.pdf'), false);
+        const inputAgree = form.addCheckbox('agree', sprintf('Eu li e aceito os <a href="https://drive.google.com/open?id=1hlLtRQNbiE2qE-3fXn-zeZq3wC414dVu" target="_blank">TERMOS DE SERVIÇO VAREJO</a> ou <a href="https://drive.google.com/open?id=1F-sgyAWvbd5CKVJoY-v088kDL-9Mxfed" target="_blank">TERMOS DE SERVIÇO FINANCEIRA</a>.'), false);
 
         form.addSubmit('login', 'Próximo Passo');
 
@@ -200,7 +199,7 @@ module.exports = controller => {
             }
 
             if (!inputAgree[1].is(':checked')) {
-                errors.push('Você precisa aceitar o contrato de usuário.');
+                errors.push('Você precisa aceitar os termos.');
             }
 
             if (!SAFE_PASSWORD.test(password)) {
