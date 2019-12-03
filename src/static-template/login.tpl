@@ -35,7 +35,7 @@
                 box-sizing: border-box;
                 display: block;
                 text-decoration: none;
-            ">TERMOS DE SERVIÇO VAREJO</a></div>
+            " target="_blank">TERMOS DE SERVIÇO VAREJO</a></div>
             <div class="mdl-cell mdl-cell--6-col"><a href="https://drive.google.com/open?id=1F-sgyAWvbd5CKVJoY-v088kDL-9Mxfed" style="
                 color: #ffffff;
                 font-family: Open Sans,sans-serif;
@@ -44,12 +44,12 @@
                 border: none;
                 border-bottom: 1px solid #e7e7e7;
                 font-size: 12px;
-                background: #ff4081;
+                background: #3f51b5;
                 font-weight: 400;
                 box-sizing: border-box;
                 display: block;
                 text-decoration: none;
-            ">TERMOS DE SERVIÇO FINANCEIRA</a></div>
+            " target="_blank">TERMOS DE SERVIÇO FINANCEIRA</a></div>
         </div>
         <ul class="actions">
             <li><a class="action-home" href="#" data-i18n="login.home">Home</a></li>
