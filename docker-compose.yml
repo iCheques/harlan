@@ -1,0 +1,10 @@
+version: '3'
+services:
+  harlan:
+    build: .
+    command: sh -c "npm install && bower install --allow-root && gulp"
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - ./:/app:cached # <--- This will map ./njs1 to /root/njs1 inside the container.
