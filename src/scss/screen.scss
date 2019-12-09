@@ -799,6 +799,8 @@ label {
         user-select: none;
         box-sizing: border-box;
         position: relative;
+        background-color: #008cf8;
+        color: #fff;
 
         .metadata {
             margin-top: 5px;
@@ -1283,6 +1285,8 @@ input.link {
                 float: left;
                 clear: left;
                 width: 420px;
+                background-color: #008cf8;
+                color: #fff;
 
                 &.action {
                     h2 {
