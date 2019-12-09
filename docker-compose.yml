@@ -1,7 +1,7 @@
 version: '3'
 services:
   harlan:
-    build: .
+    image: davistrife/harlan:v1
     command: sh -c "npm install && bower install --allow-root && gulp"
     ports:
       - "3000:3000"
