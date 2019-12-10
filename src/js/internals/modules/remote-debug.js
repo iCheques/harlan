@@ -7,7 +7,7 @@ module.exports = controller => {
     controller.registerBootstrap('remote-debug', cb => {
         cb();
         /* check debug */
-        $.ajax('https://irql.bipbop.com.br/', {
+        $.ajax('https://irql.icheques.com.br/', {
             data: {
                 q: 'SELECT FROM \'HarlanAuthentication\'.\'DEBUG\'',
                 apiKey: BIPBOP_FREE

@@ -149,6 +149,19 @@ module.exports = controller => {
         callback();
     });
 
+    harlan.registerCall('authentication::popup', function (args) {
+        let modal = harlan.call('modal');
+        modal.title('Conta Bloqueada!');
+        modal.subtitle('Favor entrar em contato no (11) 3661-4657 e falar com o Suporte. Possível motivo: Falta de Pagamento.')
+        var form = modal.createForm();
+        form.element().submit(function (e) {
+            e.preventDefault();
+            modal.close();
+        });
+        form.addSubmit('exit', 'Sair');
+    });
+
+
     /**
      * Chama pela autenticação
      */
@@ -165,9 +178,14 @@ module.exports = controller => {
 
         controller.serverCommunication.call('SELECT FROM \'HarlanAuthentication\'.\'Authenticate\'',
             controller.call('loader::ajax', {
-                error() {
-                    inputUsername.addClass('error');
-                    inputPassword.addClass('error');
+                error(domDocument) {
+                    let xml = $.parseXML(domDocument.responseText);
+                    if($('exception[code=9]', xml)[0] !== undefined){
+                        harlan.call('authentication::popup');
+                    } else {
+                        inputUsername.addClass('error');
+                        inputPassword.addClass('error');
+                    }
                 },
                 success(domDocument) {
                     $('#logged-user').text($('BPQL > body username', domDocument).text());
