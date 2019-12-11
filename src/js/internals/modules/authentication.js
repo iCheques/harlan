@@ -180,7 +180,7 @@ module.exports = controller => {
             controller.call('loader::ajax', {
                 error(domDocument) {
                     let xml = $.parseXML(domDocument.responseText);
-                    if($('exception[code=9]', xml).text().trim() === 'Seu usuário foi bloqueado, entre em contato conosco para maiores informações'){
+                    if($('exception[code=9]', xml).text().trim() === 'Seu usuário foi bloqueado, entre em contato conosco para maiores informações.'){
                         harlan.call('authentication::popup');
                     } else {
                         inputUsername.addClass('error');
