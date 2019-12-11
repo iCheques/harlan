@@ -149,7 +149,7 @@ module.exports = controller => {
         callback();
     });
 
-    harlan.registerCall('authentication::popup', function (args) {
+    harlan.registerCall('authentication::blocked', function (args) {
         let modal = harlan.call('modal');
         modal.title('Conta Bloqueada!');
         modal.subtitle('Favor entrar em contato no (11) 3661-4657 e falar com o Suporte. Possível motivo: Falta de Pagamento.')
@@ -181,7 +181,7 @@ module.exports = controller => {
                 error(domDocument) {
                     let xml = $.parseXML(domDocument.responseText);
                     if($('exception[code=9]', xml).text().trim() === 'Seu usuário foi bloqueado, entre em contato conosco para maiores informações.'){
-                        harlan.call('authentication::popup');
+                        harlan.call('authentication::blocked');
                     } else {
                         inputUsername.addClass('error');
                         inputPassword.addClass('error');
