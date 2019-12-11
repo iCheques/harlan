@@ -185,6 +185,7 @@ module.exports = controller => {
                     } else {
                         inputUsername.addClass('error');
                         inputPassword.addClass('error');
+                        toastr.error('Ops, parece que você digitou o usuário/senha incorretos. Por favor, tente novamente. \nNão consegue entrar? Fale com nosso chat ou ligue no (11) 3661-4657.', 'Usuário/Senha incorretos.');
                     }
                 },
                 success(domDocument) {
