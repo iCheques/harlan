@@ -128,7 +128,7 @@ module.exports = controller =>  {
             return node;
         };
 
-        this.addItem = (name, value, tagname) =>  {
+        this.addItem = (name, value, tagname, after) =>  {
             const node = $('<div />').addClass('field');
 
             if (typeof tagname !== typeof undefined) {
@@ -144,6 +144,10 @@ module.exports = controller =>  {
             }
 
             content.append(node);
+
+            if(after == true) {
+                content.append($('<br>'));
+            }
 
             return node;
         };
