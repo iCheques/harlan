@@ -133,8 +133,6 @@ harlan.addPlugin(controller => {
                 cache: true,
                 data: ajaxQuery,
                 success(response) {
-                    console.log('the response: ')
-                    console.log(response);
                     const dataset = controller.call('myIChequesAccountOverview::dataset', $('BPQL > body > node', response));
                     const report = controller.call('report',
                         'Relatório de Consumo',
