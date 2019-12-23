@@ -1,5 +1,9 @@
-import {CPF} from 'cpf_cnpj';
-import {CNPJ} from 'cpf_cnpj';
+import {
+    CPF
+} from 'cpf_cnpj';
+import {
+    CNPJ
+} from 'cpf_cnpj';
 import async from 'async';
 
 module.exports = controller => {
@@ -27,13 +31,20 @@ module.exports = controller => {
             ccbuscaQuery['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
         }
 
-        controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
+        /*controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
             controller.call('error::ajax', controller.call('loader::ajax', {
                 data: ccbuscaQuery,
                 success(ret) {
                     controller.call('ccbusca::parse', ret, val, callback, ...args);
                 }
-            })));
+            })));*/
+        controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
+            controller.call('ccbusca::loader', {
+                data: ccbuscaQuery,
+                success(ret) {
+                    controller.call('ccbusca::parse', ret, val, callback, ...args);
+                }
+            }));
     });
 
     controller.registerCall('ccbusca::parse', (ret, val, callback, ...args) => {
@@ -85,28 +96,42 @@ module.exports = controller => {
 
         ((() => {
             if ($('ccf-failed', ret).length) {
+                $('.perc').attr('style', 'width: 85%').next().text('85%');
+                $('.modal-content').append('<strong><h3 style="color: #ff0000">Consulta CCF falhou<h3/></strong>');
                 appendMessage('consulta de cheque sem fundo falhou');
                 return;
             }
 
             let totalRegistro = parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
             if (!totalRegistro) {
+                $('.perc').attr('style', 'width: 85%').next().text('85%');
+                $('.modal-content').append('<strong><h3 style="color: #169000">Consulta CCF concluída.<h3/></strong>');
                 appendMessage('sem cheques devolvidos');
                 return;
             }
             let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
             let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
             let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
+            $('.perc').attr('style', 'width: 85%').next().text('85%');
+            $('.modal-content').append('<strong><h3 style="color: #169000">Consulta CCF concluída.<h3/></strong>');
             appendMessage(`total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}`);
             sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'SEEKLOC', 'CCF'));
         }))();
 
         ((() => {
             if ($('ieptb-failed', ret).length) {
+                $('.perc').attr('style', 'width: 95%').next().text('95%');
+                $('.modal-content').append('<strong><h3 style="color: #ff0000">Consulta de protesto falhou.<h3/></strong>');
+                $('.perc').attr('style', 'width: 100%').next().text('100%');
+                $('.modal-content h2').text('Informações carregadas!');
                 appendMessage('consulta de protesto falhou');
                 return;
             }
             if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
+                $('.perc').attr('style', 'width: 95%').next().text('95%');
+                $('.modal-content').append('<strong><h3 style="color: #169000">Consulta de protestos concluída.<h3/></strong>');
+                $('.perc').attr('style', 'width: 100%').next().text('100%');
+                $('.modal-content h2').text('Informações carregadas!');
                 appendMessage('sem protestos');
                 return;
             }
@@ -114,8 +139,30 @@ module.exports = controller => {
                 .get()
                 .map(p => parseInt($(p).text()))
                 .reduce((a, b) => a + b, 0);
+            $('.perc').attr('style', 'width: 95%').next().text('95%');
+            $('.modal-content').append('<strong><h3 style="color: #169000">Consulta de protestos concluída.<h3/></strong>');
             appendMessage(`total de protestos: ${totalProtestos}`);
             sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'IEPTB', 'WS'));
+            $('.perc').attr('style', 'width: 100%').next().text('100%');
+            $('.modal-content h2').text('Informações carregadas!');
         }))();
+    });
+
+    controller.registerCall('ccbusca::loader', (dict) => {
+        const modal = controller.call('modal');
+        modal.title();
+        $('.modal-content h2').html('Carregando Informações <span class="saving"><span>.</span><span>.</span><span>.</span></span>');
+        modal.addProgress(0);
+        const bar = $('.perc');
+        const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+        sleep(2000).then(() => bar.attr('style', 'width: 20%').next().text('20%'));
+        sleep(3000).then(() => bar.attr('style', 'width: 50%').next().text('50%'));
+        sleep(4000).then(() => bar.attr('style', 'width: 80%').next().text('80%'));
+        modal.createActions().add('Fechar').click((e) => {
+            e.preventDefault();
+            modal.close();
+        });
+
+        return dict;
     });
 };
