@@ -148,6 +148,26 @@ module.exports = controller => {
         }))();
     });
 
+    controller.registerCall('ccbusca::card-right', () => {
+        const CardRight = () => {
+            const $card = $('<div>').addClass('mdl-card mdl-shadow--2dp');
+            const $title = $('<div>').addClass('mdl-card__title').append($('<h2>').addClass('mdl-card__title-text'));
+            const $subtitle = $('<div>').addClass('mdl-card__supporting-text');
+            const $cardProgress = $('<div>').addClass('card-progress').css('padding', '16px 16px 20px 16px');
+            $card.append([$title, $subtitle, $cardProgress]);
+            const $cardContainer = $('<div>').css({
+                position: 'fixed',
+                right: 0,
+                bottom: 0,
+                zIndex: 1030
+            });
+
+            $cardContainer.append($card);
+
+            return this;
+        };
+    });
+
     controller.registerCall('ccbusca::loader', (dict) => {
         const modal = controller.call('modal');
         modal.title();
