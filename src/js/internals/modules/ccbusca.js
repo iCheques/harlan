@@ -128,10 +128,6 @@ module.exports = controller => {
                 return;
             }
             if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
-                $('.perc').attr('style', 'width: 95%').next().text('95%');
-                $('.modal-content').append('<strong><h3 style="color: #169000">Consulta de protestos concluída.<h3/></strong>');
-                $('.perc').attr('style', 'width: 100%').next().text('100%');
-                $('.modal-content h2').text('Informações carregadas!');
                 appendMessage('sem protestos');
                 return;
             }
@@ -139,49 +135,43 @@ module.exports = controller => {
                 .get()
                 .map(p => parseInt($(p).text()))
                 .reduce((a, b) => a + b, 0);
-            $('.perc').attr('style', 'width: 95%').next().text('95%');
-            $('.modal-content').append('<strong><h3 style="color: #169000">Consulta de protestos concluída.<h3/></strong>');
             appendMessage(`total de protestos: ${totalProtestos}`);
             sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'IEPTB', 'WS'));
-            $('.perc').attr('style', 'width: 100%').next().text('100%');
-            $('.modal-content h2').text('Informações carregadas!');
         }))();
     });
 
     controller.registerCall('ccbusca::card-right', () => {
-        const CardRight = () => {
-            const $card = $('<div>').addClass('mdl-card mdl-shadow--2dp');
-            const $title = $('<div>').addClass('mdl-card__title').append($('<h2>').addClass('mdl-card__title-text'));
-            const $subtitle = $('<div>').addClass('mdl-card__supporting-text');
-            const $cardProgress = $('<div>').addClass('card-progress').css('padding', '16px 16px 20px 16px');
-            $card.append([$title, $subtitle, $cardProgress]);
-            const $cardContainer = $('<div>').css({
-                position: 'fixed',
-                right: 0,
-                bottom: 0,
-                zIndex: 1030
-            });
+        const $card = $('<div>').addClass('mdl-card mdl-shadow--2dp');
+        const $title = $('<div>').addClass('mdl-card__title').append($('<h2>').addClass('mdl-card__title-text'));
+        const $subtitle = $('<div>').addClass('mdl-card__supporting-text');
+        const $cardProgress = $('<div>').addClass('card-progress').css('padding', '16px 16px 20px 16px');
+        $card.append([$title, $subtitle, $cardProgress]);
+        const $cardContainer = $('<div>').css({
+            position: 'fixed',
+            right: 0,
+            bottom: 0,
+            zIndex: 1030
+        });
 
-            $cardContainer.append($card);
+        $cardContainer.append($card);
 
-            return this;
-        };
+        return $cardContainer;
     });
 
     controller.registerCall('ccbusca::loader', (dict) => {
-        const modal = controller.call('modal');
-        modal.title();
-        $('.modal-content h2').html('Carregando Informações <span class="saving"><span>.</span><span>.</span><span>.</span></span>');
-        modal.addProgress(0);
+        const card = controller.call('ccbusca:card-right');
+        $('.app-content').append(card);
+        $('.mdl-card__title-text').html('Carregando Informações <span class="saving"><span> .</span><span>.</span><span>.</span></span>');
+        $('.card-progress').append(controller.call('progress::init', 0));
         const bar = $('.perc');
         const sleep = time => new Promise(resolve => setTimeout(resolve, time));
-        sleep(2000).then(() => bar.attr('style', 'width: 20%').next().text('20%'));
+        /*sleep(2000).then(() => bar.attr('style', 'width: 20%').next().text('20%'));
         sleep(3000).then(() => bar.attr('style', 'width: 50%').next().text('50%'));
         sleep(4000).then(() => bar.attr('style', 'width: 80%').next().text('80%'));
         modal.createActions().add('Fechar').click((e) => {
             e.preventDefault();
             modal.close();
-        });
+        });*/
 
         return dict;
     });
