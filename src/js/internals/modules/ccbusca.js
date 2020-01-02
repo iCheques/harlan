@@ -23,6 +23,7 @@ module.exports = controller => {
     controller.registerCall('ccbusca', (val, callback, ...args) => {
         let ccbuscaQuery = {
             documento: val,
+            ccfProtesto: true,
             cache: 'DISABLED'
         };
 
@@ -38,13 +39,59 @@ module.exports = controller => {
                     controller.call('ccbusca::parse', ret, val, callback, ...args);
                 }
             })));*/
-        controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
-            controller.call('ccbusca::loader', {
+        const getRandom = (max, min) => parseInt(Math.random() * (max - min) + min);
+        controller.confs.loader = loader;
+        let loader = controller.call('ccbusca::loader');
+
+        let ccfAjax = controller.serverCommunication.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
+            data: ccbuscaQuery,
+            beforeSend() {
+                loader.setActiveStatus('Consultando CCF');
+            }
+        });
+
+        controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'', {
+            data: ccbuscaQuery,
+            beforeSend() {
+                loader.setActiveStatus('Consultando RFB');
+                loader.progressBarChange(getRandom(5, 12));
+            },
+            error(ret) {
+                loader.progressBarChange(getRandom(33, 50));
+                loader.setStatusFailed('Consulta RFB Falhou');
+                controller.confs.finder = ret;
+            },
+        }).then((ret) => {
+            loader.progressBarChange(getRandom(33, 50));
+            loader.setStatusSuccess('Consulta RFB Concluída');
+            controller.confs.finder = ret;
+        }).then(() => {
+            controller.serverCommunication.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
                 data: ccbuscaQuery,
+                beforeSend() {
+                    loader.setActiveStatus('Consultando CCF');
+                },
                 success(ret) {
-                    controller.call('ccbusca::parse', ret, val, callback, ...args);
+                    loader.progressBarChange(getRandom(65, 80));
+                    loader.setStatusSuccess('Consulta CCF Concluída');
+                    $('body', controller.confs.finder).append($('data', ret));
+                    controller.serverCommunication.call('SELECT FROM \'IEPTB\'.\'WS\'', {
+                        data: ccbuscaQuery,
+                        beforeSend() {
+                            loader.setActiveStatus('Consultando Protestos');
+                        },
+                        success(ret) {
+                            loader.progressBarChange(100);
+                            loader.setStatusSuccess('Consulta Protestos Concluída');
+                            $('body', controller.confs.finder).append($('consulta', ret));
+                            controller.call('ccbusca::parse', controller.confs.finder, val, callback, ...args);
+                            loader.searchCompleted();
+                        }
+                    });
                 }
-            }));
+            });
+        });
+
     });
 
     controller.registerCall('ccbusca::parse', (ret, val, callback, ...args) => {
@@ -96,34 +143,24 @@ module.exports = controller => {
 
         ((() => {
             if ($('ccf-failed', ret).length) {
-                $('.perc').attr('style', 'width: 85%').next().text('85%');
-                $('.modal-content').append('<strong><h3 style="color: #ff0000">Consulta CCF falhou<h3/></strong>');
                 appendMessage('consulta de cheque sem fundo falhou');
                 return;
             }
 
             let totalRegistro = parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
             if (!totalRegistro) {
-                $('.perc').attr('style', 'width: 85%').next().text('85%');
-                $('.modal-content').append('<strong><h3 style="color: #169000">Consulta CCF concluída.<h3/></strong>');
                 appendMessage('sem cheques devolvidos');
                 return;
             }
             let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
             let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
             let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
-            $('.perc').attr('style', 'width: 85%').next().text('85%');
-            $('.modal-content').append('<strong><h3 style="color: #169000">Consulta CCF concluída.<h3/></strong>');
             appendMessage(`total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}`);
             sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'SEEKLOC', 'CCF'));
         }))();
 
         ((() => {
             if ($('ieptb-failed', ret).length) {
-                $('.perc').attr('style', 'width: 95%').next().text('95%');
-                $('.modal-content').append('<strong><h3 style="color: #ff0000">Consulta de protesto falhou.<h3/></strong>');
-                $('.perc').attr('style', 'width: 100%').next().text('100%');
-                $('.modal-content h2').text('Informações carregadas!');
                 appendMessage('consulta de protesto falhou');
                 return;
             }
@@ -141,10 +178,13 @@ module.exports = controller => {
     });
 
     controller.registerCall('ccbusca::card-right', () => {
-        const $card = $('<div>').addClass('mdl-card mdl-shadow--2dp');
-        const $title = $('<div>').addClass('mdl-card__title').append($('<h2>').addClass('mdl-card__title-text'));
+        const $card = $('<div>').addClass('mdl-card mdl-shadow--2dp').css('border-radius', '15px 15px 0px 0px');
+        const $title = $('<div>').addClass('mdl-card__title').append($('<h2>').addClass('mdl-card__title-text').append($('span').addClass('status')));
         const $subtitle = $('<div>').addClass('mdl-card__supporting-text');
-        const $cardProgress = $('<div>').addClass('card-progress').css('padding', '16px 16px 20px 16px');
+        const $cardProgress = $('<div>').addClass('card-progress').css({
+            padding: '16px 16px 20px 16px',
+            margin: 'auto'
+        });
         $card.append([$title, $subtitle, $cardProgress]);
         const $cardContainer = $('<div>').css({
             position: 'fixed',
@@ -158,21 +198,85 @@ module.exports = controller => {
         return $cardContainer;
     });
 
-    controller.registerCall('ccbusca::loader', (dict) => {
-        const card = controller.call('ccbusca:card-right');
-        $('.app-content').append(card);
-        $('.mdl-card__title-text').html('Carregando Informações <span class="saving"><span> .</span><span>.</span><span>.</span></span>');
-        $('.card-progress').append(controller.call('progress::init', 0));
-        const bar = $('.perc');
-        const sleep = time => new Promise(resolve => setTimeout(resolve, time));
-        /*sleep(2000).then(() => bar.attr('style', 'width: 20%').next().text('20%'));
-        sleep(3000).then(() => bar.attr('style', 'width: 50%').next().text('50%'));
-        sleep(4000).then(() => bar.attr('style', 'width: 80%').next().text('80%'));
-        modal.createActions().add('Fechar').click((e) => {
-            e.preventDefault();
-            modal.close();
-        });*/
+    controller.registerCall('ccbusca::loader', () => {
+        class Loader {
+            constructor(controllerReference) {
+                this.controller = controllerReference;
+                this.progress;
+                this.card();
+                this.progressBar();
+            }
 
-        return dict;
+            /**
+             * Monta o card do loader.
+             */
+            card = () => {
+                const cardContainer = this.controller.call('ccbusca::card-right');
+                let loadDot = '<span class="saving"><span> .</span><span>.</span><span>.</span></span>';
+                $('.app-content').append(cardContainer).show('slow');
+                $('.mdl-card__title-text').css('margin', 'auto').html($('<span>').addClass('card-title').text('Consulta CPF/CNPJ'));
+                $('.mdl-card__supporting-text').html('Status: <span class=\'status\'></span>' + loadDot + '<br>');
+            }
+
+            /**
+             * Adiciona a barra de progresso.
+             */
+            progressBar = () => {
+                const bar = this.controller.interface.widgets.radialProject($('.card-progress'), 0);
+
+                this.progress = bar.change;
+            }
+
+            /**
+             * Executa uma ação após determinado número de tempo em 'ms'.
+             *
+             * @param {jQuery} time A promisse será executada após esse 'time' em ms.
+             * @param {sleepCallback} resolve - Função de callback a ser executada.
+             */
+            sleep = time => new Promise(resolve => setTimeout(resolve, time))
+
+            /**
+             * Altera a porcentagem da barra de progresso
+             *
+             * @param {int} progress - Porcentagem a ser definida.
+             */
+            progressBarChange = (progress) => this.progress(progress);
+
+            /**
+             * Altera o texto de um determinado elemento.
+             */
+            setText = (seletor, text, append = '') => $(seletor).text(text).append(append);
+
+            /**
+             * Define o titulo do loader.
+             */
+            setTitle = (title) => this.setText('.mdl-card__title-text .card-title', title);
+
+            /**
+             * Define o status atual da pesquisa.
+             */
+            setActiveStatus = (status) => this.setText('.mdl-card__supporting-text .status', status);
+
+            /**
+             * Define o status de uma consulta bem sucedida.
+             */
+            setStatusSuccess = (status) => $('.mdl-card__supporting-text').append('<br>').append($('<span>').text(status).css('color', '#009903'));
+
+            /**
+             * Define o status de uma consulta mal sucedida.
+             */
+            setStatusFailed = (status) => $('.mdl-card__supporting-text').append('<br>').append($('<span>').text(status).css('color', '#ff4500'));
+
+            /**
+             * Define o status atual da pesquisa como concluído e remove o Loader.
+             */
+            searchCompleted = () => {
+                $('.saving').remove();
+                this.setActiveStatus('Consulta concluída!');
+                this.sleep(3000).then(() => $('.mdl-card').parent().fadeOut(3000, function(){ $('.mdl-card').parent().remove();}));
+            };
+        }
+
+        return new Loader(controller);
     });
 };
