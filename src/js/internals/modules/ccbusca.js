@@ -43,13 +43,6 @@ module.exports = controller => {
         controller.confs.loader = loader;
         let loader = controller.call('ccbusca::loader');
 
-        let ccfAjax = controller.serverCommunication.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
-            data: ccbuscaQuery,
-            beforeSend() {
-                loader.setActiveStatus('Consultando CCF');
-            }
-        });
-
         controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'', {
             data: ccbuscaQuery,
             beforeSend() {
@@ -61,28 +54,41 @@ module.exports = controller => {
                 loader.setStatusFailed('Consulta RFB Falhou');
                 controller.confs.finder = ret;
             },
-        }).then((ret) => {
-            loader.progressBarChange(getRandom(33, 50));
-            loader.setStatusSuccess('Consulta RFB Concluída');
-            controller.confs.finder = ret;
+            success(ret) {
+                loader.progressBarChange(getRandom(33, 50));
+                loader.setStatusSuccess('Consulta RFB Concluída');
+                controller.confs.finder = ret;
+            }
         }).then(() => {
             controller.serverCommunication.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
                 data: ccbuscaQuery,
                 beforeSend() {
                     loader.setActiveStatus('Consultando CCF');
                 },
-                success(ret) {
+                error() {
+                    loader.progressBarChange(getRandom(65, 80));
+                    loader.setStatusFailed('Consulta CCF Falhou');
+                },
+                success() {
                     loader.progressBarChange(getRandom(65, 80));
                     loader.setStatusSuccess('Consulta CCF Concluída');
+                },
+                complete(ret) {
                     $('body', controller.confs.finder).append($('data', ret));
                     controller.serverCommunication.call('SELECT FROM \'IEPTB\'.\'WS\'', {
                         data: ccbuscaQuery,
                         beforeSend() {
                             loader.setActiveStatus('Consultando Protestos');
                         },
-                        success(ret) {
+                        error() {
+                            loader.progressBarChange(100);
+                            loader.setStatusFailed('Consulta Protestos Falhou');
+                        },
+                        success() {
                             loader.progressBarChange(100);
                             loader.setStatusSuccess('Consulta Protestos Concluída');
+                        },
+                        complete(ret) {
                             $('body', controller.confs.finder).append($('consulta', ret));
                             controller.call('ccbusca::parse', controller.confs.finder, val, callback, ...args);
                             loader.searchCompleted();
@@ -179,7 +185,7 @@ module.exports = controller => {
 
     controller.registerCall('ccbusca::card-right', () => {
         const $card = $('<div>').addClass('mdl-card mdl-shadow--2dp').css('border-radius', '15px 15px 0px 0px');
-        const $title = $('<div>').addClass('mdl-card__title').append($('<h2>').addClass('mdl-card__title-text').append($('span').addClass('status')));
+        const $title = $('<div>').addClass('mdl-card__title').append($('<h2>').addClass('mdl-card__title-text').append($('<span>').addClass('status')));
         const $subtitle = $('<div>').addClass('mdl-card__supporting-text');
         const $cardProgress = $('<div>').addClass('card-progress').css({
             padding: '16px 16px 20px 16px',
@@ -273,7 +279,9 @@ module.exports = controller => {
             searchCompleted = () => {
                 $('.saving').remove();
                 this.setActiveStatus('Consulta concluída!');
-                this.sleep(3000).then(() => $('.mdl-card').parent().fadeOut(3000, function(){ $('.mdl-card').parent().remove();}));
+                this.sleep(3000).then(() => $('.mdl-card').parent().fadeOut(3000, function () {
+                    $('.mdl-card').parent().remove();
+                }));
             };
         }
 
