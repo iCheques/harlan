@@ -27,10 +27,10 @@ module.exports = controller => {
             cache: 'DISABLED'
         };
 
-        if (CNPJ.isValid(val)) {
+        /*if (CNPJ.isValid(val)) {
             ccbuscaQuery['q[0]'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
             ccbuscaQuery['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
-        }
+        }*/
 
         /*controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
             controller.call('error::ajax', controller.call('loader::ajax', {
