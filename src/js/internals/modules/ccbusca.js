@@ -70,7 +70,11 @@ module.exports = controller => {
                 loader.progressBarChange(getRandom(65, 80));
                 loader.setStatusSuccess('Consulta CCF Concluída');
                 $('#consulta-temporaria body').append($('data', dataCCF.data));
-            }).then(() => {
+            }).catch(() => {
+                loader.progressBarChange(getRandom(65, 80));
+                loader.setStatusSuccess('Consulta CCF Falhou');
+                $('#consulta-temporaria body').append($('ccf-failed'));
+            }).finally(() => {
                 loader.setActiveStatus('Consultando Protestos');
                 ccfParams.set('q', 'SELECT FROM \'IEPTB\'.\'WS\'');
                 axios.get('https://irql.icheques.com.br', {
