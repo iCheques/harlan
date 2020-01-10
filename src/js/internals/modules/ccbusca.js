@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import {
     CPF
 } from 'cpf_cnpj';
@@ -21,16 +22,18 @@ module.exports = controller => {
     });
 
     controller.registerCall('ccbusca', (val, callback, ...args) => {
+        if (!$('.consulta-temporaria').length) $('body').append($('<div>').attr('id', 'consulta-temporaria').css('visibility', 'hidden'));
+
         let ccbuscaQuery = {
             documento: val,
-            ccfProtesto: true,
+            apiKey: controller.server.apiKey(),
             cache: 'DISABLED'
         };
 
-        /*if (CNPJ.isValid(val)) {
-            ccbuscaQuery['q[0]'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
-            ccbuscaQuery['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
-        }*/
+        let ccbuscaQueryRFB = ccbuscaQuery;
+
+        ccbuscaQueryRFB['q[0]'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
+        ccbuscaQueryRFB['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
 
         /*controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
             controller.call('error::ajax', controller.call('loader::ajax', {
@@ -42,62 +45,53 @@ module.exports = controller => {
         const getRandom = (max, min) => parseInt(Math.random() * (max - min) + min);
         controller.confs.loader = loader;
         let loader = controller.call('ccbusca::loader');
+        let finderRFBParams = new URLSearchParams();
+        Object.keys(ccbuscaQueryRFB).forEach(key => finderRFBParams.append(key, ccbuscaQueryRFB[key]));
+        let ccfParams = new URLSearchParams();
+        Object.keys(ccbuscaQuery).forEach(key => ccfParams.append(key, ccbuscaQuery[key]));
 
-        controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'', {
-            data: ccbuscaQuery,
-            beforeSend() {
-                loader.setActiveStatus('Consultando RFB');
-                loader.progressBarChange(getRandom(5, 12));
-            },
-            error(ret) {
-                loader.progressBarChange(getRandom(33, 50));
-                loader.setStatusFailed('Consulta RFB Falhou');
-                controller.confs.finder = ret;
-            },
-            success(ret) {
-                loader.progressBarChange(getRandom(33, 50));
-                loader.setStatusSuccess('Consulta RFB Concluída');
-                controller.confs.finder = ret;
-            }
+        loader.setActiveStatus('Consultando RFB');
+        loader.progressBarChange(getRandom(5, 12));
+        axios.get('https://irql.icheques.com.br', {
+            params: finderRFBParams
+        }).then(dataRFB => {
+            loader.progressBarChange(getRandom(20, 33));
+            loader.setStatusSuccess('Consulta RFB Concluída');
+            $('#consulta-temporaria').append(dataRFB.data);
+            let rfb = $('rfb', $('#consulta-temporaria'));
+            let xml = $('xml', $('#consulta-temporaria'));
+            $('bpql').append($('<body>').append(rfb).append(xml));
         }).then(() => {
-            controller.serverCommunication.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
-                data: ccbuscaQuery,
-                beforeSend() {
-                    loader.setActiveStatus('Consultando CCF');
-                },
-                error() {
-                    loader.progressBarChange(getRandom(65, 80));
-                    loader.setStatusFailed('Consulta CCF Falhou');
-                },
-                success() {
-                    loader.progressBarChange(getRandom(65, 80));
-                    loader.setStatusSuccess('Consulta CCF Concluída');
-                },
-                complete(ret) {
-                    $('body', controller.confs.finder).append($('data', ret));
-                    controller.serverCommunication.call('SELECT FROM \'IEPTB\'.\'WS\'', {
-                        data: ccbuscaQuery,
-                        beforeSend() {
-                            loader.setActiveStatus('Consultando Protestos');
-                        },
-                        error() {
-                            loader.progressBarChange(100);
-                            loader.setStatusFailed('Consulta Protestos Falhou');
-                        },
-                        success() {
-                            loader.progressBarChange(100);
-                            loader.setStatusSuccess('Consulta Protestos Concluída');
-                        },
-                        complete(ret) {
-                            $('body', controller.confs.finder).append($('consulta', ret));
-                            controller.call('ccbusca::parse', controller.confs.finder, val, callback, ...args);
-                            loader.searchCompleted();
-                        }
-                    });
-                }
+            loader.setActiveStatus('Consultando CCF');
+            ccfParams.append('q', 'SELECT FROM \'SEEKLOC\'.\'CCF\'');
+            axios.get('https://irql.icheques.com.br', {
+                params: ccfParams
+            }).then(dataCCF => {
+                loader.progressBarChange(getRandom(65, 80));
+                loader.setStatusSuccess('Consulta CCF Concluída');
+                $('#consulta-temporaria body').append($('data', dataCCF.data));
+            }).then(() => {
+                loader.setActiveStatus('Consultando Protestos');
+                ccfParams.set('q', 'SELECT FROM \'IEPTB\'.\'WS\'');
+                axios.get('https://irql.icheques.com.br', {
+                    params: ccfParams
+                }).then(dataProtestos => {
+                    loader.progressBarChange(100);
+                    loader.setStatusSuccess('Consulta Protestos Concluída');
+                    $('#consulta-temporaria body').append($('consulta', dataProtestos.data));
+                    controller.call('ccbusca::parse', $('#consulta-temporaria'), val, callback, ...args);
+                    loader.searchCompleted();
+                    $('#consulta-temporaria').remove();
+                }).catch(() => {
+                    loader.progressBarChange(100);
+                    loader.setStatusFailed('Consulta Protestos Falhou');
+                    $('#consulta-temporaria body').append($('<ieptb-failed>'));
+                    controller.call('ccbusca::parse', $('#consulta-temporaria')[0], val, callback, ...args);
+                    loader.searchCompleted();
+                    $('#consulta-temporaria').remove();
+                });
             });
         });
-
     });
 
     controller.registerCall('ccbusca::parse', (ret, val, callback, ...args) => {
