@@ -32,8 +32,12 @@ module.exports = controller => {
 
         let ccbuscaQueryRFB = ccbuscaQuery;
 
-        ccbuscaQueryRFB['q[0]'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
-        ccbuscaQueryRFB['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
+        if(CNPJ.isValid(val)) {
+            ccbuscaQueryRFB['q[0]'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
+            ccbuscaQueryRFB['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
+        } else {
+            ccbuscaQueryRFB['q'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
+        }
 
         /*controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
             controller.call('error::ajax', controller.call('loader::ajax', {
@@ -60,8 +64,15 @@ module.exports = controller => {
             $('#consulta-temporaria').append(dataRFB.data);
             let rfb = $('rfb', $('#consulta-temporaria'));
             let xml = $('xml', $('#consulta-temporaria'));
-            $('bpql').append($('<body>').append(rfb).append(xml));
-        }).then(() => {
+            if(CNPJ.isValid(val)) {
+                $('bpql').append($('<body>').append(rfb).append(xml));
+            } else {
+                $('bpql').append($('<body>').append(xml));
+            }
+        }).catch(() => {
+            loader.progressBarChange(getRandom(20, 33));
+            loader.setStatusFailed('Consulta RFB Falhou');
+        }).finally(() => {
             loader.setActiveStatus('Consultando CCF');
             ccfParams.append('q', 'SELECT FROM \'SEEKLOC\'.\'CCF\'');
             axios.get('https://irql.icheques.com.br', {
