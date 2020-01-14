@@ -110,7 +110,7 @@ module.exports = controller => {
                                 <th class="mdl-data-table__cell--non-numeric">Veículos<br>Consultados</th>
                                 <th class="mdl-data-table__cell--non-numeric">CPF/CNPJ<br>Consultados</th>
                                 <th class="mdl-data-table__cell--non-numeric">Imoveis(SP)<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">Pefin/Refin Serasa<br>Consultados</th>
+                                <th class="mdl-data-table__cell--non-numeric">Pefin Boa Vista<br>Consultados</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,7 +146,7 @@ module.exports = controller => {
                                 <th class="mdl-data-table__cell--non-numeric">Veículos<br>Consultados</th>
                                 <th class="mdl-data-table__cell--non-numeric">CPF/CNPJ<br>Consultados</th>
                                 <th class="mdl-data-table__cell--non-numeric">Imoveis(SP)<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">Pefin/Refin Serasa<br>Consultados</th>
+                                <th class="mdl-data-table__cell--non-numeric">Pefin Boa Vista<br>Consultados</th>
                             </tr>
                         </thead>
                         <tbody>
