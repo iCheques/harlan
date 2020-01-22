@@ -70,7 +70,7 @@ module.exports = controller => {
                 $('#consulta-temporaria body').append($('data', dataCCF));
             }).fail(() => {
                 loader.progressBarChange(getRandom(65, 80));
-                loader.setStatusSuccess('Consulta CCF Falhou');
+                loader.setStatusFailed('Consulta CCF Falhou');
                 $('#consulta-temporaria body').append($('ccf-failed'));
             }).done(() => {
                 loader.setActiveStatus('Consultando Protestos');
