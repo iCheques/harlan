@@ -30,7 +30,7 @@ module.exports = controller => {
             cache: 'DISABLED'
         };
 
-        let ccbuscaQueryRFB = ccbuscaQuery;
+        let ccbuscaQueryRFB = $.extend({}, ccbuscaQuery);
 
         if(CNPJ.isValid(val)) {
             ccbuscaQueryRFB['q[0]'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
