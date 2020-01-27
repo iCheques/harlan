@@ -91,38 +91,28 @@ module.exports = controller => {
         this.table = content => {
 
             let url = this.relatorioUrl(true);
+            const thClass = 'mdl-data-table__cell--non-numeric';
+            const secondTheadFields = ['Cheques', 'Veículos', 'CPF/CNPJ', 'Imoveis(SP)', 'Pefin Boa Vista'];
+
             $.ajax({
                 url: url,
                 dataType: 'text',
                 success: function (response) {
-                    let consultas = JSON.parse(response);
+                    const consulta = JSON.parse(response);
 
-                    let table = `
-                    <table class='mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp' style="margin-top: 10px">
-                        <thead>
-                            <tr>
-                                <th colspan="3" class="mdl-data-table__cell--non-numeric">Resumo do mês atual</th>
-                            </tr>
-                        </thead>
-                        <thead>
-                            <tr>
-                                <th class="mdl-data-table__cell--non-numeric">Cheques<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">Veículos<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">CPF/CNPJ<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">Imoveis(SP)<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">Pefin Boa Vista<br>Consultados</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.cheques}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.veiculos}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.cpf_cnpj}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.imoveis}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.refin}</td>
-                            </tr>
-                        </tbody>
-                    </table>`;
+                    const table = $('<table>').append([
+                        $('<thead>').append(
+                            $('<tr>').append($('<th>').attr('colspan', 3).addClass(thClass).text('Resumo do mês atual'))
+                        ),
+                        $('<thead>').append(
+                            $('<tr>').append(secondTheadFields.map((field) => $('<th>').append(`${field}<br>Consultados`).addClass(thClass)))
+                        ),
+                        $('<tbody>').append(
+                            $('<tr>').append(
+                                ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin'].map((field) => $('<th>').append(`${consulta[field]}`).addClass(thClass))
+                            )
+                        )
+                    ]).addClass('mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp').css('margin-top', '10px');
                     $('.right-col').append(table);
                 }
             });
@@ -132,37 +122,25 @@ module.exports = controller => {
                 url: urlMesAnterior,
                 dataType: 'text',
                 success: function (response) {
-                    let consultas = JSON.parse(response);
-                    let table2 = `
-                    <table class='mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp' style="margin-top: 10px">
-                        <thead>
-                            <tr>
-                                <th colspan="3" class="mdl-data-table__cell--non-numeric">Resumo do mês Anterior</th>
-                            </tr>
-                        </thead>
-                        <thead>
-                            <tr>
-                                <th class="mdl-data-table__cell--non-numeric">Cheques<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">Veículos<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">CPF/CNPJ<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">Imoveis(SP)<br>Consultados</th>
-                                <th class="mdl-data-table__cell--non-numeric">Pefin Boa Vista<br>Consultados</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.cheques}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.veiculos}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.cpf_cnpj}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.imoveis}</td>
-                                <td class="mdl-data-table__cell--non-numeric">${consultas.refin}</td>
-                            </tr>
-                        </tbody>
-                    </table>`;
-                    $('.right-col').append(table2);
+                    let consulta = JSON.parse(response);
+                    
+                    const table = $('<table>').append([
+                        $('<thead>').append(
+                            $('<tr>').append($('<th>').attr('colspan', 3).addClass(thClass).text('Resumo do mês Anterior'))
+                        ),
+                        $('<thead>').append(
+                            $('<tr>').append(secondTheadFields.map((field) => $('<th>').append(`${field}<br>Consultados`).addClass(thClass)))
+                        ),
+                        $('<tbody>').append(
+                            $('<tr>').append(
+                                ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin'].map((field) => $('<th>').append(`${consulta[field]}`).addClass(thClass))
+                            )
+                        )
+                    ]).addClass('mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp').css('margin-top', '10px');
+                    $('.right-col').append(table);
                 }
             });
-        }
+        };
 
         this.label = content => {
             const span = $('<span />').addClass('label').text(content);

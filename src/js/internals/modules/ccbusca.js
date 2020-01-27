@@ -33,10 +33,10 @@ module.exports = controller => {
         let ccbuscaQueryRFB = $.extend({}, ccbuscaQuery);
 
         if(CNPJ.isValid(val)) {
-            ccbuscaQueryRFB['q[0]'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
+            ccbuscaQueryRFB['q[0]'] = 'SELECT FROM \'FINDER\'.\'BILLING\'';
             ccbuscaQueryRFB['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
         } else {
-            ccbuscaQueryRFB['q'] = 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'';
+            ccbuscaQueryRFB['q'] = 'SELECT FROM \'FINDER\'.\'BILLING\'';
         }
 
         /*controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
@@ -62,6 +62,9 @@ module.exports = controller => {
             loader.progressBarChange(getRandom(20, 33));
             loader.setStatusSuccess('Consulta RFB Concluída');
             $('#consulta-temporaria').append(dataRFB.data);
+            $('LocalizePessoaFisica').length ?
+                $('LocalizePessoaFisica', $('#consulta-temporaria')).replaceWith('<xml>' + $('LocalizePessoaFisica').html() +'</xml>') :
+                $('LocalizePessoaJuridica', $('#consulta-temporaria')).replaceWith('<xml>' + $('LocalizePessoaJuridica').html() +'</xml>');
             let rfb = $('rfb', $('#consulta-temporaria'));
             let xml = $('xml', $('#consulta-temporaria'));
             if(CNPJ.isValid(val)) {
@@ -89,7 +92,7 @@ module.exports = controller => {
                 loader.setActiveStatus('Consultando Protestos');
                 ccfParams.set('q', 'SELECT FROM \'IEPTB\'.\'WS\'');
                 axios.get('https://irql.icheques.com.br', {
-                    params: ccfParams
+                    params: ccfParams,
                 }).then(dataProtestos => {
                     loader.progressBarChange(100);
                     loader.setStatusSuccess('Consulta Protestos Concluída');

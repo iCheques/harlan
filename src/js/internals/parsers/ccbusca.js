@@ -23,14 +23,14 @@ module.exports = controller => {
     }
 
     const setAddress = (result, jdocument) => {
-        const init = 'BPQL > body enderecos > endereco';
+        const init = 'BPQL > body enderecos > enderecos';
 
         const addressElements = [];
         const cepElements = [];
 
         jdocument.find(init).each((i, node) => {
             const nodes = {
-                Tipo : 'tipo',
+                Tipo : 'tipoLogradouro',
                 Endereço: 'logradouro',
                 Número: 'numero',
                 Complemento: 'complemento',
@@ -130,15 +130,17 @@ module.exports = controller => {
         let phones = [];
         let emails = [];
 
-        jdocument.find('BPQL > body telefone').each((idx, node) => {
+        let $phones = jdocument.find('BPQL > body telefones > fixos > fixos').get();
+        jdocument.find('BPQL > body telefones > moveis > moveis').get().forEach((moveis) => $phones.push(moveis));
+        $phones.forEach((node => {
             const jnode = $(node);
-            phones.push(`(${jnode.find('ddd').text()}) ${jnode.find('numero').text()}`);
-        });
+            phones.push(`(${jnode.find('telefone').text().slice(0, 2)}) ${jnode.find('telefone').text().slice(2)}`);
+        }));
 
-        jdocument.find('BPQL > body email').each((idx, node) => {
-            let email = $(node).text().trim();
+        jdocument.find('BPQL > body emails > emails').each((idx, node) => {
+            let email = $(node).find('email').text().trim();
             if (!email) return;
-            if (_.contains(emails, email)) return;
+            //if (_.contains(emails, email)) return;
             emails.push(email);
         });
 
@@ -183,22 +185,22 @@ module.exports = controller => {
     };
 
     const setQSA = (result, jdocument) => {
-        let $empresas = jdocument.find('BPQL > body qsa > socio');
+        let $empresas = jdocument.find('BPQL > body quadroSocietario > quadroSocietario');
 
         if ($empresas.length === 0) return;
 
-        for (let node of $empresas) {
+        $empresas.get().forEach((node) => {
             let $node = $(node);
 
             let nodes = {
                 Sócio: 'nome',
-                CPF: 'doc',
+                CPF: 'documento',
                 // "Participação": "quali"
             };
 
             let dict = {
-                documento: pad(11, $(node).find('doc').text().replace(/^0+/g, ''), '0'),
-                ihash: $(node).find('doc').attr('ihash')
+                documento: pad(11, $(node).find('documento').text().replace(/^0+/g, ''), '0'),
+                //ihash: $(node).find('doc').attr('ihash')
             };
 
             let items = {};
@@ -235,26 +237,26 @@ module.exports = controller => {
                 if (idx === 'Sócio') companys.push(nodes[idx]);
                 result.addItem(idx, nodes[idx]);
             }
-        }
+        });
     };
 
     const setSociety = (result, jdocument) => {
-        let $empresas = jdocument.find('BPQL > body parsocietaria > empresa');
+        let $empresas = jdocument.find('BPQL > body participacoesEmpresas > participacoesEmpresas');
 
         if ($empresas.length === 0) return;
 
-        for (let node of $empresas) {
+        $empresas.get().forEach((node) => {
             let $node = $(node);
 
             let nodes = {
                 Empresa: 'nome',
-                CNPJ: 'cnpj',
+                CNPJ: 'documento',
                 // "Participação": "quali"
             };
 
             let dict = {
-                documento: $(node).find('cnpj').text(),
-                ihash: $(node).find('cnpj').attr('ihash')
+                documento: $(node).find('documento').text(),
+                //ihash: $(node).find('cnpj').attr('ihash')
             };
 
             let items = {};
@@ -290,7 +292,7 @@ module.exports = controller => {
                 if (idx === 'CNPJ') nodes[idx] = CNPJ.format(nodes[idx]);
                 result.addItem(idx, nodes[idx]);
             }
-        }
+        });
     };
 
     const parserConsultas = document => {
@@ -301,11 +303,22 @@ module.exports = controller => {
         const nodes = {
             Nome: 'nome',
             'CPF/CNPJ': 'cpf',
-            'Nome da Mãe' : 'nomemae',
+            'Nome da Mãe' : 'maeNome',
+            'CPF da Mãe': 'maecpf',
+            'Data de Nascimento': 'datanascimento',
+            Situação: 'status',
+            Idade: 'idade',
+            Signo: 'signo',
+            Sexo: 'sexo',
+            RG: 'rg',
+            'RG/UF': 'ufrg',
+            'Óbito Provável': 'obitobitoprovavel',
             'Atividade Econômica' : 'atividade-economica',
             'Natureza Jurídica' : 'natureza-juridica',
-            Situação : 'situacao',
             'Data de Abertura' : 'data-abertura',
+            'Idade da Empresa': 'idadeEmpresa',
+            'Quantidade de Funcionários': 'quantidadeFuncionarios',
+            'Porte da Empresa': 'porteEmpresa',
         };
 
         const init = 'BPQL > body ';
@@ -339,13 +352,14 @@ module.exports = controller => {
         if (doc) {
             controller.trigger('ccbusca::parser', { result, doc });
         }
+
         setAddress(result, jdocument);
         setContact(result, jdocument);
         setSociety(result, jdocument);
         setQSA(result, jdocument);
         setSocio(result, jdocument);
         setEmpregador(result, jdocument);
-        
+
         return result.element();
     };
 
