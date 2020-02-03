@@ -302,7 +302,8 @@ module.exports = controller => {
 
         const nodes = {
             Nome: 'nome',
-            'CPF/CNPJ': 'cpf',
+            CPF: 'cpf',
+            CNPJ: 'cnpj',
             'Nome da Mãe' : 'maeNome',
             'CPF da Mãe': 'maecpf',
             'Data de Nascimento': 'datanascimento',
@@ -327,7 +328,7 @@ module.exports = controller => {
             let data = jdocument.find(init + nodes[idx]).first().text();
             if (/^\**$/.test(data))
                 continue;
-            if (idx === 'CPF/CNPJ') {
+            if (idx === 'CPF' || idx === 'CNPJ') {
                 data = data.replace(/^0+/, '');
                 data = pad(11, data, '0');
                 if (CPF.isValid(data)) {
