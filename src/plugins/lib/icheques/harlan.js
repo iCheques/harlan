@@ -466,13 +466,13 @@ module.exports = controller => {
                 title: 'Deseja realmente forçar a atualização do cheque?',
                 subtitle: 'O cheque pode ser bloqueado por excesso de tentativas junto ao operador bancário.',
                 paragraph: 'Atenção! Caso não saiba o que está fazendo não proceda esta operação.'
-            }, () => controller.server.call('SELECT FROM \'PUSH\'.\'DAEMON\'', controller.call('loader::ajax', { 
+            }, () => controller.server.call('SELECT FROM \'PUSH\'.\'DAEMON\'', controller.call('loader::ajax', {
                 dataType: 'json',
                 data: { id: check.pushId },
                 success: () => toastr.warning('O cheque foi atualizado com sucesso.', 'Aguarde até que a interface seja atualizada.'),
                 error: () => toastr.error('O cheque não foi atualizado com sucesso.', 'Aguarde ou entre em contato caso necessite com urgência da informação.'),
             })));
-        });        
+        });
 
         separator.addClass('external-source loading');
         const checkResult = controller.call('result');
@@ -679,14 +679,14 @@ module.exports = controller => {
         let queryList = [];
 
         if (CNPJ.isValid(task[0])) {
-            queryList.push(callback => queryTry(callback, 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'CONSULTA\'', {
-                'q[0]' : 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'CONSULTA\'',
+            queryList.push(callback => queryTry(callback, 'SELECT FROM \'FINDER\'.\'CONSULTA\'', {
+                'q[0]' : 'SELECT FROM \'FINDER\'.\'CONSULTA\'',
                 'q[1]' : 'SELECT FROM \'RFB\'.\'CERTIDAO\'',
             }));
         }
 
-        queryList.push(callback => queryTry(callback, 'USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'CONSULTA\''));
-        queryList.push(callback => queryTry(callback, 'SELECT FROM \'CCBUSCA\'.\'CONSULTA\''));
+        queryList.push(callback => queryTry(callback, 'SELECT FROM \'FINDER\'.\'CONSULTA\''));
+        //queryList.push(callback => queryTry(callback, 'SELECT FROM \'CCBUSCA\'.\'CONSULTA\''));
 
         async.tryEach(queryList, (err, ret) => {
             section[0].removeClass('loading');
