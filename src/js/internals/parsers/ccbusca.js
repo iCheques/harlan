@@ -22,8 +22,8 @@ module.exports = controller => {
         return true;
     }
 
-    const setAddress = (result, jdocument) => {
-        const init = 'BPQL > body enderecos > enderecos';
+    const setAddress = (result, jdocument, rfb=false) => {
+        const init = rfb ? 'BPQL > body enderecos > endereco' : 'BPQL > body enderecos > enderecos';
 
         const addressElements = [];
         const cepElements = [];
@@ -127,26 +127,36 @@ module.exports = controller => {
     };
 
     const setContact = (result, jdocument) => {
+        const formatarTelefone = (telefone, secondSlice=2) => `(${telefone.slice(0, 2)}) ${telefone.slice(secondSlice)}`;
         let phones = [];
         let emails = [];
 
-        let $phones = jdocument.find('BPQL > body telefones > fixos > fixos').get();
-        jdocument.find('BPQL > body telefones > moveis > moveis').get().forEach((moveis) => $phones.push(moveis));
+        const telefonesFixos = jdocument.find('BPQL > body telefones > fixos > fixos').get();
+        const telefonesMoveis = jdocument.find('BPQL > body telefones > moveis > moveis').get();
+        const emailsFinder = jdocument.find('BPQL > body emails > emails');
+        const telefoneRFB = jdocument.find('BPQL > body > RFB > telefones');
+        const emailRFB = jdocument.find('BPQL > body email');
+
+        let $phones = telefonesFixos;
+
+        telefonesMoveis.forEach((moveis) => $phones.push(moveis));
+
         $phones.forEach((node => {
-            const jnode = $(node);
-            phones.push(`(${jnode.find('telefone').text().slice(0, 2)}) ${jnode.find('telefone').text().slice(2)}`);
+            const telefone = $(node).find('telefone').text();
+            phones.push(formatarTelefone(telefone));
         }));
 
-        jdocument.find('BPQL > body emails > emails').each((idx, node) => {
+        emailsFinder.each((idx, node) => {
             let email = $(node).find('email').text().trim();
             if (!email) return;
             //if (_.contains(emails, email)) return;
             emails.push(email);
         });
 
-        if (!phones.length && !emails.length) {
-            return;
-        }
+        if (telefoneRFB.length) phones.push(formatarTelefone(telefoneRFB.text(), 3));
+        if (emailRFB.length) emails.push(jdocument.find('BPQL > body email').text());
+
+        if (!phones.length && !emails.length) return;
 
         phones = _.uniq(phones);
         emails = _.uniq(emails);
@@ -307,7 +317,7 @@ module.exports = controller => {
             'Nome da Mãe' : 'maeNome',
             'CPF da Mãe': 'maecpf',
             'Data de Nascimento': 'datanascimento',
-            Situação: 'status',
+            Situação: 'receitaStatus',
             Idade: 'idade',
             Signo: 'signo',
             Sexo: 'sexo',
@@ -355,6 +365,7 @@ module.exports = controller => {
         }
 
         setAddress(result, jdocument);
+        setAddress(result, jdocument, true);
         setContact(result, jdocument);
         setSociety(result, jdocument);
         setQSA(result, jdocument);
