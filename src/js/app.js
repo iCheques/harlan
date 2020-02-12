@@ -19,7 +19,7 @@ import browserUpdate from 'browser-update';
     harlan.i18n = new I18n(localStorage.language ||
         navigator.language ||
         navigator.userLanguage || 'pt', this);
-    
+
     if (harlan.confs.icheques.hosts.includes(document.location.hostname)) {
         harlan.confs.webserviceAddress = 'https://irql.icheques.com.br/';
         harlan.confs.websocketAddress = 'wss://irql.icheques.com.br/ws';
@@ -104,7 +104,7 @@ import browserUpdate from 'browser-update';
     require('./internals/modules/smartsupp')(harlan);
     require('./internals/modules/cordova')(harlan);
     require('./internals/modules/blockui')(harlan);
-    require('./internals/modules/push-notification')(harlan);
+    //require('./internals/modules/push-notification')(harlan);
     require('./internals/modules/browser-update')(harlan);
     require('./internals/modules/post-message')(harlan);
     require('./internals/modules/link')(harlan);
