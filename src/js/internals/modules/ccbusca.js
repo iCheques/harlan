@@ -58,6 +58,7 @@ module.exports = controller => {
         loader.progressBarChange(getRandom(5, 8));
 
         setTimeout(function(){
+            loader.setStatusSuccess('Consulta nos Robôs Investigadores Concluída');
             loader.setActiveStatus('Consultando RFB');
             loader.progressBarChange(getRandom(10, 18));
             axios.get('https://irql.icheques.com.br', {
