@@ -30,6 +30,28 @@ module.exports = controller => {
             const form = modal.createForm();
             form.element().submit(e => {
                 e.preventDefault();
+                delete sessionStorage.apiKey;
+                let loggedout = false;
+
+                const logout = () => {
+                    loggedout = true;
+                    controller.serverCommunication.apiKey(BIPBOP_FREE);
+                    controller.call('default::page');
+                    $('#input-username').val('');
+                    $('#input-password').val('');
+                    $('#input-save-password').removeAttr('checked');
+                    const setSessionId = (value, cb) => {
+                        if (!value) localStorage.removeItem('sessionId', cb);
+                        else localStorage.setItem('sessionId', value, cb);
+                    };
+                    setSessionId(null, () => {
+                        controller.trigger('authentication::logout::end');
+                        if (navigator.serviceWorker && navigator.serviceWorker.controller)
+                            navigator.serviceWorker.controller.postMessage(null);
+                        location.reload(true); /* prevent information leak */
+                    });
+                };
+                logout();
                 modal.close();
             });
             form.addSubmit('exit', 'Entrar');
@@ -95,6 +117,28 @@ module.exports = controller => {
             const form = modal.createForm();
             form.element().submit(e => {
                 e.preventDefault();
+                delete sessionStorage.apiKey;
+                let loggedout = false;
+
+                const logout = () => {
+                    loggedout = true;
+                    controller.serverCommunication.apiKey(BIPBOP_FREE);
+                    controller.call('default::page');
+                    $('#input-username').val('');
+                    $('#input-password').val('');
+                    $('#input-save-password').removeAttr('checked');
+                    const setSessionId = (value, cb) => {
+                        if (!value) localStorage.removeItem('sessionId', cb);
+                        else localStorage.setItem('sessionId', value, cb);
+                    };
+                    setSessionId(null, () => {
+                        controller.trigger('authentication::logout::end');
+                        if (navigator.serviceWorker && navigator.serviceWorker.controller)
+                            navigator.serviceWorker.controller.postMessage(null);
+                        location.reload(true); /* prevent information leak */
+                    });
+                };
+                logout();
                 modal.close();
             });
             form.addSubmit('exit', 'Entrar');
