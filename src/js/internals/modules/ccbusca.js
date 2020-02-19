@@ -54,62 +54,68 @@ module.exports = controller => {
         let ccfParams = new URLSearchParams();
         Object.keys(ccbuscaQuery).forEach(key => ccfParams.append(key, ccbuscaQuery[key]));
 
-        loader.setActiveStatus('Consultando RFB');
-        loader.progressBarChange(getRandom(5, 12));
-        axios.get('https://irql.icheques.com.br', {
-            params: finderRFBParams
-        }).then(dataRFB => {
-            loader.progressBarChange(getRandom(20, 33));
-            loader.setStatusSuccess('Consulta RFB Concluída');
-            $('#consulta-temporaria').append(dataRFB.data);
-            $('LocalizePessoaFisica').length ?
-                $('LocalizePessoaFisica', $('#consulta-temporaria')).replaceWith('<xml>' + $('LocalizePessoaFisica').html() +'</xml>') :
-                $('LocalizePessoaJuridica', $('#consulta-temporaria')).replaceWith('<xml>' + $('LocalizePessoaJuridica').html() +'</xml>');
-            let rfb = $('rfb', $('#consulta-temporaria'));
-            let xml = $('xml', $('#consulta-temporaria'));
-            if(CNPJ.isValid(val)) {
-                $('bpql').append($('<body>').append(rfb).append(xml));
-            } else {
-                $('bpql').append($('<body>').append(xml));
-            }
-        }).catch(() => {
-            loader.progressBarChange(getRandom(20, 33));
-            loader.setStatusFailed('Consulta RFB Falhou');
-        }).finally(() => {
-            loader.setActiveStatus('Consultando CCF');
-            ccfParams.append('q', 'SELECT FROM \'SEEKLOC\'.\'CCF\'');
+        loader.setActiveStatus('Consultando Robôs Investigadores');
+        loader.progressBarChange(getRandom(5, 8));
+
+        setTimeout(function(){
+            loader.setActiveStatus('Consultando RFB');
+            loader.progressBarChange(getRandom(10, 18));
             axios.get('https://irql.icheques.com.br', {
-                params: ccfParams
-            }).then(dataCCF => {
-                loader.progressBarChange(getRandom(65, 80));
-                loader.setStatusSuccess('Consulta CCF Concluída');
-                $('#consulta-temporaria body').append($('data', dataCCF.data));
+                params: finderRFBParams
+            }).then(dataRFB => {
+                loader.progressBarChange(getRandom(25, 33));
+                loader.setStatusSuccess('Consulta RFB Concluída');
+                $('#consulta-temporaria').append(dataRFB.data);
+                $('LocalizePessoaFisica').length ?
+                    $('LocalizePessoaFisica', $('#consulta-temporaria')).replaceWith('<xml>' + $('LocalizePessoaFisica').html() +'</xml>') :
+                    $('LocalizePessoaJuridica', $('#consulta-temporaria')).replaceWith('<xml>' + $('LocalizePessoaJuridica').html() +'</xml>');
+                let rfb = $('rfb', $('#consulta-temporaria'));
+                let xml = $('xml', $('#consulta-temporaria'));
+                if(CNPJ.isValid(val)) {
+                    $('bpql').append($('<body>').append(rfb).append(xml));
+                } else {
+                    $('bpql').append($('<body>').append(xml));
+                }
             }).catch(() => {
-                loader.progressBarChange(getRandom(65, 80));
-                loader.setStatusSuccess('Consulta CCF Falhou');
-                $('#consulta-temporaria body').append($('ccf-failed'));
+                loader.progressBarChange(getRandom(20, 33));
+                loader.setStatusFailed('Consulta RFB Falhou');
             }).finally(() => {
-                loader.setActiveStatus('Consultando Protestos');
-                ccfParams.set('q', 'SELECT FROM \'IEPTB\'.\'WS\'');
+                loader.setActiveStatus('Consultando CCF');
+                ccfParams.append('q', 'SELECT FROM \'SEEKLOC\'.\'CCF\'');
                 axios.get('https://irql.icheques.com.br', {
-                    params: ccfParams,
-                }).then(dataProtestos => {
-                    loader.progressBarChange(100);
-                    loader.setStatusSuccess('Consulta Protestos Concluída');
-                    $('#consulta-temporaria body').append($('consulta', dataProtestos.data));
-                    controller.call('ccbusca::parse', $('#consulta-temporaria'), val, callback, ...args);
-                    loader.searchCompleted();
-                    $('#consulta-temporaria').remove();
+                    params: ccfParams
+                }).then(dataCCF => {
+                    loader.progressBarChange(getRandom(65, 80));
+                    loader.setStatusSuccess('Consulta CCF Concluída');
+                    $('#consulta-temporaria body').append($('data', dataCCF.data));
                 }).catch(() => {
-                    loader.progressBarChange(100);
-                    loader.setStatusFailed('Consulta Protestos Falhou');
-                    $('#consulta-temporaria body').append($('<ieptb-failed>'));
-                    controller.call('ccbusca::parse', $('#consulta-temporaria')[0], val, callback, ...args);
-                    loader.searchCompleted();
-                    $('#consulta-temporaria').remove();
+                    loader.progressBarChange(getRandom(65, 80));
+                    loader.setStatusSuccess('Consulta CCF Falhou');
+                    $('#consulta-temporaria body').append($('ccf-failed'));
+                }).finally(() => {
+                    loader.setActiveStatus('Consultando Protestos');
+                    ccfParams.set('q', 'SELECT FROM \'IEPTB\'.\'WS\'');
+                    axios.get('https://irql.icheques.com.br', {
+                        params: ccfParams,
+                    }).then(dataProtestos => {
+                        loader.progressBarChange(100);
+                        loader.setStatusSuccess('Consulta Protestos Concluída');
+                        $('#consulta-temporaria body').append($('consulta', dataProtestos.data));
+                        controller.call('ccbusca::parse', $('#consulta-temporaria'), val, callback, ...args);
+                        loader.searchCompleted();
+                        $('#consulta-temporaria').remove();
+                    }).catch(() => {
+                        loader.progressBarChange(100);
+                        loader.setStatusFailed('Consulta Protestos Falhou');
+                        $('#consulta-temporaria body').append($('<ieptb-failed>'));
+                        controller.call('ccbusca::parse', $('#consulta-temporaria')[0], val, callback, ...args);
+                        loader.searchCompleted();
+                        $('#consulta-temporaria').remove();
+                    });
                 });
             });
-        });
+        }, 3000);
+
     });
 
     controller.registerCall('ccbusca::parse', (ret, val, callback, ...args) => {
