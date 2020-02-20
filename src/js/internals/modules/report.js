@@ -105,7 +105,7 @@ module.exports = controller => {
                             $('<tr>').append($('<th>').attr('colspan', 3).addClass(thClass).text('Resumo do mês atual'))
                         ),
                         $('<thead>').append(
-                            $('<tr>').append(secondTheadFields.map((field) => $('<th>').append(`${field}<br>Consultados`).addClass(thClass)))
+                            $('<tr>').append(secondTheadFields.map((field) => $('<th>').append(`${field}`).addClass(thClass)))
                         ),
                         $('<tbody>').append(
                             $('<tr>').append(
@@ -123,13 +123,13 @@ module.exports = controller => {
                 dataType: 'text',
                 success: function (response) {
                     let consulta = JSON.parse(response);
-                    
+
                     const table = $('<table>').append([
                         $('<thead>').append(
                             $('<tr>').append($('<th>').attr('colspan', 3).addClass(thClass).text('Resumo do mês Anterior'))
                         ),
                         $('<thead>').append(
-                            $('<tr>').append(secondTheadFields.map((field) => $('<th>').append(`${field}<br>Consultados`).addClass(thClass)))
+                            $('<tr>').append(secondTheadFields.map((field) => $('<th>').append(`${field}`).addClass(thClass)))
                         ),
                         $('<tbody>').append(
                             $('<tr>').append(
