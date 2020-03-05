@@ -32,12 +32,14 @@ module.exports = controller => {
 
         let ccbuscaQueryRFB = $.extend({}, ccbuscaQuery);
 
-        if(CNPJ.isValid(val)) {
+        /*if(CNPJ.isValid(val)) {
             ccbuscaQueryRFB['q[0]'] = 'SELECT FROM \'FINDER\'.\'BILLING\'';
             ccbuscaQueryRFB['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
         } else {
             ccbuscaQueryRFB['q'] = 'SELECT FROM \'FINDER\'.\'BILLING\'';
-        }
+        }*/
+
+        ccbuscaQueryRFB['q'] = 'SELECT FROM \'FINDER\'.\'BILLING\'';
 
         /*controller.serverCommunication.call('USING \'CCBUSCA\' SELECT FROM \'FINDER\'.\'BILLING\'',
             controller.call('error::ajax', controller.call('loader::ajax', {
