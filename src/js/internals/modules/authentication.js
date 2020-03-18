@@ -162,7 +162,7 @@ module.exports = controller => {
     });
 
     controller.registerCall('authentication::resendActivateCode', (inputUsername) => {
-        toastr.error('Você ainda não validou o e-mail através do link de ativação.\nReenviamos o email para você, confira sua caixa-entrada, caso não ache, verifique a caixa de spam.', 'Conta não validada');
+        toastr.error('Conta não ativada. Por favor clique no link de ativação enviado por e-mail (verifique SPAM também).', 'Conta não ativada');
         controller.serverCommunication.call('SELECT FROM \'HarlanAuthentication\'.\'ResendActivationCode\'', {data: {username: inputUsername}}).then(d => console.log(d));
     });
 
