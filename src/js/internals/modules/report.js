@@ -92,7 +92,7 @@ module.exports = controller => {
 
             let url = this.relatorioUrl(true);
             const thClass = 'mdl-data-table__cell--non-numeric';
-            const secondTheadFields = ['Cheques', 'Veículos', 'CPF/CNPJ', 'Imoveis(SP)', 'Pefin Boa Vista'];
+            const secondTheadFields = ['Cheques', 'Veículos', 'CPF/CNPJ', 'Imoveis(SP)', 'Pefin Boa Vista', 'Score BoaVista'];
 
             $.ajax({
                 url: url,
@@ -109,7 +109,7 @@ module.exports = controller => {
                         ),
                         $('<tbody>').append(
                             $('<tr>').append(
-                                ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin'].map((field) => $('<th>').append(`${consulta[field]}`).addClass(thClass))
+                                ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin', 'score-boavista'].map((field) => $('<th>').append(`${consulta[field]}`).addClass(thClass))
                             )
                         )
                     ]).addClass('mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp').css('margin-top', '10px');

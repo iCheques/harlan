@@ -161,6 +161,11 @@ module.exports = controller => {
         form.addSubmit('exit', 'Sair');
     });
 
+    controller.registerCall('authentication::resendActivateCode', (inputUsername) => {
+        toastr.error('Você ainda não validou o e-mail através do link de ativação.\nReenviamos o email para você, confira sua caixa-entrada, caso não ache, verifique a caixa de spam.', 'Conta não validada');
+        controller.serverCommunication.call('SELECT FROM \'HarlanAuthentication\'.\'ResendActivationCode\'', {data: {username: inputUsername}}).then(d => console.log(d));
+    });
+
     /**
      * Chama pela autenticação
      */
@@ -181,6 +186,8 @@ module.exports = controller => {
                     let xml = $.parseXML(domDocument.responseText);
                     if($('exception[code=9]', xml).text().trim() === 'Seu usuário foi bloqueado, entre em contato conosco para maiores informações.'){
                         harlan.call('authentication::blocked');
+                    } else if ($('exception[code=32]', xml).length) {
+                        controller.call('authentication::resendActivateCode', inputUsername);
                     } else {
                         inputUsername.addClass('error');
                         inputPassword.addClass('error');
