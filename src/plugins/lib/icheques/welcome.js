@@ -23,7 +23,7 @@ module.exports = controller => {
                 controller.call('icheques::form::company');
             }).addClass('gray-button');
 
-            if (!harlan.confs.user.contrato[1]) report.button('Editar Assinatura',
+            report.button('Editar Plano',
                 () => controller.call('icheques::changeplan'))
                 .addClass('newplan-button');
         } else {
@@ -82,7 +82,7 @@ module.exports = controller => {
 
 
             controller.serverCommunication.call("UPDATE 'BIPBOPCOMPANYS'.'PLAN'", controller.call('loader::ajax', controller.call('error::ajax', {
-                data: { 
+                data: {
                     plan: vPlan,
                     volume: vVolume,
                     reference: vReference,
