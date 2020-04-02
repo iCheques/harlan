@@ -311,7 +311,6 @@ module.exports = controller => {
         const result = controller.call('result');
 
         const nodes = {
-            Nome: 'nome',
             CPF: 'cpf',
             CNPJ: 'cnpj',
             'Nome da Mãe' : 'maeNome',
@@ -342,11 +341,13 @@ module.exports = controller => {
                 data = data.replace(/^0+/, '');
                 data = pad(11, data, '0');
                 if (CPF.isValid(data)) {
+                    result.addItem('Nome', jdocument.find(init + 'nome').first().text(), 'nome');
                     result.addItem('CPF', CPF.format(data), nodes[idx]);
                     doc = CPF.format(data);
                 }
                 else {
                     data = pad(14, data, '0');
+                    result.addItem('Nome', jdocument.find(init + '> RFB > nome').first().text(), 'nome');
                     result.addItem('CNPJ', CNPJ.format(data), nodes[idx]);
                     doc = CNPJ.format(data);
                 }
