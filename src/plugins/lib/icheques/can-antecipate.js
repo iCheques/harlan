@@ -44,30 +44,33 @@ module.exports = controller => {
     });
 
     controller.registerCall('icheques::canAntecipate', () => {
-        const [ammount, count] = controller.database.exec(checkQuery)[0].values[0];
-        if (!count) {
-            controller.call('icheques::cantAntecipate');
-            return;
+        const notIsFidc = ((controller.confs.user.tags == undefined) || (!controller.confs.user.tags.includes('FIDC')))
+        if (notIsFidc) {
+            const [ammount, count] = controller.database.exec(checkQuery)[0].values[0];
+            if (!count) {
+                controller.call('icheques::cantAntecipate');
+                return;
+            }
+
+            const report = controller.call('report',
+                'Parabéns! Você possui cheques bons para antecipação.',
+                'Receba o dinheiro antes do vencimento. Desconte seu recebíveis com nossos Parceiros Finaneiros!', !ammount ?
+                    `Você tem <strong>${count}</strong> ${count == 1 ? 'cheque' : 'cheques'} para antecipar com nossos Parceiros Financeiros. Clique abaixo para Antecipar!` :
+                    `Você tem <strong>${count}</strong> ${count == 1 ? 'cheque de valor' : 'cheques que somam'} <strong>${numeral(ammount/100).format('$0,0.00')}<\/strong> para antecipar com nossos Parceiros Financeiros. Clique abaixo para Antecipar!`);
+
+            report.button('Antecipar Cheques', () => {
+                const checks = controller.call('icheques::resultDatabase', controller.database.exec(obtainChecks)[0]).values;
+                controller.call('icheques::antecipate', checks);
+            }).addClass('credithub-button');
+
+            report.gamification('checkPoint');
+
+            if (element) {
+                element.replaceWith(report.element());
+            }
+            element = report.element();
+            $('.app-content').prepend(element);
         }
-
-        const report = controller.call('report',
-            'Parabéns! Você possui cheques bons para antecipação.',
-            'Receba o dinheiro antes do vencimento. Desconte seu recebíveis com nossos Parceiros Finaneiros!', !ammount ?
-                `Você tem <strong>${count}</strong> ${count == 1 ? 'cheque' : 'cheques'} para antecipar com nossos Parceiros Financeiros. Clique abaixo para Antecipar!` :
-                `Você tem <strong>${count}</strong> ${count == 1 ? 'cheque de valor' : 'cheques que somam'} <strong>${numeral(ammount/100).format('$0,0.00')}<\/strong> para antecipar com nossos Parceiros Financeiros. Clique abaixo para Antecipar!`);
-
-        report.button('Antecipar Cheques', () => {
-            const checks = controller.call('icheques::resultDatabase', controller.database.exec(obtainChecks)[0]).values;
-            controller.call('icheques::antecipate', checks);
-        }).addClass('credithub-button');
-
-        report.gamification('checkPoint');
-
-        if (element) {
-            element.replaceWith(report.element());
-        }
-        element = report.element();
-        $('.app-content').prepend(element);
     });
 
     controller.registerTrigger('icheques::deleted',
