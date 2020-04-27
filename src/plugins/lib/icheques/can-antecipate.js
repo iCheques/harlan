@@ -40,7 +40,8 @@ module.exports = controller => {
             element.replaceWith(report.element());
         }
         element = report.element();
-        $('.app-content').prepend(element);
+        //$('.app-content').prepend(element);
+        $('.ichequesAccountOverview').length ? element.insertAfter($('.ichequesAccountOverview')) : $('.app-content').prepend(element);
     });
 
     controller.registerCall('icheques::canAntecipate', () => {
