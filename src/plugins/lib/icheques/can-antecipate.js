@@ -44,7 +44,7 @@ module.exports = controller => {
     });
 
     controller.registerCall('icheques::canAntecipate', () => {
-        const notIsFidc = ((controller.confs.user.tags == undefined) || (!controller.confs.user.tags.includes('FIDC')))
+        const notIsFidc = ((controller.confs.user.tags == undefined) || (!controller.confs.user.tags.includes('FIDC')));
         if (notIsFidc) {
             const [ammount, count] = controller.database.exec(checkQuery)[0].values[0];
             if (!count) {
@@ -69,7 +69,8 @@ module.exports = controller => {
                 element.replaceWith(report.element());
             }
             element = report.element();
-            $('.app-content').prepend(element);
+            //$('.app-content').prepend(element);
+            $('.ichequesAccountOverview').length ? element.insertAfter($('.ichequesAccountOverview')) : $('.app-content').prepend(element);
         }
     });
 
