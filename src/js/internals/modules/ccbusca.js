@@ -34,7 +34,7 @@ module.exports = controller => {
 
         if(CNPJ.isValid(val)) {
             ccbuscaQueryRFB['q[0]'] = 'SELECT FROM \'FINDER\'.\'BILLING\'';
-            ccbuscaQueryRFB['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\' WHERE \'CACHE\' = \'+1 year\'';
+            ccbuscaQueryRFB['q[1]'] = 'SELECT FROM \'RFB\'.\'CERTIDAO\'';
         } else {
             ccbuscaQueryRFB['q'] = 'SELECT FROM \'FINDER\'.\'BILLING\'';
         }
