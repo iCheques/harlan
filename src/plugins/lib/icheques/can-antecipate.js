@@ -45,8 +45,14 @@ module.exports = controller => {
     });
 
     controller.registerCall('icheques::canAntecipate', () => {
-        const notIsFidc = ((controller.confs.user.tags == undefined) || (!controller.confs.user.tags.includes('FIDC')));
-        if (notIsFidc) {
+        const fidcTags = ['SECURITIZADORA', 'FIDC', 'FACTORING', 'ESC', 'COBRANCA'];
+        let isFidc = false;
+        if (controller.confs.user.tags !== undefined) {
+            const tags = controller.confs.user.tags.map(tag => tag.toUpperCase());
+            const tagsEncontradas = fidcTags.filter(fidcTag => tags.includes(fidcTag));
+            isFidc = tagsEncontradas.length > 0;
+        }
+        if (!isFidc) {
             const [ammount, count] = controller.database.exec(checkQuery)[0].values[0];
             if (!count) {
                 controller.call('icheques::cantAntecipate');
