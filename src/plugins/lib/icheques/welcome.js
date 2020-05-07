@@ -137,7 +137,11 @@ module.exports = controller => {
         setPlan();
         plan.change(setPlan);
 
-        form.addSubmit('submit', 'Solicitar Alteração de Plano');
+        const $alteracaoBtn = form.addSubmit('submit', 'Solicitar Alteração de Plano');
+        $alteracaoBtn.hide();
+        plan.change(function () {
+            !($(this).val() == 'noplan') ? $alteracaoBtn.show() : $alteracaoBtn.hide();
+        });
         modal.createActions().cancel();
     });
 
