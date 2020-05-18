@@ -85,6 +85,7 @@ module.exports = controller => {
         const fieldsCreator = new FieldsCreator();
         const totalDeRegistros = jdocument.find('BPQL > body > consulta > registros').text();
         let valorTotalDeProtestos = 0;
+        const dates = [];
         _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
             result.addSeparator('Protestos em Cartório',
                 $('nome', element).text(),
@@ -112,16 +113,19 @@ module.exports = controller => {
                 let data = $('data', v).text();
                 let valor = $('valor', v).text();
 
-                if ((data && !/^\s*$/.test(data)) && (valor && !/^\s*$/.test(valor))) fieldsCreator.addItemWithBorder({
-                    date: {
-                        name: 'Data do protesto',
-                        value: moment(data, ['YYYY-MM-DD', 'DD-MM-YYYY']).format('DD/MM/YYYY')
-                    },
-                    moneyValue: {
-                        name: 'Valor do protesto',
-                        value: numeral(valor.replace('.', ',')).format('$0,0.00')
-                    }
-                });
+                if ((data && !/^\s*$/.test(data)) && (valor && !/^\s*$/.test(valor))) {
+                    dates.push(moment(data, ['YYYY-MM-DD', 'DD-MM-YYYY']));
+                    fieldsCreator.addItemWithBorder({
+                        date: {
+                            name: 'Data do protesto',
+                            value: moment(data, ['YYYY-MM-DD', 'DD-MM-YYYY']).format('DD/MM/YYYY')
+                        },
+                        moneyValue: {
+                            name: 'Valor do protesto',
+                            value: numeral(valor.replace('.', ',')).format('$0,0.00')
+                        }
+                    });
+                }
 
                 /*result.addSeparator('Detalhes de Protesto',
                     'Informações a respeito de um dos títulos representados no cartório.',
@@ -133,11 +137,13 @@ module.exports = controller => {
             result.element().append(fieldsCreator.element());
             fieldsCreator.resetFields();
         });
-
+        let data = dates.length ? moment.max(dates).format('DD/MM/YYYY') : 'Não Informado';
+        valorTotalDeProtestos = valorTotalDeProtestos > 0 ? numeral(valorTotalDeProtestos).format('$0,0.00') : 'Não Informado';
         result.element().append(fieldsCreator.addSeparator('Resumo de Protestos'));
         fieldsCreator.addItem('Total de Protestos', totalDeRegistros);
-        fieldsCreator.addItem('Última Ocorrência ', 'Não Informado');
-        fieldsCreator.addItem('Valor Total de Protestos', valorTotalDeProtestos > 0 ? numeral(valorTotalDeProtestos).format('$0,0.00') : 'Não Informado');
+        console.log('As datas ',dates);
+        fieldsCreator.addItem('Última Ocorrência ', data);
+        fieldsCreator.addItem('Valor Total de Protestos', valorTotalDeProtestos);
 
         result.element().append(fieldsCreator.element());
         fieldsCreator.resetFields();
