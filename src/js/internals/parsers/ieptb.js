@@ -62,30 +62,41 @@ class FieldsCreator {
 module.exports = controller => {
 
     const parserConsultasWS = document => {
-        const getLastOcurrency = jdocument => {
-            let dates = [];
-
-            _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
-                $('protesto', element).each((i, protesto) => dates.push($(protesto).find('data').text()));
-            });
-
-            if (dates.length) {
-                dates = dates.map(date => {
-                    const newDate = date.split('/');
-                    return new Date(newDate[2]+ '-' + newDate[1] + '-' + newDate[0] + 'T00:00');
-                });
-
-                return (new Intl.DateTimeFormat('pt-br')).format(new Date(Math.max.apply(null, dates)));            }
-
-            return null;
-        };
-
         const result = controller.call('result');
         const jdocument = $(document);
         const fieldsCreator = new FieldsCreator();
         const totalDeRegistros = jdocument.find('BPQL > body > consulta > registros').text();
         let valorTotalDeProtestos = 0;
         const dates = [];
+
+        _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
+            const protestosDoCartorio = [];
+
+            $('protesto', element).each((i, v) => {
+                const data = $('data', v).text();
+                const valor = parseFloat($('valor', v).text());
+                if ((data && !/^\s*$/.test(data)) && (valor && !/^\s*$/.test(valor))) {
+                    dates.push(moment(data, ['YYYY-MM-DD', 'DD-MM-YYYY']));
+                    protestosDoCartorio.push(valor);
+                }
+            });
+
+            if (protestosDoCartorio.length) {
+                const valorTotal = protestosDoCartorio.reduce((a, b) => a + b);
+                valorTotalDeProtestos += valorTotal;
+            }
+        });
+
+        let data = dates.length ? moment.max(dates).format('DD/MM/YYYY') : 'Não Informado';
+        valorTotalDeProtestos = valorTotalDeProtestos > 0 ? numeral(valorTotalDeProtestos).format('$0,0.00') : 'Não Informado';
+        result.element().append(fieldsCreator.addSeparator('Resumo de Protestos'));
+        fieldsCreator.addItem('Total de Protestos', totalDeRegistros);
+        fieldsCreator.addItem('Última Ocorrência ', data);
+        fieldsCreator.addItem('Valor Total de Protestos', valorTotalDeProtestos);
+
+        result.element().append(fieldsCreator.element());
+        fieldsCreator.resetFields();
+
         _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
             result.addSeparator('Protestos em Cartório',
                 $('nome', element).text(),
@@ -101,7 +112,6 @@ module.exports = controller => {
 
             if (protestosDoCartorio.length) {
                 const valorTotal = protestosDoCartorio.reduce((a, b) => a + b);
-                valorTotalDeProtestos += valorTotal;
                 result.addItem('Valor Total no Cartório', numeral(valorTotal).format('$0,0.00'));
             }
 
@@ -114,7 +124,6 @@ module.exports = controller => {
                 let valor = $('valor', v).text();
 
                 if ((data && !/^\s*$/.test(data)) && (valor && !/^\s*$/.test(valor))) {
-                    dates.push(moment(data, ['YYYY-MM-DD', 'DD-MM-YYYY']));
                     fieldsCreator.addItemWithBorder({
                         date: {
                             name: 'Data do protesto',
@@ -137,16 +146,6 @@ module.exports = controller => {
             result.element().append(fieldsCreator.element());
             fieldsCreator.resetFields();
         });
-        let data = dates.length ? moment.max(dates).format('DD/MM/YYYY') : 'Não Informado';
-        valorTotalDeProtestos = valorTotalDeProtestos > 0 ? numeral(valorTotalDeProtestos).format('$0,0.00') : 'Não Informado';
-        result.element().append(fieldsCreator.addSeparator('Resumo de Protestos'));
-        fieldsCreator.addItem('Total de Protestos', totalDeRegistros);
-        console.log('As datas ',dates);
-        fieldsCreator.addItem('Última Ocorrência ', data);
-        fieldsCreator.addItem('Valor Total de Protestos', valorTotalDeProtestos);
-
-        result.element().append(fieldsCreator.element());
-        fieldsCreator.resetFields();
 
         return result.element();
     };
