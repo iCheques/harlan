@@ -1,12 +1,15 @@
 import _ from 'underscore';
-import {CPF, CNPJ} from 'cpf_cnpj';
+import {
+    CPF,
+    CNPJ
+} from 'cpf_cnpj';
 import pad from 'pad';
 
 module.exports = controller => {
 
     function addressIsEmpty(nodes) {
         for (let idx in nodes) {
-            if (! /^\**$/.test(nodes[idx])) {
+            if (!/^\**$/.test(nodes[idx])) {
                 return false;
             }
         }
@@ -22,7 +25,103 @@ module.exports = controller => {
         return true;
     }
 
-    const setAddress = (result, jdocument, rfb=false) => {
+    const removeDuplicatesComplements = (enderecos) => {
+        const enderecosTratados = enderecos.map(endereco => {
+            if (!Array.isArray(endereco['Complemento'])) return endereco;
+            const complementos = _.unique(endereco.Complemento.map(c => ({
+                original: c,
+                parsed: _.sortBy(c.replace(/[^0-9\s]/g, '').trim().replace(/\s\s+/g, ' ').split(' '))
+            })), _.isEqual).map(complemento => complemento.original);
+            endereco['Complemento'] = complementos.join(' / ');
+            return endereco;
+        });
+
+        return enderecosTratados;
+    };
+
+    const setAddressNew = (result, jdocument) => {
+        const enderecos = [];
+        _.each(jdocument.find('BPQL > body enderecos > enderecos'), endereco => {
+            const $endereco = $(endereco);
+            const enderecoObj = {};
+            const nodes = {
+                Tipo: 'tipoLogradouro',
+                Endereço: 'logradouro',
+                Número: 'numero',
+                Complemento: 'complemento',
+                CEP: 'cep',
+                Bairro: 'bairro',
+                Cidade: ['cidade', 'municipio'],
+                Estado: ['estado', 'uf']
+            };
+            Object.keys(nodes).forEach(node => {
+                if (Array.isArray(nodes[node])) {
+                    enderecoObj[node] = nodes[node].map(opcao => $endereco.find(`${opcao}`).text()).filter(op => op)[0];
+                } else{
+                    enderecoObj[node] = $endereco.find(`${nodes[node]}`).text();
+                }
+
+            });
+
+            enderecos.push(enderecoObj);
+        });
+
+        const enderecosAgrupados = _.groupBy(enderecos, (value) => value['Número'] + '#' + value.Cidade);
+
+        const enderecosTratados = removeDuplicatesComplements(_.map(enderecosAgrupados, (group) => ({
+            Tipo: group[0]['Tipo'],
+            Endereço: group[0]['Endereço'],
+            Número: group[0]['Número'],
+            Complemento: _.pluck(group, 'Complemento'),
+            CEP: group[0]['CEP'],
+            Bairro: group[0]['Bairro'],
+            Cidade: group[0]['Cidade'],
+            Estado: group[0]['Estado']
+        })));
+
+        result.addSeparator('Endereço', 'Localização', 'Endereçamento e mapa');
+        enderecosTratados.forEach(endereco => {
+            const address = [];
+            let removePadding = false;
+            Object.keys(endereco).forEach(key => {
+                if (!/^\**$/.test(endereco[key])) {
+                    if(!removePadding) {
+                        address.push(endereco[key]);
+                        result.addItem(key, endereco[key]).parent().css('padding', '0px 0px 5px 0px');
+                        removePadding = true;
+                    } else {
+                        address.push(endereco[key]);
+                        result.addItem(key, endereco[key]);
+                    }
+                }
+
+                if (key === 'Estado') {
+                    const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?${$.param({
+                        key: controller.confs.maps,
+                        scale: '1',
+                        size: '600x150',
+                        maptype: 'roadmap',
+                        format: 'png',
+                        visual_refresh: 'true',
+                        markers: `size:mid|color:red|label:1|${address.join(', ')}`
+                    })}`;
+
+                    result.addItem().addClass('map').append(
+                        $('<a />').attr({
+                            href: `https://www.google.com/maps?${$.param({
+                                q: address.join(', ')
+                            })}`,
+                            target: '_blank'
+                        }).append($('<img />').attr('src', mapUrl)));
+
+                    result.addSeparator('Endereço', 'Localização', 'Endereçamento e mapa').css('display', 'none');
+                }
+            });
+        });
+
+    };
+
+    const setAddress = (result, jdocument, rfb = false) => {
         const init = rfb ? 'BPQL > body enderecos > endereco' : 'BPQL > body enderecos > enderecos';
 
         const addressElements = [];
@@ -30,7 +129,7 @@ module.exports = controller => {
 
         jdocument.find(init).each((i, node) => {
             const nodes = {
-                Tipo : 'tipoLogradouro',
+                Tipo: 'tipoLogradouro',
                 Endereço: 'logradouro',
                 Número: 'numero',
                 Complemento: 'complemento',
@@ -64,8 +163,8 @@ module.exports = controller => {
             }
 
             if (_.contains(addressElements, nodes['Endereço']) ||
-                    _.contains(cepElements, nodes.CEP) ||
-                    Math.max(..._.map(addressElements, value => require('jaro-winkler')(value, nodes['Endereço']))) > 0.85) {
+                _.contains(cepElements, nodes.CEP) ||
+                Math.max(..._.map(addressElements, value => require('jaro-winkler')(value, nodes['Endereço']))) > 0.85) {
                 return;
             }
 
@@ -75,7 +174,7 @@ module.exports = controller => {
             if (!addressIsEmpty(nodes)) {
                 result.addSeparator('Endereço', 'Localização', 'Endereçamento e mapa');
                 for (idx in nodes) {
-                    if (! /^\**$/.test(nodes[idx])) {
+                    if (!/^\**$/.test(nodes[idx])) {
                         result.addItem(idx, nodes[idx]);
                     }
                 }
@@ -127,7 +226,7 @@ module.exports = controller => {
     };
 
     const setContact = (result, jdocument) => {
-        const formatarTelefone = (telefone, secondSlice=2) => `(${telefone.slice(0, 2)}) ${telefone.slice(secondSlice)}`;
+        const formatarTelefone = (telefone, secondSlice = 2) => `(${telefone.slice(0, 2)}) ${telefone.slice(secondSlice)}`;
         let phones = [];
         let emails = [];
 
@@ -216,29 +315,35 @@ module.exports = controller => {
             let items = {};
             let separator = result.addSeparator('Quadro Societário', `Empresa ${CNPJ.format(jdocument.find('cadastro > cpf'))}`, '', items);
 
-            controller.server.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {data:dict, success: ret => {
-                let totalRegistro =  parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
-                let message = 'Não há cheques sem fundo.';
-                if (totalRegistro) {
-                    let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
-                    let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
-                    let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
-                    message = ` Total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}.`;
+            controller.server.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
+                data: dict,
+                success: ret => {
+                    let totalRegistro = parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
+                    let message = 'Não há cheques sem fundo.';
+                    if (totalRegistro) {
+                        let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
+                        let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
+                        let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
+                        message = ` Total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}.`;
+                    }
+                    items.resultsDisplay.text(`${items.resultsDisplay.text()} ${message}`);
                 }
-                items.resultsDisplay.text(`${items.resultsDisplay.text()} ${message}`);
-            }});
+            });
 
-            controller.server.call('SELECT FROM \'IEPTB\'.\'WS\'', {data:dict, success: ret => {
-                if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
-                    items.resultsDisplay.text(`${items.resultsDisplay.text()} Não há protestos.`);
-                    return;
+            controller.server.call('SELECT FROM \'IEPTB\'.\'WS\'', {
+                data: dict,
+                success: ret => {
+                    if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
+                        items.resultsDisplay.text(`${items.resultsDisplay.text()} Não há protestos.`);
+                        return;
+                    }
+                    let totalProtestos = $('protestos', ret)
+                        .get()
+                        .map(p => parseInt($(p).text()))
+                        .reduce((a, b) => a + b, 0);
+                    items.resultsDisplay.text(`${items.resultsDisplay.text()} Total de Protestos: ${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}.`);
                 }
-                let totalProtestos = $('protestos', ret)
-                    .get()
-                    .map(p => parseInt($(p).text()))
-                    .reduce((a, b) => a + b, 0);
-                items.resultsDisplay.text(`${items.resultsDisplay.text()} Total de Protestos: ${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}.`);
-            }});
+            });
 
             for (const idx in nodes) {
                 const data = $node.find(nodes[idx]).text();
@@ -272,29 +377,35 @@ module.exports = controller => {
             let items = {};
             let separator = result.addSeparator('Quadro Societário', 'Empresa', '', items);
 
-            controller.server.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {data:dict, success: ret => {
-                let totalRegistro =  parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
-                let message = 'Não há cheques sem fundo.';
-                if (totalRegistro) {
-                    let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
-                    let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
-                    let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
-                    message = ` Total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}.`;
+            controller.server.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
+                data: dict,
+                success: ret => {
+                    let totalRegistro = parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
+                    let message = 'Não há cheques sem fundo.';
+                    if (totalRegistro) {
+                        let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
+                        let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
+                        let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
+                        message = ` Total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}.`;
+                    }
+                    items.resultsDisplay.text(`${items.resultsDisplay.text()} ${message}`);
                 }
-                items.resultsDisplay.text(`${items.resultsDisplay.text()} ${message}`);
-            }});
+            });
 
-            controller.server.call('SELECT FROM \'IEPTB\'.\'WS\'', {data:dict, success: ret => {
-                if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
-                    items.resultsDisplay.text(`${items.resultsDisplay.text()} Não há protestos.`);
-                    return;
+            controller.server.call('SELECT FROM \'IEPTB\'.\'WS\'', {
+                data: dict,
+                success: ret => {
+                    if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
+                        items.resultsDisplay.text(`${items.resultsDisplay.text()} Não há protestos.`);
+                        return;
+                    }
+                    let totalProtestos = $('protestos', ret)
+                        .get()
+                        .map(p => parseInt($(p).text()))
+                        .reduce((a, b) => a + b, 0);
+                    items.resultsDisplay.text(`${items.resultsDisplay.text()} Total de Protestos: ${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}.`);
                 }
-                let totalProtestos = $('protestos', ret)
-                    .get()
-                    .map(p => parseInt($(p).text()))
-                    .reduce((a, b) => a + b, 0);
-                items.resultsDisplay.text(`${items.resultsDisplay.text()} Total de Protestos: ${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}.`);
-            }});
+            });
 
             for (const idx in nodes) {
                 const data = $node.find(nodes[idx]).text();
@@ -313,7 +424,7 @@ module.exports = controller => {
         const nodes = {
             CPF: 'cpf',
             CNPJ: 'cnpj',
-            'Nome da Mãe' : 'maeNome',
+            'Nome da Mãe': 'maeNome',
             'CPF da Mãe': 'maecpf',
             'Data de Nascimento': 'datanascimento',
             Situação: 'receitaStatus',
@@ -323,9 +434,9 @@ module.exports = controller => {
             RG: 'rg',
             'RG/UF': 'ufrg',
             'Óbito Provável': 'obitobitoprovavel',
-            'Atividade Econômica' : 'atividade-economica',
-            'Natureza Jurídica' : 'natureza-juridica',
-            'Data de Abertura' : 'data-abertura',
+            'Atividade Econômica': 'atividade-economica',
+            'Natureza Jurídica': 'natureza-juridica',
+            'Data de Abertura': 'data-abertura',
             'Idade da Empresa': 'idadeEmpresa',
             'Quantidade de Funcionários': 'quantidadeFuncionarios',
             'Porte da Empresa': 'porteEmpresa',
@@ -344,8 +455,7 @@ module.exports = controller => {
                     result.addItem('Nome', jdocument.find(init + 'nome').first().text(), 'nome');
                     result.addItem('CPF', CPF.format(data), nodes[idx]);
                     doc = CPF.format(data);
-                }
-                else {
+                } else {
                     data = pad(14, data, '0');
                     result.addItem('Nome', jdocument.find(init + '> RFB > nome').first().text(), 'nome');
                     result.addItem('CNPJ', CNPJ.format(data), nodes[idx]);
@@ -362,11 +472,15 @@ module.exports = controller => {
         }
 
         if (doc) {
-            controller.trigger('ccbusca::parser', { result, doc });
+            controller.trigger('ccbusca::parser', {
+                result,
+                doc
+            });
         }
 
-        setAddress(result, jdocument);
-        setAddress(result, jdocument, true);
+        /*setAddress(result, jdocument);
+        setAddress(result, jdocument, true);*/
+        setAddressNew(result, jdocument);
         setContact(result, jdocument);
         setSociety(result, jdocument);
         setQSA(result, jdocument);
