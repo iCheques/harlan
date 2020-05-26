@@ -487,6 +487,12 @@ module.exports = controller => {
         setSocio(result, jdocument);
         setEmpregador(result, jdocument);
 
+        controller.trigger('ccbusca::finished', {
+            result,
+            doc,
+            jdocument
+        });
+
         return result.element();
     };
 
