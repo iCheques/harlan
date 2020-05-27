@@ -200,6 +200,12 @@ module.exports = controller => {
             appendMessage(`total de protestos: ${totalProtestos}`);
             sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'IEPTB', 'WS'));
         }))();
+
+        controller.trigger('ccbusca::finished', {
+            result: sectionDocumentGroup[1],
+            doc: $(ret).find('entrada').text(),
+            jdocument: $(ret)
+        });
     });
 
     controller.registerCall('ccbusca::card-right', () => {
