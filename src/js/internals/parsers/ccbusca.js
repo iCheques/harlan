@@ -66,6 +66,12 @@ module.exports = controller => {
             enderecos.push(enderecoObj);
         });
 
+        if (!enderecos.length) {
+            result.addSeparator('Endereço', 'Localização', 'Endereçamento e mapa');
+            result.addItem('Informação', 'Não foi encontrado endereços para o documento consultado.');
+            return;
+        }
+
         const enderecosAgrupados = _.groupBy(enderecos, (value) => value['Número'] + '#' + value.Cidade);
 
         const enderecosTratados = removeDuplicatesComplements(_.map(enderecosAgrupados, (group) => ({
