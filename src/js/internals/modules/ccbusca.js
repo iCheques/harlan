@@ -101,7 +101,6 @@ module.exports = controller => {
                     }).then(dataProtestos => {
                         loader.progressBarChange(100);
                         loader.setStatusSuccess('Consulta Protestos Concluída');
-                        console.log($('#consulta-temporaria'));
                         $('#consulta-temporaria body').append($('consulta', dataProtestos.data));
                         controller.call('ccbusca::parse', $('#consulta-temporaria'), val, callback, ...args);
                         loader.searchCompleted();
