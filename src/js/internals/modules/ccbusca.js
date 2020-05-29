@@ -101,6 +101,7 @@ module.exports = controller => {
                     }).then(dataProtestos => {
                         loader.progressBarChange(100);
                         loader.setStatusSuccess('Consulta Protestos Concluída');
+                        console.log($('#consulta-temporaria'));
                         $('#consulta-temporaria body').append($('consulta', dataProtestos.data));
                         controller.call('ccbusca::parse', $('#consulta-temporaria'), val, callback, ...args);
                         loader.searchCompleted();
@@ -234,8 +235,16 @@ module.exports = controller => {
             constructor(controllerReference) {
                 this.controller = controllerReference;
                 this.progress;
+                this.apiQuantity = 4;
+                this.apiCompleted = 0;
                 this.card();
                 this.progressBar();
+            }
+
+            increaseProgress() {
+                this.apiCompleted += 1;
+                const porcentage = (this.apiCompleted / this.apiQuantity) * 100;
+                this.progressBar(porcentage);
             }
 
             /**
@@ -291,19 +300,29 @@ module.exports = controller => {
             /**
              * Define o status de uma consulta bem sucedida.
              */
-            setStatusSuccess = (status) => $('.mdl-card__supporting-text').append('<br>').append($('<span>').text(status).css('color', '#009903'));
+            setStatusSuccess = (status) => {
+                const s = $('<span>').text(status).css('color', '#009903');
+                $('.mdl-card__supporting-text').append('<br>').append(s);
+
+                return s;
+            }
 
             /**
              * Define o status de uma consulta mal sucedida.
              */
-            setStatusFailed = (status) => $('.mdl-card__supporting-text').append('<br>').append($('<span>').text(status).css('color', '#ff4500'));
+            setStatusFailed = (status) => {
+                const s = $('<span>').text(status).css('color', '#ff4500');
+                $('.mdl-card__supporting-text').append('<br>').append(s);
+
+                return s;
+            };
 
             /**
              * Define o status atual da pesquisa como concluído e remove o Loader.
              */
             searchCompleted = () => {
                 $('.saving').remove();
-                this.setActiveStatus('Consulta concluída!');
+                this.setActiveStatus('Todas as consultas foram Concluídas!');
                 this.sleep(3000).then(() => $('.mdl-card').parent().fadeOut(3000, function () {
                     $('.mdl-card').parent().remove();
                 }));

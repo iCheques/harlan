@@ -1,19 +1,73 @@
 import * as _ from 'underscore';
 import moment from 'moment';
-import FieldsCreator from '../modules/lib/fields-creator';
+
+class FieldsCreator {
+    constructor() {
+        this.content = $('<div>').addClass('content protesto').css('padding' ,'0px 0');
+        this.container = $('<div>').addClass('container').append(this.content);
+    }
+
+    addSeparator(name) {
+        const header = $('<header />').addClass('separator');
+        const container = $('<div />').addClass('container');
+        const content = $('<div />').addClass('content');
+
+        const h4 = $('<h4>').text(name);
+
+        header.append(container.append(content.append(h4)));
+
+        return header;
+    }
+
+    addItem(name, value, withBorder=false) {
+        if (value === null) return null;
+
+        const field = $('<div>').addClass('field');
+
+        const $name = $('<div>').addClass('name').css({
+            fontSize: '10px',
+            fontWeight: 'bold',
+        });
+
+        const $value = $('<div>').addClass('value');
+
+        field.append($name.text(name), $value.text(value));
+
+        if (withBorder) return field;
+
+        this.content.append(field);
+    }
+
+    addItemWithBorder(dateAndMoneyValue) {
+        const { date, moneyValue } = dateAndMoneyValue;
+        const fieldDate = this.addItem(date.name, date.value, true);
+        const fieldMoneyValue = this.addItem(moneyValue.name, moneyValue.value, true);
+
+        const fieldWithBorder = $('<div>').addClass('field field-content').css('border-right', '1px solid #575963');
+        fieldWithBorder.append(fieldDate, fieldMoneyValue);
+
+        this.content.append(fieldWithBorder);
+    }
+
+    element() {
+        return this.container;
+    }
+
+    resetFields() {
+        this.content = $('<div>').addClass('content protesto').css('padding' ,'0px 0');
+        this.container = $('<div>').addClass('container').append(this.content);
+    }
+}
 
 module.exports = controller => {
 
     const parserConsultasWS = document => {
         const result = controller.call('result');
-        let registros = jdocument.find('BPQL > body > consulta > registros').text();
         const jdocument = $(document);
         const fieldsCreator = new FieldsCreator();
-        const totalDeRegistros = _.contains(['', null, undefined], registros) ? 0 : registros;
+        const totalDeRegistros = jdocument.find('BPQL > body > consulta > registros').text();
         let valorTotalDeProtestos = 0;
         const dates = [];
-
-
 
         _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
             const protestosDoCartorio = [];
@@ -35,7 +89,6 @@ module.exports = controller => {
 
         let data = dates.length ? moment.max(dates).format('DD/MM/YYYY') : 'Não Informado';
         valorTotalDeProtestos = valorTotalDeProtestos > 0 ? numeral(valorTotalDeProtestos).format('$0,0.00') : 'Não Informado';
-
         result.element().append(fieldsCreator.addSeparator('Resumo de Protestos'));
         fieldsCreator.addItem('Total de Protestos', totalDeRegistros);
         fieldsCreator.addItem('Última Ocorrência ', data);
