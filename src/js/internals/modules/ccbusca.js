@@ -243,7 +243,7 @@ module.exports = controller => {
             increaseProgress() {
                 this.apiCompleted += 1;
                 const porcentage = (this.apiCompleted / this.apiQuantity) * 100;
-                this.progressBar(porcentage);
+                this.progressBarChange(porcentage);
             }
 
             /**
