@@ -41,19 +41,34 @@ module.exports = controller => {
 
     const setAddressNew = (result, jdocument) => {
         const enderecos = [];
+        const nodes = {
+            Tipo: 'tipoLogradouro',
+            Endereço: 'logradouro',
+            Número: 'numero',
+            Complemento: 'complemento',
+            CEP: 'cep',
+            Bairro: 'bairro',
+            Cidade: ['cidade', 'municipio'],
+            Estado: ['estado', 'uf']
+        };
         _.each(jdocument.find('BPQL > body enderecos > enderecos'), endereco => {
             const $endereco = $(endereco);
             const enderecoObj = {};
-            const nodes = {
-                Tipo: 'tipoLogradouro',
-                Endereço: 'logradouro',
-                Número: 'numero',
-                Complemento: 'complemento',
-                CEP: 'cep',
-                Bairro: 'bairro',
-                Cidade: ['cidade', 'municipio'],
-                Estado: ['estado', 'uf']
-            };
+            Object.keys(nodes).forEach(node => {
+                if (Array.isArray(nodes[node])) {
+                    enderecoObj[node] = nodes[node].map(opcao => $endereco.find(`${opcao}`).text()).filter(op => op)[0];
+                } else{
+                    enderecoObj[node] = $endereco.find(`${nodes[node]}`).text();
+                }
+
+            });
+
+            enderecos.push(enderecoObj);
+        });
+
+        _.each(jdocument.find('BPQL > body enderecos > endereco'), endereco => {
+            const $endereco = $(endereco);
+            const enderecoObj = {};
             Object.keys(nodes).forEach(node => {
                 if (Array.isArray(nodes[node])) {
                     enderecoObj[node] = nodes[node].map(opcao => $endereco.find(`${opcao}`).text()).filter(op => op)[0];
