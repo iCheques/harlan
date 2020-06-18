@@ -275,7 +275,7 @@ module.exports = controller => {
             emails.push(email);
         });
 
-        if (telefoneRFB.length) phones.push(formatarTelefone(telefoneRFB.text(), 3));
+        //if (telefoneRFB.length) phones.push(formatarTelefone(telefoneRFB.text(), 3));
         if (emailRFB.length) emails.push(jdocument.find('BPQL > body email').text());
 
         if (!phones.length && !emails.length) return;
