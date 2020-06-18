@@ -266,7 +266,7 @@ module.exports = controller => {
             phones.push(formatarTelefone(telefone));
         }));
 
-        if (telefoneRFB.length) phones.push(telefoneRFB);
+        if (telefoneRFB.length) telefoneRFB.forEach(tel => phones.push(tel));
 
         emailsFinder.each((idx, node) => {
             let email = $(node).find('email').text().trim();
