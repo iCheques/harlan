@@ -163,7 +163,6 @@ module.exports = controller => {
 
     controller.registerCall('authentication::resendActivateCode', (inputUsername) => {
         toastr.error('Conta não ativada. Por favor clique no link de ativação enviado por e-mail (verifique SPAM também).', 'Conta não ativada');
-        controller.serverCommunication.call('SELECT FROM \'HarlanAuthentication\'.\'ResendActivationCode\'', {data: {username: inputUsername}}).then(d => console.log(d));
     });
 
     /**
