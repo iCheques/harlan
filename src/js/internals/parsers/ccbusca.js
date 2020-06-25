@@ -303,14 +303,24 @@ module.exports = controller => {
 
         if ($empresas.length === 0) return;
 
+        result.addSeparator('Quadro Societário', 'Sócios', '').next().find('.content').addClass('mdl-grid');
+
         for (let node of $empresas) {
             let $node = $(node);
             let nodes = {};
             if (companys.includes($node.text())) continue;
             nodes[$node.attr('qualificacao')] = $node.text();
-            result.addSeparator('Quadro Societário', 'Empresa', 'Empresa a qual faz parte.');
+            //result.addSeparator('Quadro Societário', 'Empresa', 'Empresa a qual faz parte.');
+            //const separator = result.addSeparator('', '', '').css('display', 'none');
+            //separator.next().find('.content').css('padding', '0');
+
             for (const idx in nodes) {
-                result.addItem(idx, nodes[idx]);
+                //result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col').find('.value').css('text-align', 'center');
+                const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col');
+                item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
+                    fontSize: '12px',
+                    textAlign: 'left'
+                }));
             }
 
         }
@@ -320,6 +330,8 @@ module.exports = controller => {
         let $empresas = jdocument.find('BPQL > body quadroSocietario > quadroSocietario');
 
         if ($empresas.length === 0) return;
+
+        result.addSeparator('Quadro Societário', 'Sócios', '').css('margin-bottom', '40px');
 
         $empresas.get().forEach((node) => {
             let $node = $(node);
@@ -336,45 +348,103 @@ module.exports = controller => {
             };
 
             let items = {};
-            let separator = result.addSeparator('Quadro Societário', `Empresa ${CNPJ.format(jdocument.find('cadastro > cpf'))}`, '', items);
-
-            controller.server.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
-                data: dict,
-                success: ret => {
-                    let totalRegistro = parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
-                    let message = 'Não há cheques sem fundo.';
-                    if (totalRegistro) {
-                        let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
-                        let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
-                        let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
-                        message = ` Total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}.`;
-                    }
-                    items.resultsDisplay.text(`${items.resultsDisplay.text()} ${message}`);
-                }
-            });
-
-            controller.server.call('SELECT FROM \'IEPTB\'.\'WS\'', {
-                data: dict,
-                success: ret => {
-                    if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
-                        items.resultsDisplay.text(`${items.resultsDisplay.text()} Não há protestos.`);
-                        return;
-                    }
-                    let totalProtestos = $('protestos', ret)
-                        .get()
-                        .map(p => parseInt($(p).text()))
-                        .reduce((a, b) => a + b, 0);
-                    items.resultsDisplay.text(`${items.resultsDisplay.text()} Total de Protestos: ${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}.`);
-                }
-            });
+            //let separator = result.addSeparator('Quadro Societário', `Empresa ${CNPJ.format(jdocument.find('cadastro > cpf'))}`, '', items);
+            const separator = result.addSeparator('', '', '').css('display', 'none');
+            separator.next().find('.content').css('padding', '0');
 
             for (const idx in nodes) {
                 const data = $node.find(nodes[idx]).text();
                 nodes[idx] = (/^\**$/.test(data)) ? '' : data;
                 if (idx === 'CPF') nodes[idx] = CPF.format(pad(11, nodes[idx].replace(/^0+/g, ''), '0'));
                 if (idx === 'Sócio') companys.push(nodes[idx]);
-                result.addItem(idx, nodes[idx]);
+                if (idx === 'Sócio') {
+                    const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--4-col mdl-cell--1-col-phone');
+                    item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
+                        fontSize: '12px',
+                        textAlign: 'left'
+                    }));
+                } else {
+                    const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+                    item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
+                        fontSize: '12px',
+                        textAlign: 'left'
+                    }));
+                }
             }
+
+            const loadingSpan = '<span class="saving"><span> .</span><span>.</span><span>.</span> </span>';
+
+            const $chequesSemFundos = result.addItem('Cheques Sem Fundos', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+            const $ultimaOcorrencia = result.addItem('Ultima ocorrência', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+            const $protestos = result.addItem('Protestos', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+
+            $chequesSemFundos.find('.value').css('text-align', 'left').insertAfter($chequesSemFundos.find('.name').css({
+                fontSize: '12px',
+                textAlign: 'left'
+            }));
+            $ultimaOcorrencia.find('.value').css('text-align', 'left').insertAfter($ultimaOcorrencia.find('.name').css({
+                fontSize: '12px',
+                textAlign: 'left'
+            }));
+            $protestos.find('.value').css('text-align', 'left').insertAfter($protestos.find('.name').css({
+                fontSize: '12px',
+                textAlign: 'left'
+            }));
+
+            controller.server.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
+                data: dict,
+                success: ret => {
+                    let totalRegistro = parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
+                    /*let message = 'Não há cheques sem fundo.';
+                    if (totalRegistro) {
+                        let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
+                        let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
+                        let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
+                        message = ` Total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}.`;
+                    }
+                    items.resultsDisplay.text(`${items.resultsDisplay.text()} ${message}`);*/
+                    if (totalRegistro) {
+                        const qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
+                        const v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
+                        const v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
+                        //result.addItem('Cheques Sem Fundos', qteOcorrencias);
+                        $chequesSemFundos.find('.value').text(qteOcorrencias);
+                        $ultimaOcorrencia.find('.value').text(`${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}`);
+                    } else {
+                        $chequesSemFundos.find('.value').text('0');
+                        $ultimaOcorrencia.remove();
+                    }
+                }
+            });
+
+            controller.server.call('SELECT FROM \'IEPTB\'.\'WS\'', {
+                data: dict,
+                success: ret => {
+                    /*if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
+                        items.resultsDisplay.text(`${items.resultsDisplay.text()} Não há protestos.`);
+                        return;
+                    }*/
+                    if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
+                        //result.addItem('Protestos', 'Não há protestos.');
+                        $protestos.find('.value').text('0');
+                        return;
+                    }
+                    let totalProtestos = $('protestos', ret)
+                        .get()
+                        .map(p => parseInt($(p).text()))
+                        .reduce((a, b) => a + b, 0);
+                    $protestos.find('.value').text(`${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}`);
+                    //items.resultsDisplay.text(`${items.resultsDisplay.text()} Total de Protestos: ${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}.`);
+                }
+            });
+
+            /*for (const idx in nodes) {
+                const data = $node.find(nodes[idx]).text();
+                nodes[idx] = (/^\**$/.test(data)) ? '' : data;
+                if (idx === 'CPF') nodes[idx] = CPF.format(pad(11, nodes[idx].replace(/^0+/g, ''), '0'));
+                if (idx === 'Sócio') companys.push(nodes[idx]);
+                result.addItem(idx, nodes[idx]);
+            }*/
         });
     };
 
@@ -382,6 +452,8 @@ module.exports = controller => {
         let $empresas = jdocument.find('BPQL > body participacoesEmpresas > participacoesEmpresas');
 
         if ($empresas.length === 0) return;
+
+        result.addSeparator('Quadro Societário', 'Empresas', 'Empresas a qual faz parte.').css('margin-bottom', '40px');
 
         $empresas.get().forEach((node) => {
             let $node = $(node);
@@ -398,44 +470,104 @@ module.exports = controller => {
             };
 
             let items = {};
-            let separator = result.addSeparator('Quadro Societário', 'Empresa', '', items);
+            //let separator = result.addSeparator('Quadro Societário', 'Empresa', '', items);
+            let separator = result.addSeparator('', '', '').css('display', 'none');
+            separator.next().find('.content').css('padding', '0').addClass('mdl-grid');
+
+            for (const idx in nodes) {
+                const data = $node.find(nodes[idx]).text();
+                nodes[idx] = (/^\**$/.test(data)) ? '' : data;
+                if (idx === 'CNPJ') nodes[idx] = CNPJ.format(nodes[idx]);
+                if (idx === 'Empresa') {
+                    const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--4-col mdl-cell--1-col-phone');
+                    item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
+                        fontSize: '12px',
+                        textAlign: 'left'
+                    }));
+                } else {
+                    const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+                    item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
+                        fontSize: '12px',
+                        textAlign: 'left'
+                    }));
+                }
+            }
+
+            const loadingSpan = '<span class="saving"><span> .</span><span>.</span><span>.</span> </span>';
+
+            const $chequesSemFundos = result.addItem('Cheques Sem Fundos', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+            const $ultimaOcorrencia = result.addItem('Ultima ocorrência', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+            const $protestos = result.addItem('Protestos', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+
+            $chequesSemFundos.find('.value').css('text-align', 'left').insertAfter($chequesSemFundos.find('.name').css({
+                fontSize: '12px',
+                textAlign: 'left'
+            }));
+
+            $ultimaOcorrencia.find('.value').css('text-align', 'left').insertAfter($ultimaOcorrencia.find('.name').css({
+                fontSize: '12px',
+                textAlign: 'left'
+            }));
+
+            $protestos.find('.value').css('text-align', 'left').insertAfter($protestos.find('.name').css({
+                fontSize: '12px',
+                textAlign: 'left'
+            }));
 
             controller.server.call('SELECT FROM \'SEEKLOC\'.\'CCF\'', {
                 data: dict,
                 success: ret => {
                     let totalRegistro = parseInt($(ret).find('BPQL > body > data > resposta > totalRegistro').text());
-                    let message = 'Não há cheques sem fundo.';
+                    if (totalRegistro) {
+                        const qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
+                        const v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
+                        const v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
+                        //result.addItem('Cheques Sem Fundos', qteOcorrencias);
+                        $chequesSemFundos.find('.value').text(qteOcorrencias);
+                        $ultimaOcorrencia.find('.value').text(`${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}`);
+                    } else {
+                        $chequesSemFundos.find('.value').text('0');
+                        $ultimaOcorrencia.remove();
+                    }
+                    /*let message = 'Não há cheques sem fundo.';
                     if (totalRegistro) {
                         let qteOcorrencias = $(ret).find('BPQL > body > data > sumQteOcorrencias').text();
                         let v1 = moment($('dataUltOcorrencia', ret).text(), 'DD/MM/YYYY');
                         let v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
                         message = ` Total de registros CCF: ${qteOcorrencias} com data da última ocorrência: ${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}.`;
                     }
-                    items.resultsDisplay.text(`${items.resultsDisplay.text()} ${message}`);
+                    items.resultsDisplay.text(`${items.resultsDisplay.text()} ${message}`);*/
                 }
             });
 
             controller.server.call('SELECT FROM \'IEPTB\'.\'WS\'', {
                 data: dict,
                 success: ret => {
-                    if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
+                    /*if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
                         items.resultsDisplay.text(`${items.resultsDisplay.text()} Não há protestos.`);
+                        return;
+                    }*/
+                    if ($(ret).find('BPQL > body > consulta > situacao').text() != 'CONSTA') {
+                        //result.addItem('Protestos', 'Não há protestos.');
+                        $protestos.find('.value').text('0');
                         return;
                     }
                     let totalProtestos = $('protestos', ret)
                         .get()
                         .map(p => parseInt($(p).text()))
                         .reduce((a, b) => a + b, 0);
-                    items.resultsDisplay.text(`${items.resultsDisplay.text()} Total de Protestos: ${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}.`);
+                    /*items.resultsDisplay.text(`${items.resultsDisplay.text()} Total de Protestos: ${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}.`);*/
+                    //result.addItem('Protestos', `${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}`);
+                    $protestos.find('.value').text(`${isNaN(totalProtestos) ? '1 ou mais' : totalProtestos}`);
                 }
             });
 
-            for (const idx in nodes) {
+            /*for (const idx in nodes) {
                 const data = $node.find(nodes[idx]).text();
                 nodes[idx] = (/^\**$/.test(data)) ? '' : data;
                 if (idx === 'CNPJ') nodes[idx] = CNPJ.format(nodes[idx]);
                 result.addItem(idx, nodes[idx]);
-            }
+            }*/
         });
     };
 
@@ -505,9 +637,9 @@ module.exports = controller => {
         setAddress(result, jdocument, true);*/
         setAddressNew(result, jdocument);
         setContact(result, jdocument);
-        setSociety(result, jdocument);
+        //setSocio(result, jdocument);
         setQSA(result, jdocument);
-        setSocio(result, jdocument);
+        setSociety(result, jdocument);
         setEmpregador(result, jdocument);
 
         return result.element();
