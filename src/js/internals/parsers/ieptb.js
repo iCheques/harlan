@@ -100,7 +100,7 @@ module.exports = controller => {
         _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
             result.addSeparator('Protestos em Cartório',
                 $('nome', element).text(),
-                $('endereco', element).text());
+                $('endereco', element).text()).css('margin-top', '40px');
 
             /*result.addItem('Protestos', $('protestos', element).text()).addClass('center');
             result.addItem('Telefone', $('telefone', element).text());
