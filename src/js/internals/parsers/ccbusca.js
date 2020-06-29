@@ -349,8 +349,8 @@ module.exports = controller => {
 
             let items = {};
             //let separator = result.addSeparator('Quadro Societário', `Empresa ${CNPJ.format(jdocument.find('cadastro > cpf'))}`, '', items);
-            const separator = result.addSeparator('', '', '').css('display', 'none');
-            separator.next().find('.content').css('padding', '0');
+            let separator = result.addSeparator('', '', '').css('display', 'none');
+            separator.next().find('.content').css('padding', '0').addClass('mdl-grid');
 
             for (const idx in nodes) {
                 const data = $node.find(nodes[idx]).text();
