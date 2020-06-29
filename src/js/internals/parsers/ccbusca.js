@@ -375,14 +375,9 @@ module.exports = controller => {
             const loadingSpan = '<span class="saving"><span> .</span><span>.</span><span>.</span> </span>';
 
             const $chequesSemFundos = result.addItem('Cheques Sem Fundos', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
-            const $ultimaOcorrencia = result.addItem('Ultima ocorrência', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
             const $protestos = result.addItem('Protestos', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
 
             $chequesSemFundos.find('.value').css('text-align', 'left').insertAfter($chequesSemFundos.find('.name').css({
-                fontSize: '12px',
-                textAlign: 'left'
-            }));
-            $ultimaOcorrencia.find('.value').css('text-align', 'left').insertAfter($ultimaOcorrencia.find('.name').css({
                 fontSize: '12px',
                 textAlign: 'left'
             }));
@@ -409,10 +404,8 @@ module.exports = controller => {
                         const v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
                         //result.addItem('Cheques Sem Fundos', qteOcorrencias);
                         $chequesSemFundos.find('.value').text(qteOcorrencias);
-                        $ultimaOcorrencia.find('.value').text(`${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}`);
                     } else {
                         $chequesSemFundos.find('.value').text('0');
-                        $ultimaOcorrencia.remove();
                     }
                 }
             });
@@ -453,7 +446,7 @@ module.exports = controller => {
 
         if ($empresas.length === 0) return;
 
-        result.addSeparator('Quadro Societário', 'Empresas', 'Empresas a qual faz parte.').css('margin-bottom', '40px');
+        result.addSeparator('Quadro Societário', 'Empresas', 'Empresas a qual faz parte.');
 
         $empresas.get().forEach((node) => {
             let $node = $(node);
@@ -496,15 +489,9 @@ module.exports = controller => {
             const loadingSpan = '<span class="saving"><span> .</span><span>.</span><span>.</span> </span>';
 
             const $chequesSemFundos = result.addItem('Cheques Sem Fundos', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
-            const $ultimaOcorrencia = result.addItem('Ultima ocorrência', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
             const $protestos = result.addItem('Protestos', loadingSpan).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
 
             $chequesSemFundos.find('.value').css('text-align', 'left').insertAfter($chequesSemFundos.find('.name').css({
-                fontSize: '12px',
-                textAlign: 'left'
-            }));
-
-            $ultimaOcorrencia.find('.value').css('text-align', 'left').insertAfter($ultimaOcorrencia.find('.name').css({
                 fontSize: '12px',
                 textAlign: 'left'
             }));
@@ -524,10 +511,8 @@ module.exports = controller => {
                         const v2 = moment($('ultimo', ret).text(), 'DD/MM/YYYY');
                         //result.addItem('Cheques Sem Fundos', qteOcorrencias);
                         $chequesSemFundos.find('.value').text(qteOcorrencias);
-                        $ultimaOcorrencia.find('.value').text(`${(v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY')}`);
                     } else {
                         $chequesSemFundos.find('.value').text('0');
-                        $ultimaOcorrencia.remove();
                     }
                     /*let message = 'Não há cheques sem fundo.';
                     if (totalRegistro) {
