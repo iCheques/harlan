@@ -112,7 +112,7 @@ module.exports = controller => {
                                 ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin', 'score-boavista'].map((field) => $('<th>').append(`${field != 'refin' ? consulta[field] : consulta[field] + consulta['serasa']}`).addClass(thClass))
                             )
                         )
-                    ]).addClass('mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp').css('margin-top', '10px');
+                    ]).addClass('mdl-data-table mdl-js-data-table mdl-shadow--2dp').css('margin-top', '10px');
                     $('.right-col').append(table);
                 }
             });
@@ -136,7 +136,7 @@ module.exports = controller => {
                                 ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin', 'score-boavista'].map((field) => $('<th>').append(`${field != 'refin' ? consulta[field] : consulta[field] + consulta['serasa']}`).addClass(thClass))
                             )
                         )
-                    ]).addClass('mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp').css('margin-top', '10px');
+                    ]).addClass('mdl-data-table mdl-js-data-table mdl-shadow--2dp').css('margin-top', '10px');
                     $('.right-col').append(table);
                 }
             });

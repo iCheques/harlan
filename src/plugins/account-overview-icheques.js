@@ -161,6 +161,13 @@ harlan.addPlugin(controller => {
                         controller.call('myIChequesAccountOverview::filter', username, report, callback, closeable);
                     });
                     callback(report);
+                    $.getScript( "https://cdn.jsdelivr.net/npm/harlan-credithub-historico-consultas@1.0.3/index.js" )
+                    .done(function( script, textStatus ) {
+                        console.log( textStatus );
+                    })
+                    .fail(function( jqxhr, settings, exception ) {
+                        console.log("Triggered ajaxError handler.");
+                    });
 
                     const showInterval = setInterval(() => {
                         if (!document.contains(canvas) || !$(canvas).is(':visible')) {
