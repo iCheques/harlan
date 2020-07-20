@@ -108,6 +108,7 @@ module.exports = controller => {
                 case 'prata':
                     list.item('fa-check', 'Franquia de 500 Consultas de CPF/CNPJ/Cheques.');
                     list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
+                    list.item('fa-check', 'Baixar Consultas do Passado.');
                     list.item('fa-money', 'R$ 1 Consulta de CPF/CNPJ/Cheque Excedente.');
                     list.item('fa-money', 'Mensalidade: R$ 250/mês.  Pós-Pago');
                     break;
@@ -115,6 +116,7 @@ module.exports = controller => {
                     list.item('fa-check', 'Franquia de 1.000 Consultas de CPF/CNPJ/Cheques.');
                     list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
                     list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
+                    list.item('fa-check', 'Baixar Consultas do Passado.');
                     list.item('fa-money', 'R$ 1 Consulta de CPF/CNPJ/Cheque Excedente.');
                     list.item('fa-money', 'Mensalidade: R$ 500/mês.  Pós-Pago');
                     break;
@@ -122,6 +124,7 @@ module.exports = controller => {
                     list.item('fa-check', 'Franquia ILIMITADA de Consultas CPF/CNPJ/Cheques.');
                     list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
                     list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
+                    list.item('fa-check', 'Baixar Consultas do Passado.');
                     list.item('fa-money', 'Mensalidade: R$ 990,99/mês.  Pós-Pago');
                     break;
                 case 'flex':
