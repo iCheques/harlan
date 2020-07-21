@@ -3,6 +3,7 @@ import Color from 'color';
 import randomColor from 'randomcolor';
 import ChartJS from 'chart.js';
 import buildURL from 'build-url';
+import oneTime from 'one-time';
 
 harlan.addPlugin(controller => {
 
@@ -161,13 +162,11 @@ harlan.addPlugin(controller => {
                         controller.call('myIChequesAccountOverview::filter', username, report, callback, closeable);
                     });
                     callback(report);
-                    $.getScript( "https://cdn.jsdelivr.net/npm/harlan-credithub-historico-consultas@1.0.5/index.js" )
-                    .done(function( script, textStatus ) {
-                        console.log( textStatus );
-                    })
+                    const historicoConsultas = oneTime(() => $.getScript( "https://cdn.jsdelivr.net/npm/harlan-credithub-historico-consultas@1.0.6/index.js" )
                     .fail(function( jqxhr, settings, exception ) {
                         console.log("Triggered ajaxError handler.");
-                    });
+                    }));
+                    historicoConsultas();
 
                     const showInterval = setInterval(() => {
                         if (!document.contains(canvas) || !$(canvas).is(':visible')) {
