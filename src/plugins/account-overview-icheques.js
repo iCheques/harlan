@@ -161,7 +161,7 @@ harlan.addPlugin(controller => {
                         controller.call('myIChequesAccountOverview::filter', username, report, callback, closeable);
                     });
                     callback(report);
-                    $.getScript( "https://cdn.jsdelivr.net/npm/harlan-credithub-historico-consultas@1.0.3/index.js" )
+                    $.getScript( "https://cdn.jsdelivr.net/npm/harlan-credithub-historico-consultas@1.0.5/index.js" )
                     .done(function( script, textStatus ) {
                         console.log( textStatus );
                     })
