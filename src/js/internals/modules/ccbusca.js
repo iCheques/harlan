@@ -21,6 +21,72 @@ module.exports = controller => {
         });
     });
 
+    controller.registerCall('remove::duplicated::separators', () => {
+        $('.separator').filter((i, separator) => !$(separator).text().length).each((i, separator) => $(separator).remove())
+    });
+
+    controller.registerCall('remove::duplicated::containers', () => {
+        $('.container').filter((i, container) => !$(container).text().length).each((i, container) => $(container).remove())
+    });
+
+    controller.registerCall('minimizar::categorias', (result) => {
+        const hideElement = ($element) => {
+            const containers = $element.parent();
+
+            if(containers[containers.length - 1] === $element) return;
+
+            let provisoryElement = $element.next();
+
+            if (!provisoryElement.length || provisoryElement.hasClass('.separator')) return;
+
+            provisoryElement.hide();
+
+            hideElement(provisoryElement);
+        }
+
+        const showElement = ($element) => {
+            const containers = $element.parent();
+
+            if(containers[containers.length - 1] === $element) return;
+
+            let provisoryElement = $element.next();
+
+            if (!provisoryElement.length || provisoryElement.hasClass('.separator')) return;
+
+            provisoryElement.show();
+
+            showElement(provisoryElement);
+        }
+
+        controller.call('remove::remove::duplicated::separators');
+        controller.call('remove::duplicated::containers');
+
+        $(result).find('.separator').each((i, separator) => {
+            const $elementsContainer = $(separator);
+            const $action = $elementsContainer.find('.actions');
+            const $button = $('<i>').addClass('fa fa-minus-square-o');
+
+            if ($action.find('i').filter((index, i) => $(i).is('.fa-minus-square-o, .fa-plus-square-o')).length) return;
+
+            $button.on('click', () => {
+                if ($button.hasClass('fa-minus-square-o')) {
+                    hideElement($elementsContainer);
+                    //$elementsContainer.next().hide();
+                    $button.removeClass().addClass('fa fa-plus-square-o');
+                } else {
+                    $button.removeClass().addClass('fa fa-minus-square-o');
+                    //$elementsContainer.next().show();
+                    showElement($elementsContainer);
+                }
+            });
+
+
+            $action.append($('<li>').addClass('action-resize').append($button));
+        });
+    });
+
+    controller.registerTrigger('ccbusca::finished', 'minimizarCategorias', ({result, doc, jdocument}, cb) => controller.call('minimizar::categorias', result));
+
     controller.registerCall('ccbusca', (val, callback, ...args) => {
         if (!$('.consulta-temporaria').length) $('body').append($('<div>').attr('id', 'consulta-temporaria').css('visibility', 'hidden'));
 
@@ -200,6 +266,9 @@ module.exports = controller => {
             appendMessage(`total de protestos: ${totalProtestos}`);
             sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'IEPTB', 'WS'));
         }))();
+
+        controller.call('remove::duplicated::separators');
+        controller.call('remove::duplicated::containers');
 
         controller.trigger('ccbusca::finished', {
             result: sectionDocumentGroup[1],

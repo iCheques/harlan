@@ -255,7 +255,7 @@ module.exports = controller => {
         const telefonesMoveis = jdocument.find('BPQL > body telefones > moveis > moveis').get();
         const emailsFinder = jdocument.find('BPQL > body emails > emails');
         const telefoneRFB = jdocument.find('BPQL > body > RFB > telefones').text().trim().split(' / ').map(tel => tel.trim()).filter(tel => tel.length);
-        const emailRFB = jdocument.find('BPQL > body email');
+        const emailsRFB = jdocument.find('BPQL > body email');
 
         let $phones = telefonesFixos;
 
@@ -276,7 +276,12 @@ module.exports = controller => {
         });
 
         //if (telefoneRFB.length) phones.push(formatarTelefone(telefoneRFB.text(), 3));
-        if (emailRFB.length) emails.push(jdocument.find('BPQL > body email').text());
+        emailsRFB.each((idx, node) => {
+            let email = $(node).text().trim();
+            if (!email) return;
+            //if (_.contains(emails, email)) return;
+            emails.push(email);
+        });
 
         if (!phones.length && !emails.length) return;
 
