@@ -7,7 +7,7 @@ module.exports = controller => {
         paragraph: 'Verifique se o endereço cdn.jsdelivr.net é liberado na sua rede interna.',
     });
 
-    const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.46/index.js').fail(failAlert));
+    const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.47/index.js').fail(failAlert));
     // const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-veiculos/index.js').fail(failAlert));
     const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-veiculos@1.1.23/index.js').fail(failAlert));
     const graficosAnaliticosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-graficos-analiticos@1.0.9/index.js').fail(failAlert));
