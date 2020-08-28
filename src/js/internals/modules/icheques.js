@@ -17,6 +17,7 @@ module.exports = controller => {
     const pdfMonitoramento = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-monitoramento-pdf@latest/index.js').fail(failAlert));
     const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.43/index.js').fail(failAlert));
     const componenteVeiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-componente-veiculos@1.0.10/index.js').fail(failAlert));
+    const contactLikeDislikeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-phone-like-dislike@latest/index.js').fail(failAlert));
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
         callback();
         const tags = (controller.confs.user || {}).tags || [];
@@ -29,6 +30,7 @@ module.exports = controller => {
         componenteVeiculosCall();
         graficosAnaliticosCall();
         consultaSimplesCall();
+        contactLikeDislikeCall();
     }).fail(() => {
         callback();
         failAlert();
