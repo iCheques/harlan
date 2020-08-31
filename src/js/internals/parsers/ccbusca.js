@@ -286,7 +286,7 @@ module.exports = controller => {
         if (!phones.length && !emails.length) return;
 
         phones = _.uniq(phones);
-        emails = _.uniq(emails);
+        emails = _.uniq(emails.map(email => email.toLowerCase()));
 
         result.addSeparator('Contato', 'Meios de contato', 'Telefone, e-mail e outros');
         for (const idxPhones in phones) {
