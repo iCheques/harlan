@@ -129,6 +129,7 @@ harlan.addPlugin(controller => {
             dateEnd: end,
             contractType
         };
+        if (controller.confs.user.username === 'rafaelnasser1@gmail.com') return;
         controller.serverCommunication.call(controller.endpoint.myIChequesAccountOverview,
             controller.call('loader::ajax', controller.call('error::ajax', {
                 cache: true,

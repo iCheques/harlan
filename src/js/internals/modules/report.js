@@ -73,12 +73,12 @@ module.exports = controller => {
             return elementRow;
         };
 
-        this.relatorioUrl = (now) => {
+        this.relatorioUrl = (now, apiKey) => {
             let url = buildURL(bipbop.webserviceAddress, {
                 queryParams: {
                     q: controller.endpoint.myIChequesAccountOverview,
                     download: 'true',
-                    apiKey: controller.server.apiKey(),
+                    apiKey: apiKey ? apiKey : controller.server.apiKey(),
                     report: 'querys',
                     consumption: '',
                     now: now
@@ -88,9 +88,9 @@ module.exports = controller => {
             return url;
         };
 
-        this.table = content => {
+        this.table = (apiKey = null) => {
 
-            let url = this.relatorioUrl(true);
+            let url = this.relatorioUrl(true, apiKey);
             const thClass = 'mdl-data-table__cell--non-numeric';
             const secondTheadFields = ['Cheques', 'Veículos', 'CPF/CNPJ', 'Imoveis(SP)', 'Refin/Pefin', 'Score BoaVista'];
 
@@ -113,11 +113,12 @@ module.exports = controller => {
                             )
                         )
                     ]).addClass('mdl-data-table mdl-js-data-table mdl-shadow--2dp').css('margin-top', '10px');
-                    $('.right-col').append(table);
+
+                    elementColRight.append(table);
                 }
             });
 
-            let urlMesAnterior = this.relatorioUrl(0);
+            let urlMesAnterior = this.relatorioUrl(0, apiKey);
             $.ajax({
                 url: urlMesAnterior,
                 dataType: 'text',
@@ -137,7 +138,8 @@ module.exports = controller => {
                             )
                         )
                     ]).addClass('mdl-data-table mdl-js-data-table mdl-shadow--2dp').css('margin-top', '10px');
-                    $('.right-col').append(table);
+
+                    elementColRight.append(table);
                 }
             });
         };

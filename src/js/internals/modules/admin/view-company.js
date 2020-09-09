@@ -494,7 +494,7 @@ module.exports = controller => {
                     }, 2000);
 
                     unregister();
-                }, results, username, undefined, undefined, undefined, 'after', true);
+                }, results, username, undefined, undefined, undefined, 'after', true, null, apiKey);
             });
         }, 200);
 

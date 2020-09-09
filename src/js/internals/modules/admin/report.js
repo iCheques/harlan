@@ -117,7 +117,8 @@ module.exports = controller => {
         interval = 'P1W',
         method = 'append',
         closeable = false,
-        contractType = null
+        contractType = null,
+        apiKey = null
     ) => {
         let ajaxQuery = {
             username,
@@ -139,14 +140,18 @@ module.exports = controller => {
                         'identificando dias em que é mais ou menos intensivo. Pode ser utilizado também para geração ' +
                         'de faturas para clientes que não possuem esse processo automatizado.',
                         closeable);
-                    const canvas = report.canvas(800, 250);
+                    const canvas = report.canvasGrid(apiKey ? 500 : 800, 250);
                     element[method || 'append'](report.element());
                     for (const i in dataset.datasets) {
-                        report.label(dataset.datasets[i].label).css({
+                        report.labelGrid(dataset.datasets[i].label).css({
                             'background-color': dataset.datasets[i].strokeColor,
                             color: dataset.datasets[i].color.light() ? '#000' : '#fff'
                         });
                     }
+
+                    if (apiKey) report.table(apiKey);
+
+                    report.grid();
 
                     report.action('fa-cloud-download', () => {
                         controller.call('admin::report::download', ajaxQuery, dataset.datasets);
