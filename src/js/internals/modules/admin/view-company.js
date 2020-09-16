@@ -357,6 +357,7 @@ module.exports = controller => {
                 modal.subtitle('Emissão de fatura para a empresa selecionada');
 
                 const form = modal.createForm();
+                const invoiceMessage = form.addTextarea('invoiceMessage', 'Insira uma descrição para a emissão dessa fatura')
                 const confirmarEmissaoFatura = form.addSubmit('confirmar-emissao-fatura', 'Confirmar Emissão de Fatura').css({ backgroundColor: '#00a900', fontWeight: 'bold', color: 'white' });
 
                 modal.createActions().cancel();
@@ -368,7 +369,8 @@ module.exports = controller => {
 
                     controller.server.call('SELECT FROM \'BIPBOPCOMPANYS\'.\'IssueInvoice\'', {
                         data: {
-                            username
+                            username,
+                            invoiceMessage: invoiceMessage.val()
                         },
                         success() {
                             toastr.success(`${username}: Fatura Gerada com Sucesso!`);
