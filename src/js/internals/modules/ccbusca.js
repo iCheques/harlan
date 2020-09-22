@@ -190,6 +190,8 @@ module.exports = controller => {
             'Informações agregadas do CPF ou CNPJ',
             'Registro encontrado', ...args);
 
+        if($('section.group-type').length) sectionDocumentGroup[0].css('border-bottom', '20px solid #fff')
+
         let subtitle = $('.results-display', sectionDocumentGroup[0]);
         let messages = [subtitle.text()];
         let appendMessage = message => {
@@ -286,9 +288,9 @@ module.exports = controller => {
             margin: 'auto'
         });
         $card.append([$title, $subtitle, $cardProgress]);
-        const $cardContainer = $('<div>').css({
+        const $cardContainer = $('<div>').addClass('ccbusca-loader').css({
             position: 'fixed',
-            right: 0,
+            right: '0em',
             bottom: 0,
             zIndex: 1030
         });
@@ -305,7 +307,7 @@ module.exports = controller => {
                 this.progress;
                 this.apiQuantity = 4;
                 this.apiCompleted = 0;
-                this.card();
+                this.cardContainer = this.card();
                 this.progressBar();
             }
 
@@ -321,16 +323,22 @@ module.exports = controller => {
             card = () => {
                 const cardContainer = this.controller.call('ccbusca::card-right');
                 let loadDot = '<span class="saving"><span> .</span><span>.</span><span>.</span></span>';
+                const loaderLength = $('.ccbusca-loader').length
+
+                if (loaderLength) cardContainer.css({right: `${21*loaderLength}em`});
+
                 $('.app-content').append(cardContainer).show('slow');
-                $('.mdl-card__title-text').css('margin', 'auto').html($('<span>').addClass('card-title').text('Consulta CPF/CNPJ'));
-                $('.mdl-card__supporting-text').html('Status: <span class=\'status\'></span>' + loadDot + '<br>');
+                $('.mdl-card__title-text', cardContainer).css('margin', 'auto').html($('<span>').addClass('card-title').text('Consulta CPF/CNPJ'));
+                $('.mdl-card__supporting-text', cardContainer).html('Status: <span class=\'status\'></span>' + loadDot + '<br>');
+
+                return cardContainer;
             }
 
             /**
              * Adiciona a barra de progresso.
              */
             progressBar = () => {
-                const bar = this.controller.interface.widgets.radialProject($('.card-progress'), 0);
+                const bar = this.controller.interface.widgets.radialProject($('.card-progress', this.cardContainer), 0);
 
                 this.progress = bar.change;
             }
@@ -353,7 +361,7 @@ module.exports = controller => {
             /**
              * Altera o texto de um determinado elemento.
              */
-            setText = (seletor, text, append = '') => $(seletor).text(text).append(append);
+            setText = (seletor, text, append = '') => $(seletor, this.cardContainer).text(text).append(append);
 
             /**
              * Define o titulo do loader.
@@ -370,7 +378,7 @@ module.exports = controller => {
              */
             setStatusSuccess = (status) => {
                 const s = $('<span>').text(status).css('color', '#009903');
-                $('.mdl-card__supporting-text').append('<br>').append(s);
+                $('.mdl-card__supporting-text', this.cardContainer).append('<br>').append(s);
 
                 return s;
             }
@@ -380,7 +388,7 @@ module.exports = controller => {
              */
             setStatusFailed = (status) => {
                 const s = $('<span>').text(status).css('color', '#ff4500');
-                $('.mdl-card__supporting-text').append('<br>').append(s);
+                $('.mdl-card__supporting-text', this.cardContainer).append('<br>').append(s);
 
                 return s;
             };
@@ -389,10 +397,16 @@ module.exports = controller => {
              * Define o status atual da pesquisa como concluído e remove o Loader.
              */
             searchCompleted = () => {
-                $('.saving').remove();
+                $('.saving', this.cardContainer).remove();
                 this.setActiveStatus('Todas as consultas foram Concluídas!');
-                this.sleep(3000).then(() => $('.mdl-card').parent().fadeOut(3000, function () {
-                    $('.mdl-card').parent().remove();
+                this.sleep(3000).then(() => this.cardContainer.fadeOut(3000, function () {
+                    $(this).remove();
+                    let count = 0;
+                    $('.ccbusca-loader').each((i, loader) => {
+                        $(loader).css('right', `${count}em`)
+                        count += 21
+                    });
+                    count = 0;
                 }));
             };
         }
