@@ -22,7 +22,7 @@
             </div>
         </form>
         <div class="mdl-grid">
-            <div class="mdl-cell mdl-cell--6-col"><a href="https://drive.google.com/open?id=1hlLtRQNbiE2qE-3fXn-zeZq3wC414dVu" style="
+            <div class="mdl-cell mdl-cell--4-col"><a href="https://drive.google.com/open?id=1hlLtRQNbiE2qE-3fXn-zeZq3wC414dVu" style="
                 color: #ffffff;
                 font-family: Open Sans,sans-serif;
                 margin: 10px auto;
@@ -35,8 +35,8 @@
                 box-sizing: border-box;
                 display: block;
                 text-decoration: none;
-            " target="_blank">TERMOS DE SERVIÇO VAREJO</a></div>
-            <div class="mdl-cell mdl-cell--6-col"><a href="https://drive.google.com/open?id=1F-sgyAWvbd5CKVJoY-v088kDL-9Mxfed" style="
+            " target="_blank">TERMOS DE SERVIÇO <br>VAREJO</a></div>
+            <div class="mdl-cell mdl-cell--4-col"><a href="https://drive.google.com/open?id=1F-sgyAWvbd5CKVJoY-v088kDL-9Mxfed" style="
                 color: #ffffff;
                 font-family: Open Sans,sans-serif;
                 margin: 10px auto;
@@ -49,7 +49,23 @@
                 box-sizing: border-box;
                 display: block;
                 text-decoration: none;
-            " target="_blank">TERMOS DE SERVIÇO FINANCEIRA</a></div>
+            " target="_blank">TERMOS DE SERVIÇO <br>FINANCEIRA</a>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col"><a href="https://drive.google.com/file/d/1V_Acc4YT5yr-KMb7wjQY_YLgcr1SVbA9/" style="
+                color: #ffffff;
+                font-family: Open Sans,sans-serif;
+                margin: 10px auto;
+                padding: 16px;
+                border: none;
+                border-bottom: 1px solid #e7e7e7;
+                font-size: 12px;
+                background: #3f51b5;
+                font-weight: 400;
+                box-sizing: border-box;
+                display: block;
+                text-decoration: none;
+            " target="_blank">TERMOS LGPD/Política de Privacidade</a>
+            </div>
         </div>
         <ul class="actions">
             <li><a class="action-home" href="#" data-i18n="login.home">Home</a></li>
