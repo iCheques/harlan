@@ -180,7 +180,7 @@ module.exports = controller => {
         const inputConfirmPassword = form.addInput('password-confirm', 'password', 'Confirmar Senha').magicLabel();
 
         const inputAgree = form.addCheckbox('agree', sprintf('Eu li e aceito os <a href="https://drive.google.com/file/d/1V_Acc4YT5yr-KMb7wjQY_YLgcr1SVbA9/" target="_blank">TERMOS DE SERVIÇO VAREJO</a> ou <a href="https://drive.google.com/file/d/1HzBnaHhprbpY9TN1sFZ-IOHaEDNwVlX5/" target="_blank">TERMOS DE SERVIÇO FINANCEIRA</a>.'), false);
-        const inputAgreeLGPD = form.addCheckbox('agree', sprintf('Eu li e aceito os <a href="https://drive.google.com/file/d/1V_Acc4YT5yr-KMb7wjQY_YLgcr1SVbA9/" target="_blank">TERMOS da LGPD / Política de Privacidade</a>.'), false);
+        const inputAgreeLGPD = form.addCheckbox('agree', sprintf('Eu li e aceito os <a href="https://drive.google.com/file/d/1-5feP98J3A3jnkW_KLChLlHKfChQojHv/" target="_blank">TERMOS da LGPD / Política de Privacidade</a>.'), false);
 
         form.addSubmit('login', 'Próximo Passo');
 
