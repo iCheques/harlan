@@ -15,7 +15,8 @@ module.exports = controller => {
             false);
 
         if (!controller.confs.isCordova) {
-            ichequesReport.button('Adicionar Cheque', () => {
+            const tags = (controller.confs.user || {}).tags || [];
+            if(tags.indexOf('no-monitoramento-de-cheques') === -1) ichequesReport.button('Adicionar Cheque', () => {
                 controller.call('icheques::newcheck');
             }).addClass('credithub-button');
 

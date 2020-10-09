@@ -7,6 +7,8 @@ import pad from 'pad';
 
 module.exports = controller => {
 
+    const tags = (controller.confs.user || {}).tags || [];
+
     function addressIsEmpty(nodes) {
         for (let idx in nodes) {
             if (!/^\**$/.test(nodes[idx])) {
@@ -303,7 +305,7 @@ module.exports = controller => {
 
     let companys = [];
 
-    const setSocio = (result, jdocument) => {
+    const setSocios = (result, jdocument) => {
         let $empresas = jdocument.find('BPQL > body socios > socio');
 
         if ($empresas.length === 0) return;
@@ -449,7 +451,9 @@ module.exports = controller => {
     const setSociety = (result, jdocument) => {
         let $empresas = jdocument.find('BPQL > body participacoesEmpresas > participacoesEmpresas');
 
-        if ($empresas.length === 0) return;
+        if ($empresas.length === 0) {
+            return setSocios(result, jdocument);
+        }
 
         result.addSeparator('Quadro Societário', 'Empresas', 'Empresas a qual faz parte.');
 
@@ -590,7 +594,7 @@ module.exports = controller => {
         const init = 'BPQL > body ';
         let doc;
         for (const idx in nodes) {
-            let data = jdocument.find(init + nodes[idx]).first().text();
+            let data = jdocument.find(init + nodes[idx]).first().text() || jdocument.find(init + nodes[idx].toUpperCase()).first().text();
             if (/^\**$/.test(data))
                 continue;
             if (idx === 'CPF' || idx === 'CNPJ') {
@@ -625,13 +629,14 @@ module.exports = controller => {
 
         /*setAddress(result, jdocument);
         setAddress(result, jdocument, true);*/
-        setAddressNew(result, jdocument);
-        setContact(result, jdocument);
         //setSocio(result, jdocument);
+        if (tags.indexOf('no-informacoes-cadastrais') === -1) {
+            setAddressNew(result, jdocument);
+            setContact(result, jdocument);
+            setEmpregador(result, jdocument);
+        }
         setQSA(result, jdocument);
         setSociety(result, jdocument);
-        setEmpregador(result, jdocument);
-
         return result.element();
     };
 

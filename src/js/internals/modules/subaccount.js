@@ -191,12 +191,14 @@ module.exports = controller => {
             const acc = list.add([iconStatus()].concat(icons), [cnpj ? CNPJ.format(cnpj) : (cpf ? CPF.format(cpf) : 'Sem Documento'), username]);
             acc.find('.fa-key').click(e => {
                 e.preventDefault();
-                controller.call('alert', {
+                /*controller.call('alert', {
                     icon: 'locked',
                     title: 'Chave de API',
                     subtitle: 'Atenção! Manipule com segurança.',
                     paragraph: `A chave de API <strong class="apiKey">${apiKey}</strong> do usuário ${username} deve ser manipulada com segurança absoluta, não devendo ser repassada a terceiros. Tenha certeza que você sabe o que está fazendo.`
-                });
+                });*/
+                controller.call('credithub::adm::subconta', username)
+
             });
             acc.find('.fa-cogs').click(controller.click('subaccount::limit', apiKey));
             acc.find('.fa-edit').click((e) => {

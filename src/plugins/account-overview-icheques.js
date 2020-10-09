@@ -163,10 +163,39 @@ harlan.addPlugin(controller => {
                         controller.call('myIChequesAccountOverview::filter', username, report, callback, closeable);
                     });
                     callback(report);
+
+                    const failAlert = () => harlan.alert({
+                        subtitle: 'Não foi possível carregar um módulo da iCheques.',
+                        paragraph: 'Verifique se o endereço cdn.jsdelivr.net é liberado na sua rede interna.',
+                    });
+
                     const historicoConsultas = oneTime(() => $.getScript( "https://cdn.jsdelivr.net/npm/harlan-credithub-historico-consultas@1.0.10/index.js" )
                     .fail(function( jqxhr, settings, exception ) {
                         console.log("Triggered ajaxError handler.");
                     }));
+                    const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-veiculos@1.1.25/index.js').fail(failAlert));
+                    const graficosAnaliticosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-graficos-analiticos@1.0.10/index.js').fail(failAlert));
+                    const consultaSimplesCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-consulta-simples@1.0.3/index.js').fail(failAlert));
+                    const followCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-follow-document@1.3.34/index.js').fail(failAlert));
+                    const componenteVeiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-componente-veiculos@1.0.15/index.js').fail(failAlert));
+                    const contactLikeDislikeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-phone-like-dislike@1.0.2/index.js').fail(failAlert));
+                    const finderPhoneCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-phone@1.0.6/index.js').fail(failAlert));
+                    const refin = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.52/index.js').fail(failAlert));
+
+                    const tags = (controller.confs.user || {}).tags || [];
+                    if (tags.indexOf('no-refin') === -1) refin();
+                    if (tags.indexOf('no-monitore') === -1) followCall();
+                    if (tags.indexOf('no-veiculos') === -1 || tags.indexOf('no-consulta-veiculos') === -1) {
+                        veiculosCall();
+                        componenteVeiculosCall();
+                    }
+
+                    if (tags.indexOf('no-protesto') === -1 || tags.indexOf('no-ccf') === -1) graficosAnaliticosCall();
+                    if (tags.indexOf('no-consulta-simples-cpf-cnpj-telefone') === -1){
+                        consultaSimplesCall();
+                        finderPhoneCall();
+                        contactLikeDislikeCall();
+                    }
                     historicoConsultas();
 
                     const showInterval = setInterval(() => {
