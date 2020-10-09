@@ -9,9 +9,8 @@ import async from 'async';
 import _ from 'underscore';
 
 module.exports = controller => {
-    return;
 
-    controller.registerCall('ccbusca::enable', () => {
+    /*controller.registerCall('ccbusca::enable', () => {
         controller.registerTrigger('mainSearch::submit', 'ccbusca', (val, cb) => {
             cb();
             if (!CNPJ.isValid(val) && !CPF.isValid(val)) {
@@ -21,7 +20,7 @@ module.exports = controller => {
                 controller.call('ccbusca', val);
             });
         });
-    });
+    });*/
 
     controller.registerCall('remove::duplicated::separators', () => {
         $('.separator').filter((i, separator) => !$(separator).text().length).each((i, separator) => $(separator).remove())
@@ -89,7 +88,7 @@ module.exports = controller => {
 
     controller.registerTrigger('ccbusca::finished', 'minimizarCategorias', ({result, doc, jdocument}, cb) => controller.call('minimizar::categorias', result));
 
-    controller.registerCall('ccbusca', (val, callback, ...args) => {
+    /*controller.registerCall('ccbusca', (val, callback, ...args) => {
         if (!$('.consulta-temporaria').length) $('body').append($('<div>').attr('id', 'consulta-temporaria').css('visibility', 'hidden'));
 
         let ccbuscaQuery = {
@@ -113,7 +112,7 @@ module.exports = controller => {
                 success(ret) {
                     controller.call('ccbusca::parse', ret, val, callback, ...args);
                 }
-            })));*/
+            })));
         const getRandom = (max, min) => parseInt(Math.random() * (max - min) + min);
         let loader = controller.call('ccbusca::loader');
         let finderRFBParams = new URLSearchParams();
@@ -184,7 +183,7 @@ module.exports = controller => {
             });
         }, 3000);
 
-    });
+    });*/
 
     controller.registerCall('ccbusca::parse', (ret, val, callback, ...args) => {
         const sectionDocumentGroup = controller.call('section', 'Busca Consolidada',
