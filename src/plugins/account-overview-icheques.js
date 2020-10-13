@@ -183,19 +183,17 @@ harlan.addPlugin(controller => {
                     const refin = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.52/index.js').fail(failAlert));
 
                     const tags = (controller.confs.user || {}).tags || [];
-                    if (tags.indexOf('no-refin') === -1) refin();
-                    if (tags.indexOf('no-monitore') === -1) followCall();
+                    refin();
+                    followCall();
                     if (tags.indexOf('no-veiculos') === -1 || tags.indexOf('no-consulta-veiculos') === -1) {
                         veiculosCall();
                         componenteVeiculosCall();
                     }
 
-                    if (tags.indexOf('no-protesto') === -1 || tags.indexOf('no-ccf') === -1) graficosAnaliticosCall();
-                    if (tags.indexOf('no-consulta-simples-cpf-cnpj-telefone') === -1){
-                        consultaSimplesCall();
-                        finderPhoneCall();
-                        contactLikeDislikeCall();
-                    }
+                    graficosAnaliticosCall();
+                    consultaSimplesCall();
+                    finderPhoneCall();
+                    contactLikeDislikeCall();
                     historicoConsultas();
 
                     const showInterval = setInterval(() => {
