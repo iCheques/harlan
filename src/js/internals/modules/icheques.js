@@ -23,7 +23,7 @@ module.exports = controller => {
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
         callback();
         const tags = (controller.confs.user || {}).tags || [];
-        //followCall();
+        followCall();
         if (tags.indexOf('no-veiculos') === -1) {
             veiculosCall();
             componenteVeiculosCall();
