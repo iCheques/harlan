@@ -235,7 +235,6 @@ module.exports = controller => {
         sectionDocumentGroup[1].append(juntaEmpresaHTML);
 
         ((() => {
-            if(!(tags.indexOf('no-ccf') === -1)) return;
             if ($('ccf-failed', ret).length) {
                 appendMessage('consulta de cheque sem fundo falhou');
                 return;
@@ -254,7 +253,6 @@ module.exports = controller => {
         }))();
 
         ((() => {
-            if(!(tags.indexOf('no-protesto') === -1)) return;
             if ($('ieptb-failed', ret).length) {
                 appendMessage('consulta de protesto falhou');
                 return;

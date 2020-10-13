@@ -173,7 +173,7 @@ harlan.addPlugin(controller => {
                     .fail(function( jqxhr, settings, exception ) {
                         console.log("Triggered ajaxError handler.");
                     }));
-                    const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-veiculos@1.1.26/index.js').fail(failAlert));
+                    /*const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-veiculos@1.1.26/index.js').fail(failAlert));
                     const graficosAnaliticosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-graficos-analiticos@1.0.10/index.js').fail(failAlert));
                     const consultaSimplesCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-consulta-simples@1.0.3/index.js').fail(failAlert));
                     const followCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-follow-document@1.3.34/index.js').fail(failAlert));
@@ -193,7 +193,7 @@ harlan.addPlugin(controller => {
                     graficosAnaliticosCall();
                     consultaSimplesCall();
                     finderPhoneCall();
-                    contactLikeDislikeCall();
+                    contactLikeDislikeCall();*/
                     historicoConsultas();
 
                     const showInterval = setInterval(() => {
