@@ -37,9 +37,11 @@ module.exports = controller => {
 
         graficosAnaliticosCall();
 
-        consultaSimplesCall();
-        finderPhoneCall();
-        contactLikeDislikeCall();
+        if(tags.indexOf('no-consulta-simples-cpf-cnpj-telefone') === -1) {
+            consultaSimplesCall();
+            finderPhoneCall();
+            contactLikeDislikeCall();
+        }
     }).fail(() => {
         callback();
         failAlert();
