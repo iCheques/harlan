@@ -23,25 +23,32 @@ module.exports = controller => {
     const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.53/index.js').fail(failAlert));
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
         callback();
-        const tags = (controller.confs.user || {}).tags || [];
-        refinCall();
-        followCall();
-        if (tags.indexOf('no-veiculos') === -1) {
-            veiculosCall();
-            componenteVeiculosCall();
-        }
-        statuspageCall();
-        pdfMonitoramento();
-        relatorioAnalitico();
-        admSubconta();
+        controller.registerTrigger('serverCommunication::websocket::authentication', 'loadingPlugin',  (data, callback) => {
+            const tags = data.tags || [];
+            const tagNaoExistir = (tag) => tags.indexOf(`no-${tag}`) === -1
+            refinCall();
+            if (tagNaoExistir('monitore')) followCall();
+            if (tagNaoExistir('consulta-veiculos')) {
+                veiculosCall();
+                componenteVeiculosCall();
+            }
+            statuspageCall();
+            pdfMonitoramento();
+            relatorioAnalitico();
+            admSubconta();
 
-        graficosAnaliticosCall();
+            if (tagNaoExistir('protesto') && tagNaoExistir('ccf')) graficosAnaliticosCall();
 
-        if(tags.indexOf('no-consulta-simples-cpf-cnpj-telefone') === -1) {
-            consultaSimplesCall();
-            finderPhoneCall();
-            contactLikeDislikeCall();
-        }
+            if (tagNaoExistir('consulta-simples-cpf-cnpj-telefone')) {
+                consultaSimplesCall();
+                finderPhoneCall();
+                contactLikeDislikeCall();
+            }
+            if(!tagNaoExistir('informações-cadastrais')) {
+                $('#action-Empresa').parent().css('display', 'none');
+            }
+            callback();
+        });
     }).fail(() => {
         callback();
         failAlert();

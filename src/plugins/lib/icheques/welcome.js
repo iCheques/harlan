@@ -15,8 +15,7 @@ module.exports = controller => {
             false);
 
         if (!controller.confs.isCordova) {
-            const tags = (controller.confs.user || {}).tags || [];
-            if(tags.indexOf('no-monitoramento-de-cheques') === -1) ichequesReport.button('Adicionar Cheque', () => {
+            ichequesReport.button('Adicionar Cheque', () => {
                 controller.call('icheques::newcheck');
             }).addClass('credithub-button');
 
@@ -35,9 +34,10 @@ module.exports = controller => {
         }
 
         report.gamification('shield');
+        const tags = (controller.confs.user || {}).tags || [];
         ichequesReport.gamification('shield').addClass('icheques-shield');
 
-        $('.app-content').prepend(ichequesReport.element());
+        if(tags.indexOf('no-monitoramento-de-cheques') === -1)  $('.app-content').prepend(ichequesReport.element());
         $('.app-content').prepend(report.element());
     });
 
