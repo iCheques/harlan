@@ -452,7 +452,7 @@ module.exports = controller => {
         let $empresas = jdocument.find('BPQL > body participacoesEmpresas > participacoesEmpresas');
 
         if ($empresas.length === 0) {
-            return setSocios(result, jdocument);
+            return;
         }
 
         result.addSeparator('Quadro Societário', 'Empresas', 'Empresas a qual faz parte.');
