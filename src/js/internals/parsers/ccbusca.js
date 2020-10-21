@@ -593,26 +593,28 @@ module.exports = controller => {
 
         const init = 'BPQL > body ';
         let doc;
-        for (const idx in nodes) {
-            let data = jdocument.find(init + nodes[idx]).first().text() || jdocument.find(init + nodes[idx].toUpperCase()).first().text();
-            if (/^\**$/.test(data))
-                continue;
-            if (idx === 'CPF' || idx === 'CNPJ') {
-                data = data.replace(/^0+/, '');
-                data = pad(11, data, '0');
-                if (CPF.isValid(data)) {
-                    result.addItem('Nome', jdocument.find(init + 'nome').first().text(), 'nome');
-                    result.addItem('CPF', CPF.format(data), nodes[idx]);
-                    doc = CPF.format(data);
-                } else {
-                    data = pad(14, data, '0');
-                    result.addItem('Nome', jdocument.find(init + '> RFB > nome').first().text(), 'nome');
-                    result.addItem('CNPJ', CNPJ.format(data), nodes[idx]);
-                    doc = CNPJ.format(data);
+        if (tags.indexOf('no-informações-cadastrais') === -1) {
+            for (const idx in nodes) {
+                let data = jdocument.find(init + nodes[idx]).first().text() || jdocument.find(init + nodes[idx].toUpperCase()).first().text();
+                if (/^\**$/.test(data))
+                    continue;
+                if (idx === 'CPF' || idx === 'CNPJ') {
+                    data = data.replace(/^0+/, '');
+                    data = pad(11, data, '0');
+                    if (CPF.isValid(data)) {
+                        result.addItem('Nome', jdocument.find(init + 'nome').first().text(), 'nome');
+                        result.addItem('CPF', CPF.format(data), nodes[idx]);
+                        doc = CPF.format(data);
+                    } else {
+                        data = pad(14, data, '0');
+                        result.addItem('Nome', jdocument.find(init + '> RFB > nome').first().text(), 'nome');
+                        result.addItem('CNPJ', CNPJ.format(data), nodes[idx]);
+                        doc = CNPJ.format(data);
+                    }
+                    continue;
                 }
-                continue;
+                result.addItem(idx, data, nodes[idx]);
             }
-            result.addItem(idx, data, nodes[idx]);
         }
 
         const capitalSocial = jdocument.find('capitalSocial');
@@ -630,7 +632,7 @@ module.exports = controller => {
         /*setAddress(result, jdocument);
         setAddress(result, jdocument, true);*/
         //setSocio(result, jdocument);
-        if (tags.indexOf('no-informacoes-cadastrais') === -1) {
+        if (tags.indexOf('no-informações-cadastrais') === -1) {
             setAddressNew(result, jdocument);
             setContact(result, jdocument);
             setEmpregador(result, jdocument);
