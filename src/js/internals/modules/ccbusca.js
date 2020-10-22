@@ -22,7 +22,7 @@ module.exports = controller => {
     });
 
     controller.registerCall('blockedOperation', (tag) => {
-        controller.call('alert', {
+        const {modal, form} = controller.call('alert', {
             title: 'Infelizmente voce não tem permissão para isso!',
             subtitle: 'Clique em um dos botões abaixo.',
             okText: 'Eita, preciso dessa consulta!',
@@ -32,6 +32,12 @@ module.exports = controller => {
                 return toastr.success('Foi enviada uma solicitação ao administrador da conta, para liberar acesso à funcionalidade solicitada.')
             }
         })));
+        const okBtn = form.addSubmit('ok-entendi', 'Ok, entendi!')
+
+        okBtn.on('click', ev => {
+            ev.preventDefault();
+            modal.close();
+        })
     });
 
     controller.registerCall('remove::duplicated::separators', () => {
