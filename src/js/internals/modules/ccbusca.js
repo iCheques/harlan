@@ -9,7 +9,7 @@ import async from 'async';
 import _ from 'underscore';
 
 module.exports = controller => {
-    /*controller.registerCall('ccbusca::enable', () => {
+    controller.registerCall('ccbusca::enable', () => {
         controller.registerTrigger('mainSearch::submit', 'ccbusca', (val, cb) => {
             cb();
             if (!CNPJ.isValid(val) && !CPF.isValid(val)) {
@@ -19,7 +19,20 @@ module.exports = controller => {
                 controller.call('ccbusca', val);
             });
         });
-    });*/
+    });
+
+    controller.registerCall('blockedOperation', (tag) => {
+        controller.call('alert', {
+            title: 'Infelizmente voce não tem permissão para isso!',
+            subtitle: 'Clique em um dos botões abaixo.',
+            okText: 'Eita, preciso dessa consulta!',
+        }, () => controller.serverCommunication.call("SELECT FROM 'SubAccount'.'AskPermission'",  controller.call('loader::ajax', {
+            data: {tag},
+            success(response) {
+                return toastr.success('Foi enviada uma solicitação ao administrador da conta, para liberar acesso à funcionalidade solicitada.')
+            }
+        })));
+    });
 
     controller.registerCall('remove::duplicated::separators', () => {
         $('.separator').filter((i, separator) => !$(separator).text().length).each((i, separator) => $(separator).remove())
