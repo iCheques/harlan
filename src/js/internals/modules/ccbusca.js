@@ -32,12 +32,13 @@ module.exports = controller => {
                 return toastr.success('Foi enviada uma solicitação ao administrador da conta, para liberar acesso à funcionalidade solicitada.')
             }
         })));
+        form.element().find('input[name=cancel]').attr('value', 'Eita, preciso dessa consulta!')
         const okBtn = form.addSubmit('ok-entendi', 'Ok, entendi!')
 
         okBtn.on('click', ev => {
             ev.preventDefault();
             modal.close();
-        })
+        });
     });
 
     controller.registerCall('remove::duplicated::separators', () => {
