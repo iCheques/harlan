@@ -24,7 +24,7 @@ module.exports = controller => {
     controller.registerCall('blockedOperation', (tag) => {
         const {modal, form} = controller.call('alert', {
             title: 'Infelizmente voce não tem permissão para isso!',
-            subtitle: 'Clique em um dos botões abaixo.',
+            subtitle: 'Para continuar é necessário pedir permissão ao Usuário Master.',
             okText: 'Eita, preciso dessa consulta!',
         }, () => controller.serverCommunication.call("SELECT FROM 'SubAccount'.'AskPermission'",  controller.call('loader::ajax', {
             data: {tag},
