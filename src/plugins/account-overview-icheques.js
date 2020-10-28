@@ -169,6 +169,9 @@ harlan.addPlugin(controller => {
                         paragraph: 'Verifique se o endereço cdn.jsdelivr.net é liberado na sua rede interna.',
                     });
 
+                    const historicoConsultas = oneTime(() => $.getScript("https://cdn.jsdelivr.net/npm/harlan-credithub-historico-consultas@1.0.10/index.js").fail(failAlert));
+                    historicoConsultas();
+
                     const showInterval = setInterval(() => {
                         if (!document.contains(canvas) || !$(canvas).is(':visible')) {
                             return;

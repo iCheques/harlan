@@ -21,7 +21,6 @@ module.exports = controller => {
     const finderPhoneCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-phone@1.0.6/index.js').fail(failAlert));
     const admSubconta = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-adm-subcontas@1.0.6/index.js').fail(failAlert));
     const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.58/index.js').fail(failAlert));
-    const historicoConsultas = oneTime(() => $.getScript("https://cdn.jsdelivr.net/npm/harlan-credithub-historico-consultas@1.0.10/index.js").fail(failAlert));
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
         callback();
         controller.registerTrigger('serverCommunication::websocket::authentication', 'loadingPlugin',  (data, callback) => {
@@ -45,7 +44,6 @@ module.exports = controller => {
                 finderPhoneCall();
                 contactLikeDislikeCall();
             }
-            historicoConsultas();
             callback();
         });
     }).fail(() => {
