@@ -51,7 +51,7 @@
                 text-decoration: none;
             " target="_blank">TERMOS DE SERVIÇO <br>FINANCEIRA</a>
             </div>
-            <div class="mdl-cell mdl-cell--4-col"><a href="https://drive.google.com/file/d/1-5feP98J3A3jnkW_KLChLlHKfChQojHv/" style="
+            <div class="mdl-cell mdl-cell--4-col"><a href="https://www.credithub.com.br/politica-de-privacidade" style="
                 color: #ffffff;
                 font-family: Open Sans,sans-serif;
                 margin: 10px auto;
