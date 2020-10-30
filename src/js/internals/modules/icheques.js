@@ -25,7 +25,7 @@ module.exports = controller => {
         callback();
         controller.registerTrigger('serverCommunication::websocket::authentication', 'loadingPlugin',  (data, callback) => {
             const tags = data.tags || [];
-            const tagNaoExistir = (tag) => tags.indexOf(`no-${tag}`) === -1
+            const tagNaoExistir = (tag) => tags.indexOf(`no-${tag}`) === -1;
             refinCall();
             if (tagNaoExistir('monitore')) followCall();
             if (tagNaoExistir('consulta-veiculos')) {
