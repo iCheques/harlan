@@ -622,13 +622,6 @@ module.exports = controller => {
             result.addItem('Capital Social', numeral(capitalSocial.text().replace('.', ',')).format('$0,0.00'), 'capitalSocial');
         }
 
-        if (doc) {
-            controller.trigger('ccbusca::parser', {
-                result,
-                doc
-            });
-        }
-
         /*setAddress(result, jdocument);
         setAddress(result, jdocument, true);*/
         //setSocio(result, jdocument);
@@ -639,6 +632,14 @@ module.exports = controller => {
         }
         setQSA(result, jdocument);
         setSociety(result, jdocument);
+
+        if (doc) {
+            controller.trigger('ccbusca::parser', {
+                result,
+                doc
+            });
+        }
+        
         return result.element();
     };
 
