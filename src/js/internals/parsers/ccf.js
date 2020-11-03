@@ -194,7 +194,7 @@ module.exports = controller => {
             result.addItem('Agência', $('agencia', element).text());
             result.addItem('Qtde. Ocorrências', $('qteOcorrencias', element).text());
 
-            let v1 = moment($('dataUltOcorrencia', element).text(), 'DD/MM/YYYY');
+            let v1 = moment($('ultimaOcorrencia', element).text(), 'DD/MM/YYYY');
             let v2 = moment($('ultimo', element).text(), 'DD/MM/YYYY');
             result.addItem(`Primeiro Registro (${(v1.isAfter(v2) ? v2 : v1).fromNow()})`, (v1.isAfter(v2) ? v2 : v1).format('DD/MM/YYYY'));
             result.addItem(`Última Ocorrência (${(v1.isAfter(v2) ? v1 : v2).fromNow()})`, (v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY'));
