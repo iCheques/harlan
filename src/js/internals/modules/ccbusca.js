@@ -242,7 +242,7 @@ module.exports = controller => {
                 .append($('<body />').html(html)).html());
             printWindow.focus();
             printWindow.print();*/
-            harlan.call('relatorioAnalitico::print', html);
+            harlan.call('relatorioAnalitico::print', html, false, moment().format('DD/MM/YYYY'));
         });
 
         const juntaEmpresaHTML = controller.call('xmlDocument', ret, 'CCBUSCA', 'DOCUMENT');
