@@ -129,13 +129,15 @@ module.exports = controller => {
                         markers: `size:mid|color:red|label:1|${address.join(', ')}`
                     })}`;
 
-                    result.addItem().addClass('map').append(
+                    const mapItem = result.addItem().addClass('map').append(
                         $('<a />').attr({
                             href: `https://www.google.com/maps?${$.param({
                                 q: address.join(', ')
                             })}`,
                             target: '_blank'
                         }).append($('<img />').attr('src', mapUrl)));
+
+                        $('<br>').insertBefore(mapItem);
 
                     result.addSeparator('Endereço', 'Localização', 'Endereçamento e mapa').css('display', 'none');
                 }

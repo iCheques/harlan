@@ -228,7 +228,7 @@ module.exports = controller => {
         controller.call('tooltip', sectionDocumentGroup[2], 'Download PDF').append($('<i />').addClass('fa fa-download')).click(e => {
             e.preventDefault();
             const html = sectionDocumentGroup[0].html();
-            harlan.call('relatorioAnalitico::print', html, true);
+            harlan.call('relatorioAnalitico::print', html, true, moment().format('DD/MM/YYYY'));
         });
 
         controller.call('tooltip', sectionDocumentGroup[2], 'Imprimir').append($('<i />').addClass('fa fa-print')).click(e => {
