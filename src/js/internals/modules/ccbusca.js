@@ -228,7 +228,7 @@ module.exports = controller => {
         controller.call('tooltip', sectionDocumentGroup[2], 'Download PDF').append($('<i />').addClass('fa fa-download')).click(e => {
             e.preventDefault();
             const html = sectionDocumentGroup[0].html();
-            harlan.call('relatorioAnalitico::print', html, true, moment().format('DD/MM/YYYY'));
+            harlan.call('relatorioAnalitico::print', html, true, moment().format('DD/MM/YYYY H[h]m'));
         });
 
         controller.call('tooltip', sectionDocumentGroup[2], 'Imprimir').append($('<i />').addClass('fa fa-print')).click(e => {
@@ -242,7 +242,7 @@ module.exports = controller => {
                 .append($('<body />').html(html)).html());
             printWindow.focus();
             printWindow.print();*/
-            harlan.call('relatorioAnalitico::print', html, false, moment().format('DD/MM/YYYY'));
+            harlan.call('relatorioAnalitico::print', html, false, moment().format('DD/MM/YYYY H[h]m'));
         });
 
         const juntaEmpresaHTML = controller.call('xmlDocument', ret, 'CCBUSCA', 'DOCUMENT');
