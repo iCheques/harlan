@@ -642,6 +642,8 @@ module.exports = controller => {
         setQSA(result, jdocument);
         setSociety(result, jdocument);
 
+        if(jdocument.find('erro > mensagem').text() === 'Nenhum registro encontrado') setSocios(result, jdocument);
+
         controller.trigger('processoJuridicoParser', {
             result,
             doc
