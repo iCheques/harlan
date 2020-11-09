@@ -45,7 +45,7 @@ module.exports = controller => {
                 finderPhoneCall();
                 contactLikeDislikeCall();
             }
-            processoJuridicoCall();
+            if(tagNaoExistir('consulta-processo-juridico') && tagNaoExistir('processos-juridicos')) processoJuridicoCall();
             callback();
         });
     }).fail(() => {
