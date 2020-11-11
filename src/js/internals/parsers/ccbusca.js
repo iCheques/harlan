@@ -646,7 +646,12 @@ module.exports = controller => {
 
         const tagExistir = (tag) => !(controller.confs.user.tags.indexOf(`no-${tag}`) === -1);
 
-        if (tagExistir('protesto') || tagExistir('ccf')) controller.trigger('processoJuridicoParser', {
+        /*if (tagExistir('protesto') || tagExistir('ccf')) controller.trigger('processoJuridicoParser', {
+            result,
+            doc
+        });*/
+
+        controller.trigger('processoJuridicoParser', {
             result,
             doc
         });
