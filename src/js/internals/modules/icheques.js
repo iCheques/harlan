@@ -25,6 +25,7 @@ module.exports = controller => {
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
         callback();
         controller.registerTrigger('serverCommunication::websocket::authentication', 'loadingPlugin',  (data, callback) => {
+            if(!data.commercialReference) $('#action-subaccount').parent().hide();
             const tags = data.tags || [];
             const tagNaoExistir = (tag) => tags.indexOf(`no-${tag}`) === -1;
             refinCall();
