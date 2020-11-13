@@ -644,7 +644,7 @@ module.exports = controller => {
 
         if(jdocument.find('erro > mensagem').text() === 'Nenhum registro encontrado') setSocios(result, jdocument);
 
-        const tagExistir = (tag) => !(controller.confs.user.tags.indexOf(`no-${tag}`) === -1);
+        const tagExistir = (tag) => !((controller.confs.user.tags || []).indexOf(`no-${tag}`) === -1);
 
         if (tagExistir('protesto') || tagExistir('ccf')) controller.trigger('processoJuridicoParser', {
             result,
