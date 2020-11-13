@@ -185,7 +185,7 @@ module.exports = controller => {
 
             result.addSeparator('Cheques sem Fundo em Instituição Bancária',
                 'Detalhes acerca de cheques sem fundo emitidos',
-                'Foram localizados cheques sem fundo em uma instituição bancária.');
+                'Foram localizados cheques sem fundo em uma instituição bancária.').css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)');
 
             if (bankName)
                 result.addItem('Banco', bankName);
