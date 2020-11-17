@@ -9,8 +9,10 @@ module.exports = controller => {
             return;
         }
 
-        $('.app .input-q').val(controller.query.q.replace(/\/$/, ''));
-        $('.app .main-search').submit();
+        return;
+
+        //$('.app .input-q').val(controller.query.q.replace(/\/$/, ''));
+        //$('.app .main-search').submit();
     });
 
 };
