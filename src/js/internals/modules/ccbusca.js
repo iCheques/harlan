@@ -300,7 +300,7 @@ module.exports = controller => {
         controller.call('remove::duplicated::separators');
         controller.call('remove::duplicated::containers');
 
-        controller.trigger('ccbusca::finished', {
+        if (!callback) controller.trigger('ccbusca::finished', {
             result: sectionDocumentGroup[1],
             doc: $(ret).find('entrada').text() || $(ret).find('CNPJ').text(),
             jdocument: $(ret)
