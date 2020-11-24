@@ -230,14 +230,14 @@ module.exports = controller => {
                     const sectionGroup = result.parent();
                     sectionGroup.hide('1000', () => sectionGroup.remove());
 
-                    controller.call('ccbusca::parse', jdocument, doc)
+                    controller.call('ccbusca::parse', jdocument, doc);
                     $('button:contains(Informação Divergente?)').remove();
                   }
-              })
-          })
+              });
+          });
 
 
-          result.parent().find('header').find('.actions').prepend($('<li>').append(buttonRefresh))
+          result.parent().find('header').find('.actions').prepend($('<li>').append(buttonRefresh));
         },
     );
 
