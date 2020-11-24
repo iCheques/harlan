@@ -302,7 +302,7 @@ module.exports = controller => {
 
         controller.trigger('ccbusca::finished', {
             result: sectionDocumentGroup[1],
-            doc: $(ret).find('entrada').text(),
+            doc: $(ret).find('entrada').text() || $(ret).find('CNPJ').text(),
             jdocument: $(ret)
         });
     });
