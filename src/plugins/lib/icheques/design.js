@@ -63,7 +63,6 @@ module.exports = controller => {
     document.title = 'CreditHub | Seu Hub de Crédito';
     controller.interface.helpers.changeFavicon('/images/icheques/favicon.png');
     require('../../styles/icheques.js');
-
     $('#login-about').text('Para acessar sua conta faça o login com usuário ou email e senha cadastrados.');
 
     $(controller.confs.container).append(siteTemplate);

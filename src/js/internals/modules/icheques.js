@@ -30,9 +30,18 @@ module.exports = controller => {
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
         callback();
         controller.registerTrigger('serverCommunication::websocket::authentication', 'loadingPlugin',  (data, callback) => {
-            /*controller.server.call("SELECT FROM 'HarlanVersion'.'Version'", {
-                return ''
-            })*/
+            controller.server.call("SELECT FROM 'HarlanVersion'.'Version'", {
+                dataType: 'json',
+                success: (data) => {
+                    if (data.version == controller.call('harlanVersion')) return;
+
+                    controller.call('harlanVersionError');
+                }
+            });
+
+            controller.call('SafariError');
+            controller.call('LocationError');
+
             if(!data.commercialReference) $('#action-subaccount').parent().hide();
             const tags = data.tags || [];
             const tagNaoExistir = (tag) => tags.indexOf(`no-${tag}`) === -1;

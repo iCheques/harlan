@@ -627,7 +627,7 @@ module.exports = controller => {
         if (doc) {
             controller.trigger('ccbusca::parser', {
                 result,
-                doc
+                doc,
             });
         }
 

@@ -204,6 +204,83 @@ module.exports = controller => {
 
     });*/
 
+    controller.registerTrigger(
+        'ccbusca::finished',
+        'informacaoDivergente',
+        ({
+          result,
+          doc,
+          jdocument,
+        }, cb) => {
+          cb();
+          let buttonRefresh = null;
+          buttonRefresh = $('<button />')
+            .text('Informação Divergente?')
+            .addClass('button').css('marginTop', '-10px').on('click', (ev) => {
+              ev.preventDefault();
+
+              controller.serverCommunication.call("SELECT FROM 'RFBCNPJAndroid'.'Certidao'", {
+                  data: { documento: doc },
+                  success: (rfbDocument) => {
+                    const rfbTag = $(rfbDocument).find('RFB');
+                    $(jdocument).find('RFB').remove();
+                    $(jdocument).find('LocalizePessoaJuridica').remove();
+                    $(jdocument).find('body').append(rfbTag);
+
+                    const sectionGroup = result.parent();
+                    sectionGroup.hide('1000', () => sectionGroup.remove());
+
+                    controller.call('ccbusca::parse', jdocument, doc)
+                    $('button:contains(Informação Divergente?)').remove();
+                  }
+              })
+          })
+
+
+          result.parent().find('header').find('.actions').prepend($('<li>').append(buttonRefresh))
+        },
+    );
+
+    controller.registerCall('harlanVersionError', () => {
+        const modal = controller.call('modal');
+        modal.title('Uh-oh! CreditHub Desatualizado; Atualize Já!');
+        modal.subtitle('Por razões de segurança, será necessário que você limpe o "cache" do seu navegador.');
+        modal.paragraph('Para cada navegador e sistema existe uma forma de limpar o "cache", na imagem abaixo você pode observar como realizar o procedimento:');
+        modal.element().append($('<img>').attr('src', '/images/limpar-cache.png').css({width: '32em',backgroundColor: '#d9d9d9', borderRadius: '10px'}))
+    });
+
+    controller.registerCall('SafariError', () => {
+        const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+        if (!isSafari) return;
+        const modal = controller.call('modal');
+        modal.title('Uh-oh! Navegador sem suporte!');
+        modal.subtitle('Não oferecemos suporte para o Safari.');
+        modal.paragraph('Para uma melhor navegação recomendamos que você use um dos seguintes navegadores: Chrome, Firefox, ou Opera');
+        const form = modal.createForm();
+        const submit = form.addSubmit('ok', 'Ok, entendi!')
+
+        submit.on('click', (ev) => {
+            ev.preventDefault();
+            modal.close();
+        });
+    });
+
+    controller.registerCall('LocationError', () => {
+        if (window.location.hostname === 'painel.credithub.com.br') return;
+        const modal = controller.call('modal');
+        modal.title('Uh-oh! Você está no endereço errado!');
+        modal.subtitle('Agora somos Credithub!');
+        modal.paragraph('Para acessar nossos serviços, é necessário que você esteja no "painel.credithub.com.br", clique no botão abaixo e seja redirecionado!');
+        const form = modal.createForm();
+        const submit = form.addSubmit('ok', 'Ok, me redirecione!')
+
+        submit.on('click', (ev) => {
+            ev.preventDefault();
+            window.location.href = 'https://painel.credithub.com.br';
+            modal.close();
+        });
+    });
+
     controller.registerCall('ccbusca::parse', (ret, val, callback, ...args) => {
         const tags = (controller.confs.user || {}).tags || [];
         const sectionDocumentGroup = controller.call('section', 'Busca Consolidada',
