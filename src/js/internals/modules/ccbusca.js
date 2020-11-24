@@ -213,27 +213,28 @@ module.exports = controller => {
           jdocument,
         }, cb) => {
           cb();
+          if (doc.replace(/\D/g, '').length < 14) return;
           let buttonRefresh = null;
           buttonRefresh = $('<button />')
             .text('Informação Divergente?')
             .addClass('button').css('marginTop', '-10px').on('click', (ev) => {
               ev.preventDefault();
 
-              controller.serverCommunication.call("SELECT FROM 'RFBCNPJAndroid'.'Certidao'", {
-                  data: { documento: doc },
-                  success: (rfbDocument) => {
-                    const rfbTag = $(rfbDocument).find('RFB');
-                    $(jdocument).find('RFB').remove();
-                    $(jdocument).find('LocalizePessoaJuridica').remove();
-                    $(jdocument).find('body').append(rfbTag);
+              controller.serverCommunication.call("SELECT FROM 'RFBCNPJAndroid'.'Certidao'", controller.call('loader::ajax', {
+                data: { documento: doc },
+                success: (rfbDocument) => {
+                  const rfbTag = $(rfbDocument).find('RFB');
+                  $(jdocument).find('RFB').remove();
+                  $(jdocument).find('LocalizePessoaJuridica').remove();
+                  $(jdocument).find('body').append(rfbTag);
 
-                    const sectionGroup = result.parent();
-                    sectionGroup.hide('1000', () => sectionGroup.remove());
+                  const sectionGroup = result.parent();
+                  sectionGroup.hide('1000', () => sectionGroup.remove());
 
-                    controller.call('ccbusca::parse', jdocument, doc);
-                    $('button:contains(Informação Divergente?)').remove();
-                  }
-              });
+                  controller.call('ccbusca::parse', jdocument, doc);
+                  $('button:contains(Informação Divergente?)').remove();
+                }
+            }));
           });
 
 
