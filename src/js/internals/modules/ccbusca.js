@@ -238,7 +238,7 @@ module.exports = controller => {
           });
 
 
-          result.parent().find('header').find('.actions').prepend($('<li>').append(buttonRefresh));
+          result.parent().find('header').eq(0).find('.actions').prepend($('<li>').append(buttonRefresh));
         },
     );
 
