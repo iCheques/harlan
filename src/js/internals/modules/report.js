@@ -16,8 +16,8 @@ module.exports = controller => {
         const elementResults = $('<div />').addClass('results');
         let elementOpen = null;
         let elementRow = $('<div />').addClass('mdl-grid');
-        let elementCol = $('<div />').addClass('mdl-cell mdl-cell--6-col left-col');
-        let elementColRight = $('<div />').addClass('mdl-cell mdl-cell--6-col right-col').css({'overflow-x': 'auto'});
+        let elementCol = $('<div />').addClass('mdl-cell mdl-cell--5-col left-col');
+        let elementColRight = $('<div />').addClass('mdl-cell mdl-cell--7-col right-col').css({'overflow-x': 'auto'});
 
         universalContainer.append(elementNews.append(elementContainer
             .append(elementActions)
@@ -76,12 +76,9 @@ module.exports = controller => {
         this.relatorioUrl = (now, apiKey) => {
             let url = buildURL(bipbop.webserviceAddress, {
                 queryParams: {
-                    q: controller.endpoint.myIChequesAccountOverview,
-                    download: 'true',
+                    q: "SELECT FROM 'Consumption'.'Report'",
                     apiKey: apiKey ? apiKey : controller.server.apiKey(),
-                    report: 'querys',
-                    consumption: '',
-                    now: now
+                    current: now ? 1 : 0
                 }
             });
 
@@ -92,54 +89,60 @@ module.exports = controller => {
 
             let url = this.relatorioUrl(true, apiKey);
             const thClass = 'mdl-data-table__cell--non-numeric';
-            const secondTheadFields = ['Cheques', 'Veículos', 'CPF/CNPJ', 'Imoveis(SP)', 'Refin/Pefin', 'Score BoaVista'];
+            const secondTheadFields = ['Cheques', 'Veículos', 'CPF/CNPJ', 'Imoveis(SP)', 'Refin/Pefin', 'Score BoaVista', 'Processos Jurídicos'];
+            const getPeriodo = (periodo) => {
+                const inicio = moment(periodo.inicio).format('DD/MM/Y');
+                const fim = moment(periodo.fim).format('DD/MM/Y');
 
+                return $('<span>').text(` (${inicio} a ${fim})`).css({fontWeight: 'normal', fontStyle: 'italic'});
+            }
+
+            const tableAtual = $('<table>');
+            elementColRight.append(tableAtual);
             $.ajax({
                 url: url,
-                dataType: 'text',
+                dataType: 'json',
                 success: function (response) {
-                    const consulta = JSON.parse(response);
+                    const consulta = response;//JSON.parse(response);
 
-                    const table = $('<table>').append([
+                    tableAtual.append([
                         $('<thead>').append(
-                            $('<tr>').append($('<th>').attr('colspan', 3).addClass(thClass).text('Resumo do mês atual'))
+                            $('<tr>').append($('<th>').attr('colspan', 3).addClass(thClass).text('Resumo do mês atual').append(getPeriodo(consulta.periodo)))
                         ),
                         $('<thead>').append(
                             $('<tr>').append(secondTheadFields.map((field) => $('<th>').append(`${field}`).addClass(thClass)))
                         ),
                         $('<tbody>').append(
                             $('<tr>').append(
-                                ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin', 'score-boavista'].map((field) => $('<th>').append(`${field != 'refin' ? consulta[field] : consulta[field] + consulta['serasa']}`).addClass(thClass))
+                                ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin', 'score-boavista', 'processo-juridico'].map((field) => $('<th>').append(`${field != 'refin' ? consulta[field] : consulta[field] + consulta['serasa']}`).addClass(thClass))
                             )
                         )
                     ]).addClass('mdl-data-table mdl-js-data-table mdl-shadow--2dp').css('margin-top', '10px');
-
-                    elementColRight.append(table);
                 }
             });
 
+            const tableAnterior = $('<table>');
+            elementColRight.append(tableAnterior);
             let urlMesAnterior = this.relatorioUrl(0, apiKey);
             $.ajax({
                 url: urlMesAnterior,
-                dataType: 'text',
+                dataType: 'json',
                 success: function (response) {
-                    let consulta = JSON.parse(response);
+                    let consulta = response;
 
-                    const table = $('<table>').append([
+                    tableAnterior.append([
                         $('<thead>').append(
-                            $('<tr>').append($('<th>').attr('colspan', 3).addClass(thClass).text('Resumo do mês Anterior'))
+                            $('<tr>').append($('<th>').attr('colspan', 3).addClass(thClass).text('Resumo do mês Anterior').append(getPeriodo(consulta.periodo)))
                         ),
                         $('<thead>').append(
                             $('<tr>').append(secondTheadFields.map((field) => $('<th>').append(`${field}`).addClass(thClass)))
                         ),
                         $('<tbody>').append(
                             $('<tr>').append(
-                                ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin', 'score-boavista'].map((field) => $('<th>').append(`${field != 'refin' ? consulta[field] : consulta[field] + consulta['serasa']}`).addClass(thClass))
+                                ['cheques', 'veiculos', 'cpf_cnpj', 'imoveis', 'refin', 'score-boavista', 'processo-juridico'].map((field) => $('<th>').append(`${field != 'refin' ? consulta[field] : consulta[field] + consulta['serasa']}`).addClass(thClass))
                             )
                         )
                     ]).addClass('mdl-data-table mdl-js-data-table mdl-shadow--2dp').css('margin-top', '10px');
-
-                    elementColRight.append(table);
                 }
             });
         };
