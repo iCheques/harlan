@@ -105,6 +105,57 @@ module.exports = controller => {
         });
     });
 
+    controller.registerTrigger('findDatabase::instantSearch', 'relatorioConsumo', (args, callback) => {
+        callback();
+        let [argument, autocomplete] = args;
+        if (controller.confs.user.adminOf === undefined) return;
+        if (!/relatorio de consumo/i.test(argument)) return;
+        autocomplete.item('Relatório de Consumo',
+            'Gestão de Consumo',
+            '')
+            .addClass('admin-company admin-new-company')
+            .click(controller.click('relatorioConsumoAdmin'));
+    });
+
+    controller.registerCall('relatorioConsumoAdmin', () => {
+        const modal = controller.call('modal');
+        modal.title('Relatório de Consumo');
+        const form = modal.createForm();
+        const $dueDate = form.addInput('due_date', 'number', 'Data de Vencimento do Contrato').attr({min: 1, max: 30, value: 1});
+        const $generateReport = form.addSubmit('gerar_relatorio', 'Gerar Relatório de Consumo');
+        modal.createActions().cancel();
+        $generateReport.on('click', (ev) => {
+            ev.preventDefault();
+            if ($dueDate.val() < 1 || $dueDate.val() > 30) return toastr.error('Data de Vencimento do Contrato inválida!');
+
+            controller.serverCommunication.call("SELECT FROM 'Consumption'.'ReportAllUsers'", controller.call('loader::ajax', {
+                dataType: 'json',
+                data: {
+                    due_date: $dueDate.val()
+                },
+                success: (data) => {
+                    const fields = ['Usuário', 'Valor Do Contrato','Consulta Simples + Cheques', 'Pefin/Refin Serasa', 'Pefin/Refin Boa Vista', 'Veiculos','Score Boa Vista','Processo Jurídico'];
+                    let periodo = 'indisponivel';
+                    if (data.length)
+                        periodo = `${moment(data[0].periodo.inicio).format('DD[_]MM[_]Y')} a ${moment(data[0].periodo.fim).format('DD[_]MM[_]Y')}`
+                    const companys = data.map(c => [c.username, c.valor_contrato, c.cpf_cnpj + c.cheques, c.serasa, c.refin, c.veiculos, c['score-boavista'], c['processo-juridico']])
+                    const csvData = [fields];
+                    companys.forEach(c => csvData.push(c));
+
+                    const csvContent = "data:text/csv;charset=utf-8,"+ csvData.map(e => e.join(",")).join("\n");
+                    const encodedUri = encodeURI(csvContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", `relatorio_de_consumo_periodo_${periodo}.csv`);
+                    document.body.appendChild(link);
+
+                    link.click();
+                    toastr.success('Relatório de Consumo Gerado com Sucesso!');
+                }
+            }));
+        });
+    });
+
     controller.registerTrigger('ccbusca::finished', 'minimizarCategorias', ({result, doc, jdocument}, cb) => controller.call('minimizar::categorias', result));
 
     /*controller.registerCall('ccbusca', (val, callback, ...args) => {
