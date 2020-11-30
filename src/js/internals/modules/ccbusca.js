@@ -109,12 +109,19 @@ module.exports = controller => {
         callback();
         let [argument, autocomplete] = args;
         if (controller.confs.user.adminOf === undefined) return;
-        if (!/relatorio de consumo/i.test(argument)) return;
+        if (!/relatorio/i.test(argument)) return;
+        // Consumo
         autocomplete.item('Relatório de Consumo',
             'Gestão de Consumo',
             '')
             .addClass('admin-company admin-new-company')
             .click(controller.click('relatorioConsumoAdmin'));
+        // Usuarios Sem tag
+        autocomplete.item('Relatório de Usuários sem Tags',
+        'Gere um relatório de usuários com contrato acima de 1 sem tags',
+        '')
+        .addClass('admin-company admin-new-company')
+        .click(controller.click('relatorioUsuariosSemTags'));
     });
 
     controller.registerCall('relatorioConsumoAdmin', () => {
@@ -151,6 +158,38 @@ module.exports = controller => {
 
                     link.click();
                     toastr.success('Relatório de Consumo Gerado com Sucesso!');
+                }
+            }));
+        });
+    });
+
+    controller.registerCall('relatorioUsuariosSemTags', () => {
+        const modal = controller.call('modal');
+        modal.title('Relatório de Usuários sem Tags');
+        modal.subtitle('Gere um relatório de usuários com contrato acima de 1 sem tags');
+        const form = modal.createForm();
+        const $generateReport = form.addSubmit('gerar_relatorio', 'Gerar Relatório de Usuarios sem Tags');
+        modal.createActions().cancel();
+        $generateReport.on('click', (ev) => {
+            ev.preventDefault();
+
+            controller.serverCommunication.call("SELECT FROM 'Consumption'.'UntaggedUserReport'", controller.call('loader::ajax', {
+                dataType: 'json',
+                success: (data) => {
+                    const fields = ['Usuário', 'Valor Do Contrato'];
+                    const companys = data.map(c => [c.username, c.valor_contrato])
+                    const csvData = [fields];
+                    companys.forEach(c => csvData.push(c));
+
+                    const csvContent = "data:text/csv;charset=utf-8,"+ csvData.map(e => e.join(",")).join("\n");
+                    const encodedUri = encodeURI(csvContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", `relatorio_usuarios_sem_tag_${moment().format('DD[_]MM[_]Y[_]H[h]m')}.csv`);
+                    document.body.appendChild(link);
+
+                    link.click();
+                    toastr.success('Relatório de Usuários sem Tags Gerado com Sucesso!');
                 }
             }));
         });
