@@ -48,8 +48,7 @@ module.exports = controller => {
                     if (isSubAccount) $('#action-subaccount').parent().hide();
                 }
             });
-            
-            if(!data.commercialReference)
+
             const tags = data.tags || [];
             const tagNaoExistir = (tag) => tags.indexOf(`no-${tag}`) === -1;
             refinCall();
