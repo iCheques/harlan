@@ -42,7 +42,14 @@ module.exports = controller => {
             controller.call('SafariError');
             controller.call('LocationError');
 
-            if(!data.commercialReference) $('#action-subaccount').parent().hide();
+            controller.server.call("SELECT FROM 'SubAccount'.'IsSubAccount'", {
+                dataType: 'json',
+                success: (isSubAccount) => {
+                    if (isSubAccount) $('#action-subaccount').parent().hide();
+                }
+            });
+            
+            if(!data.commercialReference)
             const tags = data.tags || [];
             const tagNaoExistir = (tag) => tags.indexOf(`no-${tag}`) === -1;
             refinCall();
