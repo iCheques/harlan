@@ -85,6 +85,96 @@ let formDescription = {
     }]
 };
 
+let formDescriptionAdmin = (thirdParty, username) => ({
+    title: 'Criação de Subconta',
+    subtitle: 'Preencha os dados abaixo.',
+    paragraph: 'As subchaves possibilitam você trabalhar em um cadastro independente.',
+    gamification: 'star',
+    screens: [{
+        magicLabel: true,
+        fields: [{
+            name: 'alias',
+            type: 'text',
+            placeholder: 'Nome de Usuário',
+            labelText: 'Nome de Usuário',
+            optional: false
+        },
+        [{
+            name: 'password',
+            type: 'password',
+            placeholder: 'Senha',
+            labelText: 'Senha',
+            optional: false
+        }, {
+            name: 'repeat-password',
+            type: 'password',
+            placeholder: 'Repita sua Senha',
+            labelText: 'Repita sua Senha',
+            optional: false
+        }],
+        [{
+            name: 'name',
+            type: 'text',
+            placeholder: 'Nome (opcional)',
+            optional: true,
+            labelText: 'Nome'
+        }, {
+            name: 'zipcode',
+            type: 'text',
+            placeholder: 'CEP (opcional)',
+            optional: true,
+            labelText: 'CEP',
+            mask: '00000-000'
+        }],
+        [{
+            name: 'email',
+            type: 'text',
+            placeholder: 'E-mail (opcional)',
+            optional: true,
+            labelText: 'E-mail'
+        }, {
+            name: 'phone',
+            type: 'text',
+            placeholder: 'Telefone (opcional)',
+            labelText: 'Telefone',
+            mask: '(00) 0000-00009',
+            optional: true
+        }],
+        [{
+            name: 'cpf',
+            type: 'text',
+            placeholder: 'CPF (opcional)',
+            labelText: 'CPF',
+            mask: '000.000.000-00',
+            optional: true,
+            maskOptions: {
+                reverse: true
+            }
+        }, {
+            name: 'cnpj',
+            type: 'text',
+            placeholder: 'CNPJ (opcional)',
+            labelText: 'CNPJ',
+            mask: '00.000.000/0000-00',
+            optional: true,
+            maskOptions: {
+                reverse: true
+            }
+        }], {
+            name: 'username',
+            value: username,
+            type: 'hidden',
+            optional: true
+        }, {
+            name: 'third',
+            value: thirdParty,
+            type: 'hidden',
+            optional: true
+        }
+        ]
+    }]
+});
+
 module.exports = controller => {
 
     controller.confs.subaccount = {
@@ -111,6 +201,13 @@ module.exports = controller => {
     controller.registerCall('subaccount::create', () => {
         const form = controller.call('form', register);
         form.configure(formDescription);
+    });
+
+    controller.registerCall('subaccount::create::admin', (thirdParty=false, username=null) => {
+        const newForm = formDescriptionAdmin(thirdParty, username);
+        const form = controller.call('form', register);
+
+        form.configure(newForm);
     });
 
     controller.registerCall('subaccount::limit', apiKey => {
@@ -247,7 +344,8 @@ module.exports = controller => {
         bipbopLoader = true,
         companyNode = null,
         username = null,
-        section = null
+        section = null,
+        third = null,
     ) => {
         if (!text || /^\s*$/.test(text)) {
             text = undefined;
@@ -268,7 +366,8 @@ module.exports = controller => {
 
                     if (!queryResults && autoCreate) {
                         modal.close();
-                        controller.call('subaccount::create');
+                        if (third) controller.call('subaccount::create::admin', third, username);
+                        else controller.call('subaccount::create');
                         return;
                     }
 
@@ -330,6 +429,53 @@ module.exports = controller => {
             text = query;
             skip = 0;
             updateList(modal, pageActions, results, pagination, list, false, 5, skip, text, callback, true, companyNode, username, section);
+        });
+    });
+
+    controller.registerCall('subaccount::list::admin', (companyNode, username, section, third=false) => {
+        const modal = controller.call('modal');
+        modal.title('Gestão de Subcontas');
+        modal.subtitle('Crie e Bloqueie Subchaves');
+        modal.addParagraph('A gestão de subcontas permite você administrar múltiplos usuários.');
+
+        const form = modal.createForm();
+        const search = form.addInput('username', 'text', 'Nome de usuário que procura');
+        const list = form.createList();
+        const actions = modal.createActions();
+        let skip = 0;
+        let text = null;
+        form.element().submit(e => {
+            e.preventDefault();
+            controller.call('subaccount::create::admin', third, username);
+            modal.close();
+        });
+
+        form.addSubmit('create-subaccount', 'Criar Subconta');
+        actions.add('Sair').click(e => {
+            e.preventDefault();
+            modal.close();
+        });
+
+        const results = actions.observation();
+        const pagination = actions.observation();
+
+        const pageActions = {
+            next: actions.add('Próxima Página').click(() => {
+                skip += 5;
+                updateList(modal, pageActions, results, pagination, list, false, 5, skip, text, null, true, companyNode, username, section, third);
+            }).hide(),
+
+            back: actions.add('Página Anterior').click(() => {
+                skip -= 5;
+                updateList(modal, pageActions, results, pagination, list, false, 5, skip, text, null, true, companyNode, username, section, third);
+            }).hide()
+        };
+
+        updateList(modal, pageActions, results, pagination, list, true, 5, skip, text, null, false, companyNode, username, section, third);
+        controller.call('instantSearch', search, (query, autocomplete, callback) => {
+            text = query;
+            skip = 0;
+            updateList(modal, pageActions, results, pagination, list, false, 5, skip, text, callback, true, companyNode, username, section, third);
         });
     });
 

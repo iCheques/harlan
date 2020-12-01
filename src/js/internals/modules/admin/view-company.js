@@ -312,7 +312,7 @@ module.exports = controller => {
                 .click(controller.click('admin::changeCompany', companyNode, username, section));
 
             controller.call('tooltip', actions, 'Subcontas').append($('<i />').addClass('fa fa-users'))
-                .click(controller.click('subaccount::list', companyNode, username, section));
+                .click(controller.click('subaccount::list::admin', companyNode, username, section, true));
 
             controller.call('tooltip', actions, 'Editar Contrato').append($('<i />').addClass('fa fa-briefcase'))
                 .click(controller.click('admin::changeContract', companyNode, username, section));
