@@ -106,6 +106,7 @@ module.exports = controller => {
             cartorioSeparator.find('.container').remove();
 
             const nomeCartorio = result.addItem('Nome do Cartório', $('nome', element).text());
+            nomeCartorio.parents().eq(1).addClass('container-protesto');
             result.addItem('Endereço do Cartório', $('endereco', element).text());
 
             /*result.addItem('Protestos', $('protestos', element).text()).addClass('center');
