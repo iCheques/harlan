@@ -89,26 +89,23 @@ module.exports = controller => {
 
         let data = dates.length ? moment.max(dates).format('DD/MM/YYYY') : 'Não Informado';
         valorTotalDeProtestos = valorTotalDeProtestos > 0 ? numeral(valorTotalDeProtestos).format('$0,0.00') : 'Não Informado';
-        /*result.element().append(fieldsCreator.addSeparator('Resumo de Protestos'));
-        fieldsCreator.addItem('Total de Protestos', totalDeRegistros);
-        fieldsCreator.addItem('Última Ocorrência ', data);
-        fieldsCreator.addItem('Valor Total de Protestos', valorTotalDeProtestos);
+        result.addSeparator('Resumo de Protestos', '', '').find('.results-display').remove();
+        result.addItem('Total de Protestos', totalDeRegistros);
+        result.addItem('Última Ocorrência ', data);
+        result.addItem('Valor Total de Protestos', valorTotalDeProtestos);
 
-        result.element().append(fieldsCreator.element());
-        fieldsCreator.resetFields();*/
-
-        const separatorProtestosEmCartorio = result.addSeparator('Protestos em Cartório');
+        const separatorProtestosEmCartorio = result.addSeparator('Protestos em Cartório', 'Confira os protestos deste Documento', '');
 
         if(parseInt(totalDeRegistros)) separatorProtestosEmCartorio.css('margin-top', '40px').css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)');
 
         _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
             const cartorioSeparator = result.addSeparator('Protestos em Cartório',
                 $('nome', element).text(),
-                $('endereco', element).text()).css('margin-top', '40px').css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)');
+                $('endereco', element).text()).css('margin-top', '40px').css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)').addClass('container-cartorio');
             cartorioSeparator.hide();
             cartorioSeparator.find('.container').remove();
 
-            const nomeCartorio = result.addItem('Nome do Cartório', $('protestos', element).text());
+            const nomeCartorio = result.addItem('Nome do Cartório', $('nome', element).text());
             result.addItem('Endereço do Cartório', $('endereco', element).text());
 
             /*result.addItem('Protestos', $('protestos', element).text()).addClass('center');
@@ -158,7 +155,7 @@ module.exports = controller => {
 
             fieldsCreator.element().css({
                 borderBottom: '2px solid #2196F3'
-            }).hide();
+            }).addClass('container-protesto').hide();
 
             const collapseBtn = $('<i>').addClass('fa fa-chevron-circle-down').css({ marginTop: '0.4em', cursor: 'pointer' });
             const botaoMostrarProcessos = $('<div>').css({
