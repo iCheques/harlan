@@ -24,7 +24,7 @@ module.exports = controller => {
     const processoJuridicoCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-processos-juridicos@1.0.20/index.js').fail(failAlert));
 
     controller.registerCall('harlanVersion', () => {
-        return '1.0.6'
+        return '1.0.7'
     });
 
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
