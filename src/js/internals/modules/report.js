@@ -91,8 +91,8 @@ module.exports = controller => {
             const thClass = 'mdl-data-table__cell--non-numeric';
             const secondTheadFields = ['Cheques', 'Veículos', 'CPF/CNPJ', 'Imoveis(SP)', 'Refin/Pefin', 'Score BoaVista', 'Processos Jurídicos'];
             const getPeriodo = (periodo) => {
-                const inicio = moment(periodo.inicio).format('DD/MM/Y');
-                const fim = moment(periodo.fim).format('DD/MM/Y');
+                const inicio = moment(periodo.inicio).utc().format('DD/MM/Y');
+                const fim = moment(periodo.fim).utc().format('DD/MM/Y');
 
                 return $('<span>').text(` (${inicio} a ${fim})`).css({fontWeight: 'normal', fontStyle: 'italic'});
             }
