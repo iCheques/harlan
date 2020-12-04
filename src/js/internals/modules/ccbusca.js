@@ -341,7 +341,25 @@ module.exports = controller => {
     });
 
     controller.registerCall('SafariError', () => {
-        const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+        const get_browser = () => {
+            var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+            if(/trident/i.test(M[1])){
+                tem=/\brv[ :]+(\d+)/g.exec(ua) || [];
+                return {name:'IE',version:(tem[1]||'')};
+                }
+            if(M[1]==='Chrome'){
+                tem=ua.match(/\bOPR|Edge\/(\d+)/)
+                if(tem!=null)   {return {name:'Opera', version:tem[1]};}
+                }
+            M=M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+            if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+            return {
+              name: M[0],
+              version: M[1]
+            };
+         }
+
+        const isSafari = get_browser().name.toLocaleLowerCase() === 'safari';
         if (!isSafari) return;
         const modal = controller.call('modal');
         modal.title('Uh-oh! Navegador sem suporte!');

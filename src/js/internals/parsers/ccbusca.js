@@ -639,10 +639,11 @@ module.exports = controller => {
             setContact(result, jdocument);
             setEmpregador(result, jdocument);
         }
-        setQSA(result, jdocument);
+        //setQSA(result, jdocument);
         setSociety(result, jdocument);
 
-        if(jdocument.find('erro > mensagem').text() === 'Nenhum registro encontrado') setSocios(result, jdocument);
+        //if(jdocument.find('erro > mensagem').text() === 'Nenhum registro encontrado')
+        setSocios(result, jdocument);
 
         const tagExistir = (tag) => !((controller.confs.user.tags || []).indexOf(`no-${tag}`) === -1);
 
