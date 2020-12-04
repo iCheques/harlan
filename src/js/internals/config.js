@@ -16,8 +16,8 @@ module.exports = {
         hosts: [
             'icheques',
             'credithub',
-            'painel.icheques.com.br',
-            //'painel.icheques.localhost',
+            //'painel.icheques.com.br',
+            'painel.icheques.localhost',
             'painel.credithub.com.br'
         ]
     },
