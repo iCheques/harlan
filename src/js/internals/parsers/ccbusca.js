@@ -312,12 +312,12 @@ module.exports = controller => {
 
         if ($empresas.length === 0) return;
 
-        result.addSeparator('Quadro Societário', 'Sócios', '').next().find('.content').addClass('mdl-grid');
+        //result.addSeparator('Quadro Societário', 'Sócios', '').next().find('.content').addClass('mdl-grid');
 
         for (let node of $empresas) {
             let $node = $(node);
             let nodes = {};
-            if (companys.includes($node.text())) continue;
+            if (companys.map(e => e.toLowerCase()).includes($node.text().toLowerCase())) continue;
             nodes[$node.attr('qualificacao')] = $node.text();
             //result.addSeparator('Quadro Societário', 'Empresa', 'Empresa a qual faz parte.');
             //const separator = result.addSeparator('', '', '').css('display', 'none');
@@ -326,10 +326,10 @@ module.exports = controller => {
             for (const idx in nodes) {
                 //result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col').find('.value').css('text-align', 'center');
                 const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col');
-                item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
+                /*item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
                     fontSize: '12px',
                     textAlign: 'left'
-                }));
+                }));*/
             }
 
         }
@@ -639,11 +639,9 @@ module.exports = controller => {
             setContact(result, jdocument);
             setEmpregador(result, jdocument);
         }
-        //setQSA(result, jdocument);
-        setSociety(result, jdocument);
-
-        //if(jdocument.find('erro > mensagem').text() === 'Nenhum registro encontrado')
+        setQSA(result, jdocument);
         setSocios(result, jdocument);
+        setSociety(result, jdocument);
 
         const tagExistir = (tag) => !((controller.confs.user.tags || []).indexOf(`no-${tag}`) === -1);
 
