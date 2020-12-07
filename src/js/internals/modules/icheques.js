@@ -27,6 +27,9 @@ module.exports = controller => {
         return '1.0.8'
     });
 
+    controller.call('SafariError');
+    controller.call('LocationError');
+
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
         callback();
         controller.registerTrigger('serverCommunication::websocket::authentication', 'loadingPlugin',  (data, callback) => {
@@ -38,9 +41,6 @@ module.exports = controller => {
                     controller.call('harlanVersionError');
                 }
             });
-
-            controller.call('SafariError');
-            controller.call('LocationError');
 
             controller.server.call("SELECT FROM 'SubAccount'.'IsSubAccount'", {
                 dataType: 'json',
