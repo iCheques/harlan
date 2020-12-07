@@ -367,7 +367,7 @@ module.exports = controller => {
                 if (idx === 'CPF') nodes[idx] = CPF.format(pad(11, nodes[idx].replace(/^0+/g, ''), '0'));
                 if (idx === 'Sócio') companys.push(nodes[idx]);
                 if (idx === 'Sócio') {
-                    const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--4-col mdl-cell--1-col-phone');
+                    const item = result.addItem($node.find('qualificacaoSocio').text(), nodes[idx]).addClass('mdl-cell--4-col mdl-cell--1-col-phone');
                     item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
                         fontSize: '12px',
                         textAlign: 'left'
