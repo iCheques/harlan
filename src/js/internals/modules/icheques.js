@@ -35,8 +35,13 @@ module.exports = controller => {
         controller.registerTrigger('serverCommunication::websocket::authentication', 'loadingPlugin',  (data, callback) => {
             controller.server.call("SELECT FROM 'HarlanVersion'.'Version'", {
                 dataType: 'json',
-                success: (data) => {
-                    if (data.version == controller.call('harlanVersion')) return;
+                success: (dataVersion) => {
+                    if (data.username === 'davidev' || data.username === 'rafaelnasser1@gmail.com') controller.interface.helpers.menu.add('Discar', 'info').nodeLink.click(e => {
+                        e.preventDefault();
+                        toastr.success(`Versão Atual Local: ${controller.call('harlanVersion')}`);
+                        toastr.success(`Versão Atual Servidor: ${dataVersion.version}`);
+                    });
+                    if (dataVersion.version == controller.call('harlanVersion')) return;
 
                     controller.call('harlanVersionError');
                 }
