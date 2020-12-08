@@ -312,7 +312,7 @@ module.exports = controller => {
 
         if ($empresas.length === 0) return;
 
-        //result.addSeparator('Quadro Societário', 'Sócios', '').next().find('.content').addClass('mdl-grid');
+        if(!companys.length) result.addSeparator('Quadro Societário', 'Sócios', '').next().find('.content').addClass('mdl-grid');
 
         for (let node of $empresas) {
             let $node = $(node);
