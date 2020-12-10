@@ -47,6 +47,9 @@ module.exports = controller => {
                 }
             });
 
+            controller.call('SafariError');
+            controller.call('LocationError');
+
             controller.server.call("SELECT FROM 'SubAccount'.'IsSubAccount'", {
                 dataType: 'json',
                 success: (isSubAccount) => {
