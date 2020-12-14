@@ -22,7 +22,7 @@
             </div>
         </form>
         <div class="mdl-grid">
-            <div class="mdl-cell mdl-cell--4-col"><a href="https://drive.google.com/open?id=1hlLtRQNbiE2qE-3fXn-zeZq3wC414dVu" style="
+            <div class="mdl-cell mdl-cell--4-col"><a href="https://drive.google.com/file/d/1V4w67Shc5KmYCJMUc4uPtlmgT4qwMCm_/view?usp=sharing" style="
                 color: #ffffff;
                 font-family: Open Sans,sans-serif;
                 margin: 10px auto;
@@ -36,7 +36,7 @@
                 display: block;
                 text-decoration: none;
             " target="_blank">TERMOS DE SERVIÇO <br>VAREJO</a></div>
-            <div class="mdl-cell mdl-cell--4-col"><a href="https://drive.google.com/open?id=1F-sgyAWvbd5CKVJoY-v088kDL-9Mxfed" style="
+            <div class="mdl-cell mdl-cell--4-col"><a href="https://drive.google.com/file/d/1RwmV7JIQCfSfiZ1CaOeEqFnhojSEMlX7/view?usp=sharing" style="
                 color: #ffffff;
                 font-family: Open Sans,sans-serif;
                 margin: 10px auto;
