@@ -20,12 +20,10 @@ module.exports = controller => {
     const contactLikeDislikeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-phone-like-dislike@1.0.3/index.js').fail(failAlert));
     const finderPhoneCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-phone@1.0.6/index.js').fail(failAlert));
     const admSubconta = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-adm-subcontas@1.0.6/index.js').fail(failAlert));
-    const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.63/index.js').fail(failAlert));
+    const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.64/index.js').fail(failAlert));
     const processoJuridicoCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-processos-juridicos@1.0.20/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => {
-        return '1.0.10'
-    });
+    controller.registerCall('harlanVersion', () => '1.0.11');
 
     controller.call('SafariError');
     controller.call('LocationError');
@@ -33,7 +31,7 @@ module.exports = controller => {
     controller.registerBootstrap('icheques::init::plataform', callback => $.getScript('/js/icheques.js').done(() => {
         callback();
         controller.registerTrigger('serverCommunication::websocket::authentication', 'loadingPlugin',  (data, callback) => {
-            controller.server.call("SELECT FROM 'HarlanVersion'.'Version'", {
+            controller.server.call('SELECT FROM \'HarlanVersion\'.\'Version\'', {
                 dataType: 'json',
                 success: (dataVersion) => {
                     if (data.username === 'davidev' || data.username === 'rafaelnasser1@gmail.com') controller.interface.helpers.menu.add('Discar', 'info').nodeLink.click(e => {
@@ -50,7 +48,7 @@ module.exports = controller => {
             controller.call('SafariError');
             controller.call('LocationError');
 
-            controller.server.call("SELECT FROM 'SubAccount'.'IsSubAccount'", {
+            controller.server.call('SELECT FROM \'SubAccount\'.\'IsSubAccount\'', {
                 dataType: 'json',
                 success: (isSubAccount) => {
                     if (isSubAccount) $('#action-subaccount').parent().hide();
