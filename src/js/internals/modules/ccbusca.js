@@ -26,14 +26,14 @@ module.exports = controller => {
             title: 'Infelizmente voce não tem permissão para isso!',
             subtitle: 'Para continuar é necessário pedir permissão ao Usuário Master.',
             okText: 'Eita, preciso dessa consulta!',
-        }, () => controller.serverCommunication.call("SELECT FROM 'SubAccount'.'AskPermission'",  controller.call('loader::ajax', {
+        }, () => controller.serverCommunication.call('SELECT FROM \'SubAccount\'.\'AskPermission\'',  controller.call('loader::ajax', {
             data: {tag},
             success(response) {
-                return toastr.success('Foi enviada uma solicitação ao administrador da conta, para liberar acesso à funcionalidade solicitada.')
+                return toastr.success('Foi enviada uma solicitação ao administrador da conta, para liberar acesso à funcionalidade solicitada.');
             }
         })));
-        form.element().find('input[name=cancel]').attr('value', 'Eita, preciso dessa consulta!')
-        const okBtn = form.addSubmit('ok-entendi', 'Ok, entendi!')
+        form.element().find('input[name=cancel]').attr('value', 'Eita, preciso dessa consulta!');
+        const okBtn = form.addSubmit('ok-entendi', 'Ok, entendi!');
 
         okBtn.on('click', ev => {
             ev.preventDefault();
@@ -42,14 +42,14 @@ module.exports = controller => {
     });
 
     controller.registerCall('remove::duplicated::separators', () => {
-        $('.separator').filter((i, separator) => !$(separator).text().length).each((i, separator) => $(separator).remove())
+        $('.separator').filter((i, separator) => !$(separator).text().length).each((i, separator) => $(separator).remove());
     });
 
     controller.registerCall('remove::duplicated::containers', () => {
-        $('.container').filter((i, container) => !$(container).text().length).each((i, container) => $(container).remove())
+        $('.container').filter((i, container) => !$(container).text().length).each((i, container) => $(container).remove());
     });
 
-    controller.registerCall('minimizar::categorias', (result) => {
+    /*controller.registerCall('minimizar::categorias', (result) => {
         const hideElement = ($element) => {
             const containers = $element.parent();
 
@@ -62,7 +62,7 @@ module.exports = controller => {
             provisoryElement.hide();
 
             hideElement(provisoryElement);
-        }
+        };
 
         const showElement = ($element) => {
             const containers = $element.parent();
@@ -76,7 +76,7 @@ module.exports = controller => {
             provisoryElement.show();
 
             showElement(provisoryElement);
-        }
+        };
 
         controller.call('remove::remove::duplicated::separators');
         controller.call('remove::duplicated::containers');
@@ -100,10 +100,9 @@ module.exports = controller => {
                 }
             });
 
-
             $action.append($('<li>').addClass('action-resize').append($button));
         });
-    });
+    });*/
 
     controller.registerTrigger('findDatabase::instantSearch', 'relatorioConsumo', (args, callback) => {
         callback();
@@ -118,10 +117,10 @@ module.exports = controller => {
             .click(controller.click('relatorioConsumoAdmin'));
         // Usuarios Sem tag
         autocomplete.item('Relatório de Usuários sem Tags',
-        'Gere um relatório de usuários com contrato acima de 1 sem tags',
-        '')
-        .addClass('admin-company admin-new-company')
-        .click(controller.click('relatorioUsuariosSemTags'));
+            'Gere um relatório de usuários com contrato acima de 1 sem tags',
+            '')
+            .addClass('admin-company admin-new-company')
+            .click(controller.click('relatorioUsuariosSemTags'));
     });
 
     controller.registerCall('relatorioConsumoAdmin', () => {
@@ -135,7 +134,7 @@ module.exports = controller => {
             ev.preventDefault();
             if ($dueDate.val() < 1 || $dueDate.val() > 30) return toastr.error('Data de Vencimento do Contrato inválida!');
 
-            controller.serverCommunication.call("SELECT FROM 'Consumption'.'ReportAllUsers'", controller.call('loader::ajax', {
+            controller.serverCommunication.call('SELECT FROM \'Consumption\'.\'ReportAllUsers\'', controller.call('loader::ajax', {
                 dataType: 'json',
                 data: {
                     due_date: $dueDate.val()
@@ -144,16 +143,16 @@ module.exports = controller => {
                     const fields = ['Usuário', 'Valor Do Contrato','Consulta Simples + Cheques', 'Pefin/Refin Serasa', 'Pefin/Refin Boa Vista', 'Veiculos','Score Boa Vista','Processo Jurídico'];
                     let periodo = 'indisponivel';
                     if (data.length)
-                        periodo = `${moment(data[0].periodo.inicio).format('DD[_]MM[_]Y')} a ${moment(data[0].periodo.fim).format('DD[_]MM[_]Y')}`
-                    const companys = data.map(c => [c.username, c.valor_contrato, c.cpf_cnpj + c.cheques, c.serasa, c.refin, c.veiculos, c['score-boavista'], c['processo-juridico']])
+                        periodo = `${moment(data[0].periodo.inicio).format('DD[_]MM[_]Y')} a ${moment(data[0].periodo.fim).format('DD[_]MM[_]Y')}`;
+                    const companys = data.map(c => [c.username, c.valor_contrato, c.cpf_cnpj + c.cheques, c.serasa, c.refin, c.veiculos, c['score-boavista'], c['processo-juridico']]);
                     const csvData = [fields];
                     companys.forEach(c => csvData.push(c));
 
-                    const csvContent = "data:text/csv;charset=utf-8,"+ csvData.map(e => e.join(",")).join("\n");
+                    const csvContent = 'data:text/csv;charset=utf-8,'+ csvData.map(e => e.join(',')).join('\n');
                     const encodedUri = encodeURI(csvContent);
-                    const link = document.createElement("a");
-                    link.setAttribute("href", encodedUri);
-                    link.setAttribute("download", `relatorio_de_consumo_periodo_${periodo}.csv`);
+                    const link = document.createElement('a');
+                    link.setAttribute('href', encodedUri);
+                    link.setAttribute('download', `relatorio_de_consumo_periodo_${periodo}.csv`);
                     document.body.appendChild(link);
 
                     link.click();
@@ -173,19 +172,19 @@ module.exports = controller => {
         $generateReport.on('click', (ev) => {
             ev.preventDefault();
 
-            controller.serverCommunication.call("SELECT FROM 'Consumption'.'UntaggedUserReport'", controller.call('loader::ajax', {
+            controller.serverCommunication.call('SELECT FROM \'Consumption\'.\'UntaggedUserReport\'', controller.call('loader::ajax', {
                 dataType: 'json',
                 success: (data) => {
                     const fields = ['Usuário', 'Valor Do Contrato'];
-                    const companys = data.map(c => [c.username, c.valor_contrato])
+                    const companys = data.map(c => [c.username, c.valor_contrato]);
                     const csvData = [fields];
                     companys.forEach(c => csvData.push(c));
 
-                    const csvContent = "data:text/csv;charset=utf-8,"+ csvData.map(e => e.join(",")).join("\n");
+                    const csvContent = 'data:text/csv;charset=utf-8,'+ csvData.map(e => e.join(',')).join('\n');
                     const encodedUri = encodeURI(csvContent);
-                    const link = document.createElement("a");
-                    link.setAttribute("href", encodedUri);
-                    link.setAttribute("download", `relatorio_usuarios_sem_tag_${moment().format('DD[_]MM[_]Y[_]H[h]m')}.csv`);
+                    const link = document.createElement('a');
+                    link.setAttribute('href', encodedUri);
+                    link.setAttribute('download', `relatorio_usuarios_sem_tag_${moment().format('DD[_]MM[_]Y[_]H[h]m')}.csv`);
                     document.body.appendChild(link);
 
                     link.click();
@@ -195,7 +194,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerTrigger('ccbusca::finished', 'minimizarCategorias', ({result, doc, jdocument}, cb) => controller.call('minimizar::categorias', result));
+    /*controller.registerTrigger('ccbusca::finished', 'minimizarCategorias', ({result, doc, jdocument}, cb) => controller.call('minimizar::categorias', result));*/
 
     /*controller.registerCall('ccbusca', (val, callback, ...args) => {
         if (!$('.consulta-temporaria').length) $('body').append($('<div>').attr('id', 'consulta-temporaria').css('visibility', 'hidden'));
@@ -298,37 +297,36 @@ module.exports = controller => {
         'ccbusca::finished',
         'informacaoDivergente',
         ({
-          result,
-          doc,
-          jdocument,
+            result,
+            doc,
+            jdocument,
         }, cb) => {
-          cb();
-          if (doc.replace(/\D/g, '').length < 14) return;
-          let buttonRefresh = null;
-          buttonRefresh = $('<button />')
-            .text('Informação Divergente?')
-            .addClass('button').css('marginTop', '-10px').on('click', (ev) => {
-              ev.preventDefault();
+            cb();
+            if (doc.replace(/\D/g, '').length < 14) return;
+            let buttonRefresh = null;
+            buttonRefresh = $('<button />')
+                .text('Informação Divergente?')
+                .addClass('button').css('marginTop', '-10px').on('click', (ev) => {
+                    ev.preventDefault();
 
-              controller.serverCommunication.call("SELECT FROM 'RFBCNPJAndroid'.'Certidao'", controller.call('loader::ajax', {
-                data: { documento: doc },
-                success: (rfbDocument) => {
-                  const rfbTag = $(rfbDocument).find('RFB');
-                  $(jdocument).find('RFB').remove();
-                  $(jdocument).find('LocalizePessoaJuridica').remove();
-                  $(jdocument).find('body').append(rfbTag);
+                    controller.serverCommunication.call('SELECT FROM \'RFBCNPJAndroid\'.\'Certidao\'', controller.call('loader::ajax', {
+                        data: { documento: doc },
+                        success: (rfbDocument) => {
+                            const rfbTag = $(rfbDocument).find('RFB');
+                            $(jdocument).find('RFB').remove();
+                            $(jdocument).find('LocalizePessoaJuridica').remove();
+                            $(jdocument).find('body').append(rfbTag);
 
-                  const sectionGroup = result.parent();
-                  sectionGroup.hide('1000', () => sectionGroup.remove());
+                            const sectionGroup = result.parent();
+                            sectionGroup.hide('1000', () => sectionGroup.remove());
 
-                  controller.call('ccbusca::parse', jdocument, doc);
-                  $('button:contains(Informação Divergente?)').remove();
-                }
-            }));
-          });
+                            controller.call('ccbusca::parse', jdocument, doc);
+                            $('button:contains(Informação Divergente?)').remove();
+                        }
+                    }));
+                });
 
-
-          result.parent().find('header').eq(0).find('.actions').prepend($('<li>').append(buttonRefresh));
+            result.parent().find('header').eq(0).find('.actions').prepend($('<li>').append(buttonRefresh));
         },
     );
 
@@ -337,7 +335,7 @@ module.exports = controller => {
         modal.title('Uh-oh! CreditHub Desatualizado; Atualize Já!');
         modal.subtitle('Por razões de segurança, será necessário que você limpe o "cache" do seu navegador.');
         modal.paragraph('Para cada navegador e sistema existe uma forma de limpar o "cache", na imagem abaixo você pode observar como realizar o procedimento:');
-        modal.element().append($('<img>').attr('src', '/images/limpar-cache.png').css({width: '32em',backgroundColor: '#d9d9d9', borderRadius: '10px'}))
+        modal.element().append($('<img>').attr('src', '/images/limpar-cache.png').css({width: '32em',backgroundColor: '#d9d9d9', borderRadius: '10px'}));
     });
 
     controller.registerCall('SafariError', () => {
@@ -346,18 +344,18 @@ module.exports = controller => {
             if(/trident/i.test(M[1])){
                 tem=/\brv[ :]+(\d+)/g.exec(ua) || [];
                 return {name:'IE',version:(tem[1]||'')};
-                }
+            }
             if(M[1]==='Chrome'){
-                tem=ua.match(/\bOPR|Edge\/(\d+)/)
+                tem=ua.match(/\bOPR|Edge\/(\d+)/);
                 if(tem!=null)   {return {name:'Opera', version:tem[1]};}
-                }
+            }
             M=M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
             if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
             return {
-              name: M[0],
-              version: M[1]
+                name: M[0],
+                version: M[1]
             };
-         }
+        };
 
         const isSafari = get_browser().name.toLocaleLowerCase() === 'safari';
         if (!isSafari) return;
@@ -366,7 +364,7 @@ module.exports = controller => {
         modal.subtitle('Não oferecemos suporte para o Safari.');
         modal.paragraph('Para uma melhor navegação recomendamos que você use um dos seguintes navegadores: Chrome, Firefox, ou Opera');
         const form = modal.createForm();
-        const submit = form.addSubmit('ok', 'Ok, entendi!')
+        const submit = form.addSubmit('ok', 'Ok, entendi!');
 
         submit.on('click', (ev) => {
             ev.preventDefault();
@@ -381,7 +379,7 @@ module.exports = controller => {
         modal.subtitle('Agora somos Credithub!');
         modal.paragraph('Para acessar nossos serviços, é necessário que você esteja no "painel.credithub.com.br", clique no botão abaixo e seja redirecionado!');
         const form = modal.createForm();
-        const submit = form.addSubmit('ok', 'Ok, me redirecione!')
+        const submit = form.addSubmit('ok', 'Ok, me redirecione!');
 
         submit.on('click', (ev) => {
             ev.preventDefault();
@@ -396,7 +394,7 @@ module.exports = controller => {
             'Informações agregadas do CPF ou CNPJ',
             'Registro encontrado', ...args);
 
-        if($('section.group-type').length) sectionDocumentGroup[0].css('border-bottom', '20px solid #fff')
+        if($('section.group-type').length) sectionDocumentGroup[0].css('border-bottom', '20px solid #fff');
 
         let subtitle = $('.results-display', sectionDocumentGroup[0]);
         let messages = [subtitle.text()];
@@ -537,7 +535,7 @@ module.exports = controller => {
             card = () => {
                 const cardContainer = this.controller.call('ccbusca::card-right');
                 let loadDot = '<span class="saving"><span> .</span><span>.</span><span>.</span></span>';
-                const loaderLength = $('.ccbusca-loader').length
+                const loaderLength = $('.ccbusca-loader').length;
 
                 if (loaderLength) cardContainer.css({right: `${21*loaderLength}em`});
 
@@ -617,8 +615,8 @@ module.exports = controller => {
                     $(this).remove();
                     let count = 0;
                     $('.ccbusca-loader').each((i, loader) => {
-                        $(loader).css('right', `${count}em`)
-                        count += 21
+                        $(loader).css('right', `${count}em`);
+                        count += 21;
                     });
                     count = 0;
                 }));
@@ -626,5 +624,88 @@ module.exports = controller => {
         }
 
         return new Loader(controller);
+    });
+
+    class Resize {
+        constructor(separators, hidden=false) {
+            this.separators = separators;
+            this.elementsToHide = this.getElementsToHide();
+            this.hidden = hidden;
+            this.makeResize();
+        }
+
+        makeResize() {
+            this.separators.forEach(($separator, index) => {
+                $separator.find('.actions').append(
+                    $('<li>').addClass('action-resize').append($('<i>').addClass('fa fa-minus-square-o'))
+                );
+
+                $separator.find('.actions > .action-resize > i').on('click', ev => {
+                    ev.preventDefault();
+
+                    const hide = $separator.find('.actions > .action-resize > i').hasClass('fa-minus-square-o');
+                    this.elementsToHide[index].forEach(element => this.hideOrShow(element, hide));
+
+                    if (hide) $separator.find('.actions > .action-resize > i').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+                    else $separator.find('.actions > .action-resize > i').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+                });
+
+                if (this.hidden) $separator.find('.actions > .action-resize > i').click();
+            });
+        }
+
+        getElementsToHide() {
+            return this.separators.map((separator, index) => {
+                const indexes = this.getIndexes(index, separator);
+                if(index === this.separators.length - 1) indexes.endIndex = separator.parent().children().length;
+
+                return this.sliceElements(indexes.initIndex, indexes.endIndex, separator);
+            });
+        }
+
+        hideOrShow(element, hide) {
+            return hide ? $(element).hide() : $(element).show();
+        }
+
+        getIndexes(index, separator) {
+            const indexes = {
+                initIndex: null,
+                endIndex: null,
+            };
+
+            const indexItem = index === this.separators.length -1 ? index : index + 1;
+
+            separator.parent().children().each((index, element) => {
+                if (element == separator[0]) indexes.initIndex = index;
+                if (element == this.separators[indexItem][0]) indexes.endIndex = index + 1;
+            });
+
+            return indexes;
+        }
+
+        sliceElements(initIndex, endIndex, separator) {
+            return separator.parent().children().slice(initIndex, endIndex).get().filter(element => !$(element).is('.separator'));
+        }
+    }
+
+    controller.registerCall('resize', (separators, hidden=false) => new Resize(separators, hidden));
+
+    controller.registerCall('resize::basic', (result) => {
+        const separators = [
+            result.find('.separator:contains(Endereçamento e mapa)').eq(0),
+            result.find('.separator:contains(Contato)').eq(0),
+            result.find('.separator:contains(Quadro Societário)').eq(0),
+        ];
+
+        controller.call('resize', separators);
+        controller.call('resize', [
+            result.find('.separator:contains(Cheques sem Fundo em Instituição Bancária)').eq(0),
+            result.find('.separator:contains(Protestos em Cartório)').eq(0)
+        ], true);
+    });
+
+    controller.registerTrigger('ccbusca::finished', 'resize::basic', ({result, doc, jdocument}, cb) => {
+        cb();
+        controller.call('resize::basic', result);
     });
 };

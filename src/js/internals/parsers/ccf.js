@@ -179,13 +179,21 @@ module.exports = controller => {
         const result = controller.call('result');
         const jdocument = $(document);
 
+        if (jdocument.find('data > sumQteOcorrencias').text() !== '0') {
+            result.addSeparator(
+                'Cheques sem Fundo em Instituição Bancária',
+                'Detalhes acerca de cheques sem fundo emitidos',
+                ''
+            ).css(
+                'background',
+                'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)'
+            ).find('.results-display').text('Foram localizados cheques sem fundo em instituição bancária.');;
+        }
         _.each(jdocument.find('data resposta list > *'), element => {
             let bankName = bankCodes[$('banco', element).text()] ||
                 bankCodes[$('banco', element).text().replace(/^0+/, '')];
 
-            result.addSeparator('Cheques sem Fundo em Instituição Bancária',
-                'Detalhes acerca de cheques sem fundo emitidos',
-                'Foram localizados cheques sem fundo em uma instituição bancária.').css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)');
+            const separatorInternalCCF = result.addSeparator('', '', '');
 
             if (bankName)
                 result.addItem('Banco', bankName);
@@ -196,9 +204,11 @@ module.exports = controller => {
 
             let v1 = moment($('ultimaOcorrencia', element).text(), 'DD/MM/YYYY');
             let v2 = moment($('ultimo', element).text(), 'DD/MM/YYYY');
-            result.addItem(`Primeiro Registro (${(v1.isAfter(v2) ? v2 : v1).fromNow()})`, (v1.isAfter(v2) ? v2 : v1).format('DD/MM/YYYY'));
+            //result.addItem(`Primeiro Registro (${(v1.isAfter(v2) ? v2 : v1).fromNow()})`, (v1.isAfter(v2) ? v2 : v1).format('DD/MM/YYYY'));
             result.addItem(`Última Ocorrência (${(v1.isAfter(v2) ? v1 : v2).fromNow()})`, (v1.isAfter(v2) ? v1 : v2).format('DD/MM/YYYY'));
             result.addItem('Alínea', $('motivo', element).text());
+            separatorInternalCCF.next().addClass('container-ccf');
+            separatorInternalCCF.remove();
         });
 
         return result.element();

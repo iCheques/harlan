@@ -89,10 +89,10 @@ module.exports = controller => {
 
         let data = dates.length ? moment.max(dates).format('DD/MM/YYYY') : 'Não Informado';
         valorTotalDeProtestos = valorTotalDeProtestos > 0 ? numeral(valorTotalDeProtestos).format('$0,0.00') : 'Não Informado';
-        result.addSeparator('Resumo de Protestos', '', '').find('.results-display').remove();
-        result.addItem('Total de Protestos', totalDeRegistros);
-        result.addItem('Última Ocorrência ', data);
-        result.addItem('Valor Total de Protestos', valorTotalDeProtestos);
+        result.addSeparator('Resumo de Protestos', '', '').hide().find('.results-display').remove();
+        result.addItem('Total de Protestos', totalDeRegistros).hide();
+        result.addItem('Última Ocorrência ', data).hide();
+        result.addItem('Valor Total de Protestos', valorTotalDeProtestos).hide();
 
         const separatorProtestosEmCartorio = result.addSeparator('Protestos em Cartório', 'Confira os protestos deste Documento', '');
 
