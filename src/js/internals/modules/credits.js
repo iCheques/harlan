@@ -132,7 +132,7 @@ module.exports = controller =>  {
             controller.call('credits::charge::bankSlip', value, quantity, description);
         });
 
-        form.addSubmit('pixpay', 'Pagamento via PIX (Liberação imediata)').on('click', e =>  {
+        form.addSubmit('pixpay', 'Pagamento via PIX (Liberação Imediata)').on('click', e =>  {
             e.preventDefault();
             modal.close();
             controller.call('credits::charge::pixpay', value, quantity, description);
