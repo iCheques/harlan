@@ -126,16 +126,29 @@ module.exports = controller =>  {
         });
 
         form.addSubmit('creditcard', 'Cartão de Crédito');
-        form.addSubmit('bankslip', 'Boleto Bancário').click(e =>  {
+        form.addSubmit('bankslip', 'Boleto Bancário (Liberação 1 dia útil)').click(e =>  {
             e.preventDefault();
             modal.close();
             controller.call('credits::charge::bankSlip', value, quantity, description);
+        });
+
+        form.addSubmit('pixpay', 'Pagamento via PIX (Liberação imediata)').on('click', e =>  {
+            e.preventDefault();
+            modal.close();
+            controller.call('credits::charge::pixpay', value, quantity, description);
         });
 
         modal.createActions().add(controller.i18n.system.cancel()).click(e =>  {
             e.preventDefault();
             modal.close();
         });
+    });
+
+    controller.registerCall('credits::charge::pixpay', () => {
+        const modal = controller.call('modal');
+        modal.title('Pagamento via PIX');
+        modal.subtitle('Pagamento via PIX com liberação imediata! Basta realizar a transferencia e enviar o comprovante para contato@credithub.com.br.');
+        modal.paragraph('CNPJ PIX: 17.279.091/0001-49<br>ou pague através do Código QR:<br><br><img src="https://i.imgur.com/AjOhwbn.jpg">');
     });
 
     controller.registerCall('credits::charge::bankSlip', (value, quantity, description) =>  {
