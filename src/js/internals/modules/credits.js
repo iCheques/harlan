@@ -149,6 +149,10 @@ module.exports = controller =>  {
         modal.title('Pagamento via PIX');
         modal.subtitle('Pagamento via PIX com liberação imediata! Basta realizar a transferencia e enviar o comprovante para contato@credithub.com.br.');
         modal.paragraph('CNPJ PIX: 17.279.091/0001-49<br>ou pague através do Código QR:<br><br><img src="https://i.imgur.com/AjOhwbn.jpg">');
+        modal.createActions().add(controller.i18n.system.cancel()).click(e =>  {
+            e.preventDefault();
+            modal.close();
+        });
     });
 
     controller.registerCall('credits::charge::bankSlip', (value, quantity, description) =>  {
