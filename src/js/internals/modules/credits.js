@@ -154,6 +154,8 @@ module.exports = controller =>  {
             e.preventDefault();
             modal.close();
         });
+
+        modal.element().css('text-align', 'center');
     });
 
     controller.registerCall('credits::charge::bankSlip', (value, quantity, description) =>  {
