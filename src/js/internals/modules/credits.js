@@ -125,7 +125,7 @@ module.exports = controller =>  {
             controller.call('credits::charge::creditCard', value, quantity, description, callback);
         });
 
-        form.addSubmit('creditcard', 'Cartão de Crédito');
+        form.addSubmit('creditcard', 'Cartão de Crédito (Liberação Imediata)');
         form.addSubmit('bankslip', 'Boleto Bancário (Liberação 1 dia útil)').click(e =>  {
             e.preventDefault();
             modal.close();
