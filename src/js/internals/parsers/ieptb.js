@@ -96,7 +96,7 @@ module.exports = controller => {
 
         const separatorProtestosEmCartorio = result.addSeparator('Protestos em Cartório', 'Confira os protestos deste Documento', '');
 
-        if(parseInt(totalDeRegistros)) separatorProtestosEmCartorio.css('margin-top', '40px').css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)');
+        if(parseInt(totalDeRegistros)) separatorProtestosEmCartorio.css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)');
 
         _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
             const cartorioSeparator = result.addSeparator('Protestos em Cartório',
