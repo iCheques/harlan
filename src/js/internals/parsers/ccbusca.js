@@ -609,7 +609,10 @@ module.exports = controller => {
                         doc = CPF.format(data);
                     } else {
                         data = pad(14, data, '0');
-                        result.addItem('Nome', jdocument.find(init + '> RFB > nome').first().text(), 'nome');
+                        result.addItem('Razão Social', jdocument.find(init + '> RFB > nome').first().text(), 'nome');
+                        if (jdocument.find(init + '> RFB > nome').first().attr('fantasia') !== undefined) {
+                            result.addItem('Nome Fantasia', jdocument.find(init + '> RFB > nome').first().attr('fantasia'), 'nome-fantasia');
+                        }
                         result.addItem('CNPJ', CNPJ.format(data), nodes[idx]);
                         doc = CNPJ.format(data);
                     }
