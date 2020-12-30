@@ -312,7 +312,7 @@ module.exports = controller => {
 
         if ($empresas.length === 0) return;
 
-        if(!companys.length) result.addSeparator('Quadro Societário', 'Sócios', '').next().find('.content').addClass('mdl-grid');
+        if(!companys.length) result.addSeparator('Quadro Societário', 'Sócios/Empresas a Qual Faz Parte', '').next().find('.content').addClass('mdl-grid');
 
         for (let node of $empresas) {
             let $node = $(node);
@@ -340,7 +340,7 @@ module.exports = controller => {
 
         if ($empresas.length === 0) return;
 
-        result.addSeparator('Quadro Societário', 'Sócios', '');
+        result.addSeparator('Quadro Societário', 'Sócios/Empresas a Qual Faz Parte', '');
 
         $empresas.get().forEach((node) => {
             let $node = $(node);
@@ -634,9 +634,6 @@ module.exports = controller => {
             });
         }
 
-        /*setAddress(result, jdocument);
-        setAddress(result, jdocument, true);*/
-        //setSocio(result, jdocument);
         if (tags.indexOf('no-informações-cadastrais') === -1) {
             setAddressNew(result, jdocument);
             setContact(result, jdocument);
