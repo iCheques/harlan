@@ -429,6 +429,12 @@ module.exports = controller => {
             harlan.call('relatorioAnalitico::print', html, false, moment().format('DD/MM/YYYY H[h]mm'));
         });
 
+        if ($(ret).find('erro > codigo').text().trim() === "404" && CPF.isValid(val)) {
+            const resultInfo = controller.call('result');
+            sectionDocumentGroup[1].append(resultInfo.element());
+            return resultInfo.addItem('Informações', 'Não foi encontrado informações para o CPF informado');
+        }
+
         const juntaEmpresaHTML = controller.call('xmlDocument', ret, 'CCBUSCA', 'DOCUMENT');
         juntaEmpresaHTML.find('.container').first().addClass('xml2html')
             .data('document', $(ret))
