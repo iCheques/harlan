@@ -340,7 +340,7 @@ module.exports = controller => {
 
         if ($empresas.length === 0) return;
 
-        result.addSeparator('Quadro Societário', 'Sócios', '').css('margin-bottom', '40px');
+        result.addSeparator('Quadro Societário', 'Sócios', '');
 
         $empresas.get().forEach((node) => {
             let $node = $(node);
@@ -457,7 +457,7 @@ module.exports = controller => {
             return;
         }
 
-        result.addSeparator('Quadro Societário', 'Empresas', 'Empresas a qual faz parte.');
+        result.addSeparator('', '', '').hide().find('.container').remove();
 
         $empresas.get().forEach((node) => {
             let $node = $(node);
