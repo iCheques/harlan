@@ -631,6 +631,7 @@ module.exports = controller => {
             controller.trigger('ccbusca::parser', {
                 result,
                 doc,
+                jdocument
             });
         }
 

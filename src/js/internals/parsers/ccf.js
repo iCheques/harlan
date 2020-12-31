@@ -187,7 +187,7 @@ module.exports = controller => {
             ).css(
                 'background',
                 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)'
-            ).find('.results-display').text('Foram localizados cheques sem fundo em instituição bancária.');;
+            ).find('.results-display').text(`Foram localizados ${jdocument.find('data > sumQteOcorrencias').text()} cheques sem fundo em instituições bancárias.`);
         }
         _.each(jdocument.find('data resposta list > *'), element => {
             let bankName = bankCodes[$('banco', element).text()] ||

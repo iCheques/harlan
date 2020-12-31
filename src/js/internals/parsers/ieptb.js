@@ -94,9 +94,9 @@ module.exports = controller => {
         result.addItem('Última Ocorrência ', data).hide().parent().css('padding', '0');
         result.addItem('Valor Total de Protestos', valorTotalDeProtestos).hide();
 
-        const separatorProtestosEmCartorio = result.addSeparator('Protestos em Cartório', 'Confira os protestos deste Documento', '');
+        const separatorProtestosEmCartorio = result.addSeparator('Protestos em Cartório', 'Confira os protestos deste Documento', 'Não foram encontradas ocorrências');
 
-        if(parseInt(totalDeRegistros)) separatorProtestosEmCartorio.css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)');
+        if(parseInt(totalDeRegistros)) separatorProtestosEmCartorio.css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)').find('.results-display').text(`Foram encontrados ${totalDeRegistros} protestos.`);
 
         _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
             const cartorioSeparator = result.addSeparator('Protestos em Cartório',
