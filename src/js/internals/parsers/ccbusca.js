@@ -456,8 +456,8 @@ module.exports = controller => {
         if ($empresas.length === 0) {
             return;
         }
-
-        result.addSeparator('', '', '').hide().find('.container').remove();
+        if (!companys.length) result.addSeparator('Quadro Societário', 'Sócios/Empresas a Qual Faz Parte', '');
+        else result.addSeparator('', '', '').hide().find('.container').remove();
 
         $empresas.get().forEach((node) => {
             let $node = $(node);
