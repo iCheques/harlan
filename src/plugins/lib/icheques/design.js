@@ -69,6 +69,18 @@ module.exports = controller => {
     $('.input-q').attr('placeholder',
         controller.confs.isCordova ? 'Digite um CPF, CNPJ, CMC7 ou Placa de Veículo.' :
             'Pesquise um CPF/CNPJ, telefone, número de cheque ou placa de veículo.');
+
+    $('.actions .container').prepend($('<div />').addClass('content user').css({
+        backgroundColor: '#f80050',
+        color: 'white',
+        fontWeight: 'bold',
+        marginRight: '2px',
+        cursor: 'pointer'
+    }).text(' Baixar Plugin / Extensão!').prepend($('<i />').addClass('fa fa-download')).on('click', ev => {
+        ev.preventDefault();
+        window.open('https://chrome.google.com/webstore/detail/credithub/kbabapbdjbfdigkbmicgjkfgobifkoli?hl=pt-BR', '_blank');
+    }));
+
     $('.actions .container').prepend($('<div />').addClass('content support-phone').text('(11) 3522-8363 (Suporte)').prepend($('<i />').addClass('fa fa-phone')));
     $('body > .icheques-site .call-to-action').css({
         height: window.innerHeight
