@@ -334,7 +334,9 @@ module.exports = controller => {
         const modal = controller.call('modal');
         modal.title('Uh-oh! CreditHub Desatualizado; Atualize Já!');
         modal.subtitle('Por razões de segurança, será necessário que você limpe o "cache" do seu navegador.');
-        modal.paragraph('Para cada navegador e sistema existe uma forma de limpar o "cache", na imagem abaixo você pode observar como realizar o procedimento:');
+        modal.paragraph(`Para cada navegador e sistema existe uma forma de limpar o "cache":
+        <br><br><b>Windows:</b> Shift + F5<br><b>Mac:</b> Shift + Command + R<br><br>
+        Na imagem abaixo você também pode observar como realizar o procedimento:`);
         modal.element().append($('<img>').attr('src', '/images/limpar-cache.png').css({width: '32em',backgroundColor: '#d9d9d9', borderRadius: '10px'}));
     });
 
@@ -409,11 +411,11 @@ module.exports = controller => {
             callback(sectionDocumentGroup[0]);
         }
 
-        controller.call('tooltip', sectionDocumentGroup[2], 'Download PDF').append($('<i />').addClass('fa fa-download')).click(e => {
+        /*controller.call('tooltip', sectionDocumentGroup[2], 'Download PDF').append($('<i />').addClass('fa fa-download')).click(e => {
             e.preventDefault();
             const html = sectionDocumentGroup[0];
             harlan.call('relatorioAnalitico::print', html, true, moment().format('DD/MM/YYYY H[h]mm'));
-        });
+        });*/
 
         controller.call('tooltip', sectionDocumentGroup[2], 'Imprimir').append($('<i />').addClass('fa fa-print')).click(e => {
             e.preventDefault();
