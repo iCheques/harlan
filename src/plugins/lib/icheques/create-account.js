@@ -34,7 +34,7 @@ module.exports = controller => {
 
     controller.registerCall('icheques::createAccount::1', (data, callback) => {
         const modal = controller.call('modal');
-        modal.title('Crie sua conta iCheques');
+        modal.title('Crie sua conta Credithub');
         modal.subtitle('Informe os dados abaixo para que possamos continuar');
         modal.addParagraph('Sua senha é secreta e recomendamos que não a revele a ninguém.');
 

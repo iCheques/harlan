@@ -23,7 +23,7 @@ module.exports = controller => {
         e.preventDefault();
         controller.call('icheques::createAccount', data => {
             const modal = controller.call('modal');
-            modal.title('Você completou sou cadastro no iCheques');
+            modal.title('Você completou seu cadastro na Credithub');
             modal.subtitle('Parabéns! Sua conta foi criada com sucesso.');
             modal.addParagraph('A última etapa necessária é confirmar seu endereço de e-mail na sua caixa de entrada.');
             modal.addParagraph('Esperamos que tenha uma ótima experiência com nosso produto, a partir de agora nunca mais se preocupe se seus cheques estão seguros em sua carteira.');
