@@ -22,8 +22,9 @@ module.exports = controller => {
     const admSubconta = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-adm-subcontas@1.0.6/index.js').fail(failAlert));
     const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.70/index.js').fail(failAlert));
     const processoJuridicoCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-processos-juridicos@1.0.23/index.js').fail(failAlert));
+    const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-name-address@1.0.1/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.0.22');
+    controller.registerCall('harlanVersion', () => '1.0.23');
 
     controller.call('SafariError');
     controller.call('LocationError');
@@ -73,6 +74,7 @@ module.exports = controller => {
             if (tagNaoExistir('consulta-simples-cpf-cnpj-telefone')) {
                 consultaSimplesCall();
                 finderPhoneCall();
+                consultaSimplesPorNomeCall();
                 contactLikeDislikeCall();
             }
             if(tagNaoExistir('consulta-processo-juridico') && tagNaoExistir('processos-juridicos')) processoJuridicoCall();
