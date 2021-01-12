@@ -68,7 +68,7 @@ module.exports = controller => {
     $(controller.confs.container).append(siteTemplate);
     $('.input-q').attr('placeholder',
         controller.confs.isCordova ? 'Digite um CPF, CNPJ, CMC7 ou Placa de Veículo.' :
-            'Pesquise um CPF/CNPJ, telefone, número de cheque ou placa de veículo.');
+            'Pesquise um CPF/CNPJ, nome completo, telefone, número de cheque ou placa de veículo.');
 
     $('.actions .container').prepend($('<div />').addClass('content support-phone').text('(11) 3522-8363 (Suporte)').prepend($('<i />').addClass('fa fa-phone')));
     $('.actions .container').prepend($('<div />').addClass('content user').css({
