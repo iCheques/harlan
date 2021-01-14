@@ -143,7 +143,7 @@ module.exports = controller => {
                     const fields = ['Usuário', 'Valor Do Contrato','Consulta Simples + Cheques', 'Pefin/Refin Serasa', 'Pefin/Refin Boa Vista', 'Veiculos','Score Boa Vista','Processo Jurídico'];
                     let periodo = 'indisponivel';
                     if (data.length)
-                        periodo = `${moment(data[0].periodo.inicio).format('DD[_]MM[_]Y')} a ${moment(data[0].periodo.fim).format('DD[_]MM[_]Y')}`;
+                        periodo = `${moment(data[0].periodo.inicio).utc().format('DD[_]MM[_]Y')} a ${moment(data[0].periodo.fim).utc().format('DD[_]MM[_]Y')}`;
                     const companys = data.map(c => [c.username, c.valor_contrato, c.cpf_cnpj + c.cheques, c.serasa, c.refin, c.veiculos, c['score-boavista'], c['processo-juridico']]);
                     const csvData = [fields];
                     companys.forEach(c => csvData.push(c));
@@ -635,68 +635,91 @@ module.exports = controller => {
     });
 
     class Resize {
-        constructor(separators, hidden=false) {
-            this.separators = separators;
-            this.elementsToHide = this.getElementsToHide();
+        /**
+         * Responsável pela minimização de containers de um determinado separator.
+         * @param separator Elemento que receberá o botão de Minimização/Maximização.
+         * @param hidden Caso seja verdadeiro, todos os containers serão minimizados na inicialização.
+         */
+        constructor(separator, hidden=false) {
+            this.separator = separator;
+            this.result = separator.parent();
+            this.stopFilter = false;
+            this.initIndex = null;
             this.hidden = hidden;
             this.makeResize();
         }
 
+        /**
+         * Adiciona o botão de minimizar/maximizar e suas respectivas funções.
+         */
         makeResize() {
-            this.separators.forEach(($separator, index) => {
-                $separator.find('.actions').append(
-                    $('<li>').addClass('action-resize').append($('<i>').addClass('fa fa-minus-square-o'))
-                );
+            this.separator.find('.actions').append(
+                $('<li>').addClass('action-resize').append($('<i>').addClass('fa fa-minus-square-o'))
+            );
 
-                $separator.find('.actions > .action-resize > i').on('click', ev => {
-                    ev.preventDefault();
+            this.initIndex = this.getIndexSeparator();
+            this.generateButtonAction();
+            this.hideElements();
+        }
 
-                    const hide = $separator.find('.actions > .action-resize > i').hasClass('fa-minus-square-o');
-                    this.elementsToHide[index].forEach(element => this.hideOrShow(element, hide));
+        /**
+         * Obtém o index do separator nos children's do parent.
+         */
+        getIndexSeparator() {
+            return this.result.children().map((index, element) => {
+                if ($(element).is(separator)) return index
+            }).get()[0];
+        }
 
-                    if (hide) $separator.find('.actions > .action-resize > i').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-                    else $separator.find('.actions > .action-resize > i').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
-                });
+        /**
+         * Adiciona as ações de minimização e maximização do botão.
+         */
+        generateButtonAction() {
+            this.separator.find('.actions > .action-resize > i').on('click', ev => {
+                ev.preventDefault();
 
-                if (this.hidden) $separator.find('.actions > .action-resize > i').click();
+                // Flag de estado atual para verificar se o estado atual do botão é minimizado ou maximizado
+                const hide = this.separator.find('.actions > .action-resize > i').hasClass('fa-minus-square-o');
+
+                // Dependendo do estado atual, os objetos que fazem parte do separator, são minimizados ou maximizados
+                this.getElements().get().forEach(element => this.hideOrShow(element, hide));
+
+                if (hide) this.separator.find('.actions > .action-resize > i').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+                else this.separator.find('.actions > .action-resize > i').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
             });
         }
 
-        getElementsToHide() {
-            return this.separators.map((separator, index) => {
-                const indexes = this.getIndexes(index, separator);
-                if(index === this.separators.length - 1) indexes.endIndex = separator.parent().children().length;
-
-                return this.sliceElements(indexes.initIndex, indexes.endIndex, separator);
-            });
+        /**
+         * Oculta os containers na inicilização, somente se,
+         * o parâmetro "hidden", do construtor for verdadeiro.
+         */
+        hideElements() {
+            if (this.hidden) this.separator.find('.actions > .action-resize > i').click();
         }
 
+        /**
+         * Função responsável por ocultar o "element" caso o parâmetro "hide" seja verdadeiro
+         * ou expor o "element" caso o parâmetro "hide" seja falso.
+         * @param element Elemento a ser oculto/exposto.
+         * @param hide Ocultar ou expor um elemento.
+         */
         hideOrShow(element, hide) {
             return hide ? $(element).hide() : $(element).show();
         }
 
-        getIndexes(index, separator) {
-            const indexes = {
-                initIndex: null,
-                endIndex: null,
-            };
+        /**
+         * Obtém os containers que serão ocultos ou mostrados.
+         */
+        getElements() {
+            return this.result.children().filter((index, element) => index > this.initIndex).filter((index, element) => {
+                if ($(element).hasClass('separator')) this.stopFilter = true;
 
-            const indexItem = index === this.separators.length -1 ? index : index + 1;
-
-            separator.parent().children().each((index, element) => {
-                if (element == separator[0]) indexes.initIndex = index;
-                if (element == this.separators[indexItem][0]) indexes.endIndex = index + 1;
+                return $(element).hasClass('container') && !this.stopFilter;
             });
-
-            return indexes;
-        }
-
-        sliceElements(initIndex, endIndex, separator) {
-            return separator.parent().children().slice(initIndex, endIndex).get().filter(element => !$(element).is('.separator'));
         }
     }
 
-    controller.registerCall('resize', (separators, hidden=false) => new Resize(separators, hidden));
+    controller.registerCall('resize', (separators, hidden=false) => separators.forEach(separator => new Resize(separator, hidden)));
 
     controller.registerCall('resize::basic', (result) => {
         const separators = [
