@@ -667,7 +667,7 @@ module.exports = controller => {
          */
         getIndexSeparator() {
             return this.result.children().map((index, element) => {
-                if ($(element).is(separator)) return index
+                if ($(element).is(this.separator)) return index
             }).get()[0];
         }
 
