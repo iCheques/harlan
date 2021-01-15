@@ -24,7 +24,7 @@ module.exports = controller => {
     const processoJuridicoCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-processos-juridicos@1.0.23/index.js').fail(failAlert));
     const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-name-address@1.0.3/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.0.26');
+    controller.registerCall('harlanVersion', () => '1.0.27');
 
     controller.call('SafariError');
     controller.call('LocationError');
