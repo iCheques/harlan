@@ -317,15 +317,17 @@ module.exports = controller => {
         for (let node of $empresas) {
             let $node = $(node);
             let nodes = {};
-            if (companys.map(e => e.toLowerCase()).includes($node.text().toLowerCase())) continue;
+            
+            if (companys.map(e => e.toLowerCase().trim()).includes($node.text().toLowerCase())) continue;
             nodes[$node.attr('qualificacao')] = $node.text();
             //result.addSeparator('Quadro Societário', 'Empresa', 'Empresa a qual faz parte.');
-            //const separator = result.addSeparator('', '', '').css('display', 'none');
-            //separator.next().find('.content').css('padding', '0');
+            const separator = result.addSeparator('', '', '').css('display', 'none');
+
+            separator.next().find('.content').css('padding', '0');
 
             for (const idx in nodes) {
                 //result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col').find('.value').css('text-align', 'center');
-                const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col');
+                const item = result.addItem(idx, nodes[idx]);
                 /*item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
                     fontSize: '12px',
                     textAlign: 'left'
