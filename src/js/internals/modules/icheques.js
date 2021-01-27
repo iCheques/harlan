@@ -10,19 +10,34 @@ module.exports = controller => {
 
     // const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-veiculos/index.js').fail(failAlert));
     const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-veiculos@1.1.31/index.js').fail(failAlert));
-    const graficosAnaliticosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-graficos-analiticos@1.0.28/index.js').fail(failAlert));
+
+    const graficosAnaliticosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-graficos-analiticos@1.0.29/index.js').fail(failAlert));
+
     const consultaSimplesCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-consulta-simples@1.0.7/index.js').fail(failAlert));
+
     const followCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-follow-document@1.3.34/index.js').fail(failAlert));
+
     const statuspageCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-statuspage@latest/index.js').fail(failAlert));
+
     const pdfMonitoramento = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-monitoramento-pdf@latest/index.js').fail(failAlert));
+
     const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.52/index.js').fail(failAlert));
+
     const componenteVeiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-componente-veiculos@1.0.17/index.js').fail(failAlert));
+
     const contactLikeDislikeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-phone-like-dislike@1.0.3/index.js').fail(failAlert));
+
     const finderPhoneCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-phone@1.0.6/index.js').fail(failAlert));
+
     const admSubconta = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-adm-subcontas@1.0.6/index.js').fail(failAlert));
+
     const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.73/index.js').fail(failAlert));
+
     const processoJuridicoCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-processos-juridicos@1.0.24/index.js').fail(failAlert));
+
     const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-name-address@1.0.3/index.js').fail(failAlert));
+
+    const tutorialIntroJS = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.1/index.js').fail(failAlert));
 
     controller.registerCall('harlanVersion', () => '1.0.29');
 
@@ -35,11 +50,19 @@ module.exports = controller => {
             controller.server.call('SELECT FROM \'HarlanVersion\'.\'Version\'', {
                 dataType: 'json',
                 success: (dataVersion) => {
-                    if (data.username === 'davidev' || data.username === 'rafaelnasser1@gmail.com') controller.interface.helpers.menu.add('Discar', 'info').nodeLink.click(e => {
-                        e.preventDefault();
-                        toastr.success(`Versão Atual Local: ${controller.call('harlanVersion')}`);
-                        toastr.success(`Versão Atual Servidor: ${dataVersion.version}`);
-                    });
+                    if (data.username === 'davidev' || data.username === 'rafaelnasser1@gmail.com') {
+                        controller.interface.helpers.menu.add('Version', 'info').nodeLink.click(e => {
+                            e.preventDefault();
+                            toastr.success(`Versão Atual Local: ${controller.call('harlanVersion')}`);
+                            toastr.success(`Versão Atual Servidor: ${dataVersion.version}`);
+                        });
+                    } else {
+                        controller.interface.helpers.menu.add('Tutorial', 'info').nodeLink.click(e => {
+                            e.preventDefault();
+                            localStorage.introJsCompleted = false;
+                            controller.call('credithub::introjs');
+                        });
+                    }
                     if (dataVersion.version == controller.call('harlanVersion')) return;
 
                     controller.call('harlanVersionError');
@@ -77,7 +100,24 @@ module.exports = controller => {
                 consultaSimplesPorNomeCall();
                 contactLikeDislikeCall();
             }
+
             if(tagNaoExistir('consulta-processo-juridico') && tagNaoExistir('processos-juridicos')) processoJuridicoCall();
+
+            const config = [
+                $('.main-search')[0],
+                $('button:contains(Adicionar Cheque)')[0],
+                $('.content:contains(Histórico de Consultas)')[0],
+                $('.report:contains(Consulta Veículos / Detran / Denatran)')[0],
+                $('.report:contains(Relatório de Consumo)')[0]
+            ]
+            clockElements = setInterval(() => {
+                for (let element of config) {
+                    if (!$(element).length) return;
+                }
+                clearInterval(clockElements);
+                tutorialIntroJS();
+            }, 5000);
+
             callback();
         });
     }).fail(() => {
