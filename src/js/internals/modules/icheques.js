@@ -37,9 +37,9 @@ module.exports = controller => {
 
     const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-name-address@1.0.3/index.js').fail(failAlert));
 
-    const tutorialIntroJS = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.1/index.js').fail(failAlert));
+    const tutorialIntroJS = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.2/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.0.30');
+    controller.registerCall('harlanVersion', () => '1.0.31');
 
     controller.call('SafariError');
     controller.call('LocationError');
@@ -103,20 +103,7 @@ module.exports = controller => {
 
             if(tagNaoExistir('consulta-processo-juridico') && tagNaoExistir('processos-juridicos')) processoJuridicoCall();
 
-            const config = [
-                $('.main-search')[0],
-                $('button:contains(Adicionar Cheque)')[0],
-                $('.content:contains(Histórico de Consultas)')[0],
-                $('.report:contains(Consulta Veículos / Detran / Denatran)')[0],
-                $('.report:contains(Relatório de Consumo)')[0]
-            ]
-            clockElements = setInterval(() => {
-                for (let element of config) {
-                    if (!$(element).length) return;
-                }
-                clearInterval(clockElements);
-                tutorialIntroJS();
-            }, 5000);
+            tutorialIntroJS();
 
             callback();
         });
