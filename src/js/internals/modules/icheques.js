@@ -37,7 +37,7 @@ module.exports = controller => {
 
     const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-name-address@1.0.3/index.js').fail(failAlert));
 
-    const tutorialIntroJS = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.2/index.js').fail(failAlert));
+    const tutorialIntroJS = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.6/index.js').fail(failAlert));
 
     controller.registerCall('harlanVersion', () => '1.0.31');
 
