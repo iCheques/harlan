@@ -1651,8 +1651,8 @@ input.link {
 @import "animation";
 @import "timeline";
 @media print {
-    .actions,
-    .alerts {
+    .actions/*,
+    .alerts*/ {
         display: none;
     }
 }

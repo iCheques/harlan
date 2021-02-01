@@ -317,7 +317,7 @@ module.exports = controller => {
         for (let node of $empresas) {
             let $node = $(node);
             let nodes = {};
-            
+
             if (companys.map(e => e.toLowerCase().trim()).includes($node.text().toLowerCase())) continue;
             nodes[$node.attr('qualificacao')] = $node.text();
             //result.addSeparator('Quadro Societário', 'Empresa', 'Empresa a qual faz parte.');
@@ -458,6 +458,7 @@ module.exports = controller => {
         if ($empresas.length === 0) {
             return;
         }
+        console.log('Companys', companys);
         if (!companys.length) result.addSeparator('Quadro Societário', 'Sócios/Empresas a Qual Faz Parte', '');
         else result.addSeparator('', '', '').hide().find('.container').remove();
 
@@ -645,6 +646,8 @@ module.exports = controller => {
         setQSA(result, jdocument);
         setSocios(result, jdocument);
         setSociety(result, jdocument);
+
+        companys = [];
 
         const tagExistir = (tag) => !((controller.confs.user.tags || []).indexOf(`no-${tag}`) === -1);
 

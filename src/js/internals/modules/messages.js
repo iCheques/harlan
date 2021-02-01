@@ -31,7 +31,7 @@ module.exports = controller => {
         controller.call('inbox::check');
     };
 
-    controller.registerTrigger('authentication::authenticated', 'inbox', checkbox);
+    controller.registerTrigger('serverCommunication::websocket::authentication', 'inbox', checkbox);
     controller.registerTrigger('serverCommunication::websocket::sendMessage', 'inbox', checkbox);
 
     controller.registerBootstrap('inbox', callback => {
