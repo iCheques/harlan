@@ -16,7 +16,14 @@ module.exports = controller => {
                 return;
             }
             controller.call('credits::has', 1500, () => {
-                controller.call('ccbusca', val);
+                controller.server.call('SELECT FROM \'HarlanVersion\'.\'Version\'', {
+                    dataType: 'json',
+                    success: (dataVersion) => {
+                        if (dataVersion.version == controller.call('harlanVersion')) return controller.call('ccbusca', val);
+
+                        controller.call('harlanVersionError');
+                    }
+                });
             });
         });
     });
