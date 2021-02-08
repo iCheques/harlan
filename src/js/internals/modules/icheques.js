@@ -37,9 +37,11 @@ module.exports = controller => {
 
     const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-name-address@1.0.3/index.js').fail(failAlert));
 
-    const tutorialIntroJS = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.7/index.js').fail(failAlert));
+    const tutorialIntroJSCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.7/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.0.37');
+    const notifyCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-notify@1.0.1/index.js').fail(failAlert));
+
+    controller.registerCall('harlanVersion', () => '1.0.38');
 
     controller.call('SafariError');
     controller.call('LocationError');
@@ -103,7 +105,9 @@ module.exports = controller => {
 
             if(tagNaoExistir('consulta-processo-juridico') && tagNaoExistir('processos-juridicos')) processoJuridicoCall();
 
-            tutorialIntroJS();
+            tutorialIntroJSCall();
+
+            notifyCall();
 
             callback();
         });

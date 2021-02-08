@@ -75,6 +75,39 @@ module.exports = controller => {
         modal.createActions().cancel(null, 'Fechar');
     });
 
+    controller.registerCall('showItems', (...args) => {
+        args.forEach(item => item.show());
+    });
+
+    controller.registerCall('parseText', (pastedText) => pastedText.replace(/(\r\n|\n|\r)/gm, '<br>'));
+
+    controller.registerCall('promocaoAtivaListMessage', ($promocaoAtivaDiv, click = true) => {
+        const promocaoAtivaTitle = $('<h2>').text('Promoção Ativa').css('text-align', click ? 'left' : 'center').hide();
+        const promocaoAtivaImage = $('<img>').css('text-align', 'center').hide();
+        const promocaoAtivaContent = $('<p>').css('text-align', 'justify').hide();
+
+        $promocaoAtivaDiv.append(promocaoAtivaTitle, promocaoAtivaImage, promocaoAtivaContent);
+
+        if (click) $promocaoAtivaDiv.css('border-bottom', '2px solid #ccc');
+
+        controller.server.call('SELECT FROM \'HarlanMessages\'.\'PromocaoAtiva\'', {
+            dataType: 'json',
+            success: function(promocao) {
+                if (promocao.success) {
+                    controller.call('showItems', promocaoAtivaTitle, promocaoAtivaImage, promocaoAtivaContent);
+
+                    promocaoAtivaImage.attr('src', promocao.promocao.image).css('width', '520px');
+                    promocaoAtivaContent.html(controller.call('parseText', promocao.promocao.content));
+
+                    if (click) promocaoAtivaImage.on('click', ev => {
+                        ev.preventDefault();
+                        $('.button.newplan-button').click();
+                    });
+                }
+            }
+        });
+    });
+
     const parseMessage = (list, message) => {
         const item = list.item('fa-envelope', [
             moment.unix(parseInt($('send', message).text())).format('DD/MM/YYYY, HH:mm:ss'),
@@ -169,6 +202,11 @@ module.exports = controller => {
         let text = null;
 
         const modal = controller.call('modal');
+
+        const $promocaoAtivaDiv = $('<div>');
+        modal.element().append($promocaoAtivaDiv);
+
+        controller.call('promocaoAtivaListMessage', $promocaoAtivaDiv);
 
         modal.title('Mensagens Privadas');
         modal.subtitle('Caixa de mensagens privadas.');

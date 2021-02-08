@@ -12,7 +12,7 @@
                 </div>
             </form>
             <div class="alerts">
-                <i class="fa fa-inbox" id="action-mailbox">
+                <i class="fa fa-envelope" id="action-mailbox">
                     <!-- <span class="alert">2</span> -->
                 </i>
             </div>

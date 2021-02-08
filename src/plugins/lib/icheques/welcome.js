@@ -100,46 +100,52 @@ module.exports = controller => {
             volume.hide();
             list.empty();
             switch (plan.val()) {
-                case 'noplan':
-                    list.item('fa-check', 'R$ 1,50 Consulta de CPF/CNPJ.');
-                    list.item('fa-check', 'R$ 1,50 Monitoramento de Cheques (até 5 meses) + R$0,30/mês excedente.');
-                    list.item('fa-check', 'R$ 1 Monitoramento de CPF/CNPJ (Gerencie Carteira).');
-                    list.item('fa-money', 'Mensalidade: R$ 0/mês. Pré-Pago');
-                    break;
-                case 'prata':
-                    list.item('fa-check', 'Franquia de 500 Consultas de CPF/CNPJ/Cheques.');
-                    list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
-                    list.item('fa-check', 'Baixar Consultas do Passado.');
-                    list.item('fa-money', 'R$ 1 Consulta de CPF/CNPJ/Cheque Excedente.');
-                    list.item('fa-money', 'Mensalidade: R$ 250/mês.  Pós-Pago');
-                    break;
-                case 'ouro':
-                    list.item('fa-check', 'Franquia de 1.000 Consultas de CPF/CNPJ/Cheques.');
-                    list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
-                    list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
-                    list.item('fa-check', 'Baixar Consultas do Passado.');
-                    list.item('fa-money', 'R$ 1 Consulta de CPF/CNPJ/Cheque Excedente.');
-                    list.item('fa-money', 'Mensalidade: R$ 500/mês.  Pós-Pago');
-                    break;
-                case 'diamante':
-                    list.item('fa-check', 'Franquia ILIMITADA de Consultas CPF/CNPJ/Cheques.');
-                    list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
-                    list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
-                    list.item('fa-check', 'Baixar Consultas do Passado.');
-                    list.item('fa-money', 'Mensalidade: R$ 990,99/mês.  Pós-Pago');
-                    break;
-                case 'flex':
-                    list.item('fa-check', 'Escolha seu volume de Consultas CPF/CNPJ/Cheques.');
-                    list.item('fa-money', 'A partir de R$ 1 por Consultas CPF/CNPJ/Cheques. Mínimo 50 consultas.');
-                    list.item('fa-money', 'R$ 1,50 Consulta de CPF/CNPJ/Cheque Excedente.');
-                    list.item('fa-money', 'Mensalidade: R$ X /mês.  Pós-Pago.');
-                    volume.show();
-                    break;
+            case 'noplan':
+                list.item('fa-check', 'R$ 1,50 Consulta de CPF/CNPJ.');
+                list.item('fa-check', 'R$ 1,50 Monitoramento de Cheques (até 5 meses) + R$0,30/mês excedente.');
+                list.item('fa-check', 'R$ 1 Monitoramento de CPF/CNPJ (Gerencie Carteira).');
+                list.item('fa-money', 'Mensalidade: R$ 0/mês. Pré-Pago');
+                break;
+            case 'prata':
+                list.item('fa-check', 'Franquia de 500 Consultas de CPF/CNPJ/Cheques.');
+                list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
+                list.item('fa-check', 'Baixar Consultas do Passado.');
+                list.item('fa-money', 'R$ 1 Consulta de CPF/CNPJ/Cheque Excedente.');
+                list.item('fa-money', 'Mensalidade: R$ 250/mês.  Pós-Pago');
+                break;
+            case 'ouro':
+                list.item('fa-check', 'Franquia de 1.000 Consultas de CPF/CNPJ/Cheques.');
+                list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
+                list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
+                list.item('fa-check', 'Baixar Consultas do Passado.');
+                list.item('fa-money', 'R$ 1 Consulta de CPF/CNPJ/Cheque Excedente.');
+                list.item('fa-money', 'Mensalidade: R$ 500/mês.  Pós-Pago');
+                break;
+            case 'diamante':
+                list.item('fa-check', 'Franquia ILIMITADA de Consultas CPF/CNPJ/Cheques.');
+                list.item('fa-check', 'Prospecção Automática (Apenas Financeiras).');
+                list.item('fa-check', 'Protestos e CCF ILIMITADO nas Operações de Duplicatas (Apenas Financeiras).');
+                list.item('fa-check', 'Baixar Consultas do Passado.');
+                list.item('fa-money', 'Mensalidade: R$ 990,99/mês.  Pós-Pago');
+                break;
+            case 'flex':
+                list.item('fa-check', 'Escolha seu volume de Consultas CPF/CNPJ/Cheques.');
+                list.item('fa-money', 'A partir de R$ 1 por Consultas CPF/CNPJ/Cheques. Mínimo 50 consultas.');
+                list.item('fa-money', 'R$ 1,50 Consulta de CPF/CNPJ/Cheque Excedente.');
+                list.item('fa-money', 'Mensalidade: R$ X /mês.  Pós-Pago.');
+                volume.show();
+                break;
             }
         };
 
         setPlan();
         plan.change(setPlan);
+
+        const $promocaoAtivaDiv = $('<div>');
+
+        form.element().append($promocaoAtivaDiv);
+
+        controller.call('promocaoAtivaListMessage', $promocaoAtivaDiv, false);
 
         const $alteracaoBtn = form.addSubmit('submit', 'Solicitar Alteração de Plano');
         $alteracaoBtn.hide();

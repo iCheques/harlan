@@ -117,7 +117,7 @@ label {
 .alerts {
     cursor: pointer;
 
-    .fa-inbox {
+    .fa-envelope {
         @include transition(color 200ms ease-in);
         position: relative;
         font-size: 24px;
