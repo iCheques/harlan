@@ -21,7 +21,7 @@ module.exports = controller => {
 
     const pdfMonitoramento = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-monitoramento-pdf@latest/index.js').fail(failAlert));
 
-    const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.52/index.js').fail(failAlert));
+    const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.53/index.js').fail(failAlert));
 
     const componenteVeiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-componente-veiculos@1.0.17/index.js').fail(failAlert));
 
@@ -41,7 +41,7 @@ module.exports = controller => {
 
     const notifyCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-notify@1.0.4/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.0.42');
+    controller.registerCall('harlanVersion', () => '1.0.43');
 
     controller.call('SafariError');
     controller.call('LocationError');
