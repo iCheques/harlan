@@ -40,26 +40,35 @@ module.exports = controller => {
         require('./send-message')(controller);
         require('./report')(controller);
 
+        controller.registerCall('admin::getApiKeys', filter => {
+            let apiKeys = [];
+            let total = 0;
+
+            const loaderAjax = controller.call('loader::ajax', {});
+
+            loaderAjax.beforeSend();
+            doUntil(callback => controller.serverCommunication.call('SELECT FROM \'BIPBOPCOMPANYS\'.\'LIST\'', {
+                data: Object.assign({
+                    limit: 500,
+                    skip: apiKeys.length
+                }, filter),
+                success: data => {
+                    apiKeys = apiKeys.concat($('apiKey', data).map((i, v) => $(v).text()).toArray());
+                    total = parseInt($('body count', data).text());
+                },
+                complete: () => callback()
+            }), () => total === apiKeys.length, () => {
+                loaderAjax.complete();
+                controller.call('admin::message', apiKeys);
+            });
+        });
+
         controller.registerCall('admin::index', () => {
             const report = controller.call('report', 'Administrador da Conta', 'Administre os usuários cadastrados no sistema.',
                 'Altere dados cadastrais como CPF, CNPJ, telefones, emails e endereço, bloqueie, desbloqueie, crie ' +
                 ' novos usuários, verifique o consumo de seus clientes e quantos créditos eles possuem em suas contas.');
 
-            report.button('Disparar E-mail', () => controller.call('form', filter => {
-                let apiKeys = [];
-                let total = 0;
-                doUntil(callback => controller.serverCommunication.call('SELECT FROM \'BIPBOPCOMPANYS\'.\'LIST\'', {
-                    data: Object.assign({
-                        limit: 500,
-                        skip: apiKeys.length
-                    }, filter),
-                    success: data => {
-                        apiKeys = apiKeys.concat($('apiKey', data).map((i, v) => $(v).text()).toArray());
-                        total = parseInt($('body count', data).text());
-                    },
-                    complete: () => callback()
-                }), () => total === apiKeys.length, () => controller.call('admin::message', apiKeys));
-            }).configure({
+            report.button('Disparar E-mail', () => controller.call('form', filter => controller.call('admin::getApiKeys', filter)).configure({
                 title: 'Filtrar E-mail de Clientes',
                 subtitle: 'Preencha os campos abaixo para filtrar os destinatários do e-mail.',
                 paragraph: 'Você enviará um e-mail para toda sua base de clientes que satisfazerem a condição abaixo, deixe em branco para enviar a todos.',

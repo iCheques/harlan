@@ -68,6 +68,7 @@ module.exports = controller => {
         let markdownData = MarkdownIt.render($('message > text', message).text());
         let el = $('<div />').html(markdownData).addClass('markdown');
         modal.element().append(el);
+        el.find('img').css('width','520px');
         el.find('a').click(function (e) {
             controller.call('link', $(this).attr('href'), e);
             modal.close();
@@ -204,6 +205,7 @@ module.exports = controller => {
         const modal = controller.call('modal');
 
         const $promocaoAtivaDiv = $('<div>');
+
         modal.element().append($promocaoAtivaDiv);
 
         controller.call('promocaoAtivaListMessage', $promocaoAtivaDiv);

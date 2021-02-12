@@ -56,6 +56,31 @@ module.exports = controller => {
         });
     });
 
+    controller.registerCall('admin::message::submit', (data, apiKeys) => {
+        let modal = controller.call('modal');
+        modal.title('Progresso de Envio da Mensagem');
+        modal.subtitle('Sua mensagem está sendo enviada, por favor aguarde.');
+        modal.paragraph('Experimente tomar um café enquanto nossos servidores encaminham as mensagens.');
+
+        let progress = modal.addProgress();
+
+        let sended = 0;
+        eachLimit(apiKeys, 5, (apiKey, callback) => {
+            data.apiKey = apiKey;
+            controller.call('INSERT INTO \'HarlanMessages\'.\'AdminMessage\'', controller.call('error::ajax', {
+                data,
+                dataType: 'json',
+                complete: () => {
+                    progress(++sended / apiKeys.length);
+                    callback();
+                }
+            }));
+        }, err => {
+            toastr.success('A mensagem foi enviada com sucesso!');
+            modal.close();
+        });
+    });
+
     controller.registerCall('admin::message', (apiKeys) => {
         if (!apiKeys.length) {
             controller.alert({

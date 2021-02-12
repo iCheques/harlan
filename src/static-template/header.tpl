@@ -5,7 +5,7 @@
                 <span></span>
                 <h1>Harlan</h1>
             </div>
-            <form class="search main-search">
+            <form class="search main-search" style="padding: 0 20px;">
                 <div class="q">
                     <input type="text" name="q" class="input-q" data-i18n-placeholder="index.report-input" placeholder="Qual o relatório de hoje?" />
                     <span class="icon"></span>
@@ -15,6 +15,7 @@
                 <i class="fa fa-envelope" id="action-mailbox">
                     <!-- <span class="alert">2</span> -->
                 </i>
+                Inbox
             </div>
         </div>
     </div>
