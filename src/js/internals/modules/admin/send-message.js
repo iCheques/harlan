@@ -66,8 +66,7 @@ module.exports = controller => {
 
         let sended = 0;
         eachLimit(apiKeys, 5, (apiKey, callback) => {
-            data.apiKey = apiKey;
-            $.bipbop('INSERT INTO \'HarlanMessages\'.\'AdminMessage\'', controller.call('error::ajax', {
+            $.bipbop('INSERT INTO \'HarlanMessages\'.\'AdminMessage\'', apiKey, controller.call('error::ajax', {
                 data,
                 dataType: 'json',
                 complete: () => {
