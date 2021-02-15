@@ -40,6 +40,30 @@ module.exports = controller => {
         require('./send-message')(controller);
         require('./report')(controller);
 
+        controller.registerCall('admin::getApiKeys::notify', filter => {
+            let apiKeys = [];
+            let total = 0;
+
+            const loaderAjax = controller.call('loader::ajax', {});
+
+            loaderAjax.beforeSend();
+            doUntil(callback => controller.serverCommunication.call('SELECT FROM \'BIPBOPCOMPANYS\'.\'LIST\'', {
+                data: {
+                    limit: 500,
+                    skip: apiKeys.length,
+                    tags: filter.tags.length ? filter.tags : null,
+                },
+                success: data => {
+                    apiKeys = apiKeys.concat($('apiKey', data).map((i, v) => $(v).text()).toArray());
+                    total = parseInt($('body count', data).text());
+                },
+                complete: () => callback()
+            }), () => total === apiKeys.length, () => {
+                loaderAjax.complete();
+                controller.call('admin::message::submit', filter, apiKeys);
+            });
+        });
+
         controller.registerCall('admin::getApiKeys', filter => {
             let apiKeys = [];
             let total = 0;
