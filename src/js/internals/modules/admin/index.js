@@ -51,7 +51,7 @@ module.exports = controller => {
                 data: {
                     limit: 500,
                     skip: apiKeys.length,
-                    tags: filter.tags.length ? filter.tags : null,
+                    tags: !$.isEmptyObject(filter.tags) ? filter.tags : null,
                 },
                 success: data => {
                     apiKeys = apiKeys.concat($('apiKey', data).map((i, v) => $(v).text()).toArray());
