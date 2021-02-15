@@ -39,9 +39,9 @@ module.exports = controller => {
 
     const tutorialIntroJSCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.7/index.js').fail(failAlert));
 
-    const notifyCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-notify@1.0.8/index.js').fail(failAlert));
+    const notifyCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-notify@1.0.9/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.0.47');
+    controller.registerCall('harlanVersion', () => '1.0.48');
 
     controller.call('SafariError');
     controller.call('LocationError');
