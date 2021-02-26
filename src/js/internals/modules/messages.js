@@ -216,7 +216,37 @@ module.exports = controller => {
 
         const form = modal.createForm();
         const search = form.addInput('text', 'text', 'Mensagem que procura');
+
         const list = form.createList();
+
+        const btnMarcarTodasComoLidas = $('<li>').css({
+            textAlign: 'left',
+            cursor: 'pointer',
+            backgroundColor: '#fff',
+        }).on('click', ev => {
+            ev.preventDefault();
+            controller.serverCommunication.call('SELECT FROM \'NodeMessages\'.\'AllReaded\'', controller.call('loader::ajax', {
+                dataType: 'json',
+                success: function (success) {
+                    toastr.success('Solicitação concluída!');
+                },
+                error: (err) => {
+                    toastr.error('Houve um erro ao marcar as mensagens como lida, tente novamente mais tarde.');
+                }
+            }));
+        });
+        const envelope = $('<i>').addClass('fa fa-envelope-open').css({
+            padding: '14px 8px',
+            color: '#93a7d8',
+        });
+        const btnText = $('<div><a>');
+        btnText.find('a').text('Marcar todas como lidas');
+        btnMarcarTodasComoLidas.append(envelope, btnText);
+
+        $('<ul>').addClass('actions list').css({
+            width: '43%'
+        }).append(btnMarcarTodasComoLidas).insertBefore(list.element().parent());
+
         const actions = modal.createActions();
 
         actions.add('Sair').click(e => {
