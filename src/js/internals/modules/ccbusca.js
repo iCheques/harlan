@@ -316,7 +316,7 @@ module.exports = controller => {
                 .addClass('button').css('marginTop', '-10px').on('click', (ev) => {
                     ev.preventDefault();
 
-                    controller.serverCommunication.call('SELECT FROM \'RFBCNPJAndroid\'.\'Certidao\'', controller.call('loader::ajax', {
+                    controller.serverCommunication.call('SELECT FROM \'RFBDivergente\'.\'ConsultaCNPJ\'', controller.call('loader::ajax', {
                         data: { documento: doc },
                         success: (rfbDocument) => {
                             const rfbTag = $(rfbDocument).find('RFB');

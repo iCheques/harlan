@@ -137,7 +137,7 @@ module.exports = controller => {
                             target: '_blank'
                         }).append($('<img />').attr('src', mapUrl)));
 
-                        $('<br>').insertBefore(mapItem);
+                    $('<br>').insertBefore(mapItem);
 
                     result.addSeparator('Endereço', 'Localização', 'Endereçamento e mapa').css('display', 'none');
                 }
@@ -581,7 +581,7 @@ module.exports = controller => {
             'Nome da Mãe': 'maeNome',
             'CPF da Mãe': 'maecpf',
             'Data de Nascimento': 'datanascimento',
-            Situação: 'receitaStatus',
+            Situação: 'situacao',
             Idade: 'idade',
             Signo: 'signo',
             Sexo: 'sexo',
@@ -620,6 +620,11 @@ module.exports = controller => {
                         doc = CNPJ.format(data);
                     }
                     continue;
+                }
+
+                if (idx === 'Situação') {
+                    const situacao = jdocument.find(init + ' RFB situacao').first();
+                    data = situacao.length ? situacao : data;
                 }
                 result.addItem(idx, data, nodes[idx]);
             }
