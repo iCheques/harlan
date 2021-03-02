@@ -399,7 +399,7 @@ module.exports = controller => {
 
     controller.registerCall('ccbusca::parse', (ret, val, callback, ...args) => {
         const tags = (controller.confs.user || {}).tags || [];
-        const sectionDocumentGroup = controller.call('section', 'Busca Consolidada',
+        const sectionDocumentGroup = controller.call('section', 'Consulta Simples',
             'Informações agregadas do CPF ou CNPJ',
             'Registro encontrado', ...args);
 
@@ -527,12 +527,12 @@ module.exports = controller => {
         return $cardContainer;
     });
 
-    controller.registerCall('ccbusca::loader', () => {
+    controller.registerCall('ccbusca::loader', (apiQuantity=4) => {
         class Loader {
-            constructor(controllerReference) {
+            constructor(controllerReference, apiQuantity) {
                 this.controller = controllerReference;
                 this.progress;
-                this.apiQuantity = 4;
+                this.apiQuantity = apiQuantity;
                 this.apiCompleted = 0;
                 this.cardContainer = this.card();
                 this.progressBar();
@@ -638,7 +638,7 @@ module.exports = controller => {
             };
         }
 
-        return new Loader(controller);
+        return new Loader(controller, apiQuantity);
     });
 
     class Resize {
