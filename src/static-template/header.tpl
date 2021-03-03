@@ -14,8 +14,8 @@
             <div class="alerts">
                 <i class="fa fa-envelope" id="action-mailbox">
                     <!-- <span class="alert">2</span> -->
+                    <span class="inbox-text">Inbox</span>
                 </i>
-                Inbox
             </div>
         </div>
     </div>
