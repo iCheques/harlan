@@ -12,12 +12,10 @@
                 </div>
             </form>
             <div class="alerts">
-                <div id="action-mailbox">
-                <i class="fa fa-envelope">
+                <i class="fa fa-envelope" id="action-mailbox">
                     <!-- <span class="alert">2</span> -->
                 </i>
                 <span class="inbox-text">Inbox</span>
-                </div>
             </div>
         </div>
     </div>
