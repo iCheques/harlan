@@ -159,7 +159,7 @@ module.exports = controller => {
             }).addClass('container-protesto').hide();
 
             const collapseBtn = $('<i>').addClass('fa fa-chevron-circle-down').css({ marginTop: '0.4em', cursor: 'pointer' });
-            const botaoMostrarProcessos = $('<div>').css({
+            const botaoMostrarProtestos = $('<div>').addClass('container').css({
                 backgroundColor: 'rgb(251, 65, 36)',
                 color: '#fff',
                 textAlign: 'center',
@@ -172,7 +172,7 @@ module.exports = controller => {
             const elementFields = fieldsCreator.element();
 
             result.element().append(elementFields);
-            botaoMostrarProcessos.insertAfter(nomeCartorio.parents().eq(1));
+            botaoMostrarProtestos.insertAfter(nomeCartorio.parents().eq(1));
             collapseBtn.on('click', (ev) => {
                 ev.preventDefault();
                 if (collapseBtn.hasClass('fa-chevron-circle-down')) {
