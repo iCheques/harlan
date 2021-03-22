@@ -144,8 +144,9 @@ module.exports = controller =>  {
         });
     });
 
-    controller.registerCall('credits::charge::pixpay', () => {
+    controller.registerCall('credits::charge::pixpay', (value, quantity, description) => {
         const modal = controller.call('modal');
+        controller.call('sendPixEmail', value);
         modal.title('Pagamento via PIX');
         modal.subtitle('Pagamento via PIX com liberação imediata! Basta realizar a transferencia e enviar o comprovante para contato@credithub.com.br.');
         modal.paragraph('CNPJ PIX: 17.279.091/0001-49').css('margin-bottom', '0px');
@@ -156,6 +157,15 @@ module.exports = controller =>  {
         });
 
         modal.element().css('text-align', 'center');
+    });
+
+    controller.registerCall('sendPixEmail', value => {
+        controller.server.call('SELECT FROM \'HARLANMESSAGES\'.\'PixCredits\'', {
+            dataType: 'json',
+            data: {
+                value
+            }
+        });
     });
 
     controller.registerCall('credits::charge::bankSlip', (value, quantity, description) =>  {
