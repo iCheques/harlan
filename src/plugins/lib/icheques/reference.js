@@ -14,8 +14,8 @@ module.exports = controller => {
         }
 
         report = controller.call('report',
-            'Como você encontrou a iCheques?',
-            'Conte como ouviu falar de nós ou digite a referência que recebeu por e-mail de sua parceira financeira.',
+            'Como você encontrou o CreditHub?',
+            'Conte como ouviu falar de nós ou informe o sistema (ERP) que utiliza.',
             '',
             true);
 
