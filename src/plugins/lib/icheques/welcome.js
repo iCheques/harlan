@@ -1,6 +1,5 @@
 module.exports = controller => {
 
-
     controller.registerCall('icheques::welcome', ret => {
         var ichequesReport = controller.call('report',
             'iCheques - Cheque Sem Susto!',
@@ -41,8 +40,6 @@ module.exports = controller => {
         $('.app-content').prepend(report.element());
     });
 
-
-
     controller.registerCall('icheques::changeplan', () => {
         const modal = controller.call('modal');
         modal.gamification('star');
@@ -81,15 +78,14 @@ module.exports = controller => {
                 return;
             }
 
-
-            controller.serverCommunication.call("UPDATE 'BIPBOPCOMPANYS'.'PLAN'", controller.call('loader::ajax', controller.call('error::ajax', {
+            controller.serverCommunication.call('UPDATE \'BIPBOPCOMPANYS\'.\'PLAN\'', controller.call('loader::ajax', {
                 data: {
                     plan: vPlan,
                     volume: vVolume,
                     reference: vReference,
                 },
-                success: () => toastr.success("Aguarde até 24hrs para que nosso setor comercial responda.", "Pedido realizada com sucesso.")
-            })));
+                success: () => toastr.success('Aguarde até 24hrs para que nosso setor comercial responda.', 'Pedido realizada com sucesso.')
+            }));
 
             modal.close();
         });
