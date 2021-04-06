@@ -1201,6 +1201,10 @@ input[type=checkbox] {
     margin: 20px 0;
 }
 
+.markdown p {
+    white-space: pre-line
+}
+
 input.link {
     font-size: 10px;
     font-weight: bolder;
