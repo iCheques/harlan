@@ -83,6 +83,10 @@
     //     }
     // }
     .actions {
+        @media (max-width: 600px) {
+            display: flex;
+            flex-direction: column-reverse;
+        }
         clear: both;
         text-align: center;
         margin-top: 10px;
