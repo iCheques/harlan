@@ -582,6 +582,7 @@ module.exports = controller => {
             'CPF da Mãe': 'maecpf',
             'Data de Nascimento': 'datanascimento',
             Situação: 'situacao',
+            'Motivo da Situacao': 'motivoSituacaoCadastral',
             Idade: 'idade',
             Signo: 'signo',
             Sexo: 'sexo',
