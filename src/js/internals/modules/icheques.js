@@ -21,7 +21,7 @@ module.exports = controller => {
 
     const pdfMonitoramento = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-monitoramento-pdf@1.0.2/index.js').fail(failAlert));
 
-    const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.58/index.js').fail(failAlert));
+    const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.59/index.js').fail(failAlert));
 
     const componenteVeiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-componente-veiculos@1.0.19/index.js').fail(failAlert));
 
@@ -33,7 +33,7 @@ module.exports = controller => {
 
     const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.79/index.js').fail(failAlert));
 
-    const processosJuridicosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-processos-juridicos@1.0.27/index.js').fail(failAlert));
+    const processosJuridicosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-processos-juridicos@1.0.29/index.js').fail(failAlert));
 
     const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-name-address@1.0.3/index.js').fail(failAlert));
 
@@ -41,7 +41,7 @@ module.exports = controller => {
 
     const notifyCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-notify@1.0.14/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.0.83');
+    controller.registerCall('harlanVersion', () => '1.0.84');
 
     controller.call('SafariError');
     controller.call('LocationError');
