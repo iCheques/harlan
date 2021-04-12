@@ -397,7 +397,7 @@ module.exports = controller => {
         });
     });
 
-    controller.registerCall('ccbusca::parse', (ret, val, callback, ...args) => {
+    controller.registerCall('ccbusca::parse', (ret, documento, callback, ...args) => {
         const tags = (controller.confs.user || {}).tags || [];
         const sectionDocumentGroup = controller.call('section', 'Consulta Simples',
             'Informações agregadas do CPF ou CNPJ',
@@ -438,7 +438,7 @@ module.exports = controller => {
             harlan.call('relatorioAnalitico::print', html, false, moment().format('DD/MM/YYYY H[h]mm'));
         });
 
-        if ($(ret).find('erro > codigo').text().trim() === "404" && CPF.isValid(val)) {
+        if ($(ret).find('erro > codigo').text().trim() === '404' && CPF.isValid(documento)) {
             const resultInfo = controller.call('result');
             sectionDocumentGroup[1].append(resultInfo.element());
             return resultInfo.addItem('Informações', 'Não foi encontrado informações para o CPF informado');
@@ -449,7 +449,7 @@ module.exports = controller => {
             .data('document', $(ret))
             .data('form', [{
                 name: 'documento',
-                value: val
+                value: documento
             }]);
         sectionDocumentGroup[1].append(juntaEmpresaHTML);
 
@@ -501,7 +501,7 @@ module.exports = controller => {
 
         if (!callback) controller.trigger('ccbusca::finished', {
             result: sectionDocumentGroup[1],
-            doc: $(ret).find('entrada').text() || $(ret).find('CNPJ').text(),
+            doc: documento,
             jdocument: $(ret)
         });
     });
@@ -674,7 +674,7 @@ module.exports = controller => {
          */
         getIndexSeparator() {
             return this.result.children().map((index, element) => {
-                if ($(element).is(this.separator)) return index
+                if ($(element).is(this.separator)) return index;
             }).get()[0];
         }
 

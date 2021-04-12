@@ -12,7 +12,7 @@ module.exports = controller => {
 
     controller.registerTrigger('logs::onerror', 'callhome', (args, cb) => {
         cb();
-        html2canvas(document.body).then(canvas => {
+        /*html2canvas(document.body).then(canvas => {
             controller.server.call('INSERT INTO \'HARLANAUTHENTICATION\'.\'BROWSERERROR\'', {
                 method: 'POST',
                 data: {
@@ -21,6 +21,6 @@ module.exports = controller => {
                     canvas: canvas.toDataURL('image/jpeg')
                 }
             });
-        });
+        });*/
     });
 };

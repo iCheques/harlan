@@ -46,7 +46,7 @@
         </div>
         <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--4-col"><a
-                    href="https://drive.google.com/file/d/16xuJ8Pj8KsscgpYSz8XQ2Qeat42QZ511/view" style="
+                    href="https://app.hellosign.com/s/KmxvWy1y" style="
                 color: #ffffff;
                 font-family: Open Sans,sans-serif;
                 margin: 10px auto;
@@ -61,7 +61,7 @@
                 text-decoration: none;
             " target="_blank">TERMOS DE SERVIÇO <br>VAREJO</a></div>
             <div class="mdl-cell mdl-cell--4-col"><a
-                    href="https://drive.google.com/file/d/1EJv5pwto19M_1p4kHgq3CMBejdIJvipd/view" style="
+                    href="https://app.hellosign.com/s/Lui3LHqG" style="
                 color: #ffffff;
                 font-family: Open Sans,sans-serif;
                 margin: 10px auto;
