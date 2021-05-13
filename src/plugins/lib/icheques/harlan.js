@@ -630,10 +630,9 @@ module.exports = controller => {
                         for (let check of task[1]) {
                             let cmc = new CMC7Parser(check.cmc);
                             let agency = $('agencia', v).text().replace(/^[0]+/, '');
-                            let bank = $('banco', v).text().replace(/^[0]+/, '');
-
+                            let bank = $('banco', v).text().replace(/\D/g, '');
                             if (agency == cmc.agency.replace(/^[0]+/, '') &&
-                                bank == cmc.bank.replace(/^[0]+/, '')) {
+                                bank == cmc.bank.replace(/^[0]+/g, '')) {
                                 section[0].removeClass('warning').addClass('critical');
                             }
                         }
