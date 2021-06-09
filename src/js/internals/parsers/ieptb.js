@@ -38,13 +38,18 @@ class FieldsCreator {
         this.content.append(field);
     }
 
-    addItemWithBorder(dateAndMoneyValue) {
-        const { date, moneyValue } = dateAndMoneyValue;
+    addItemWithBorder(params) {
+        const { date, moneyValue, cpfCnpj, nomeApresentante, temAnuencia, anuenciaVencida } = params;
+
+        const fieldCpfCnpj = this.addItem(cpfCnpj.name, cpfCnpj.value, true);
+        const fieldNomeApresentante = this.addItem(nomeApresentante.name, nomeApresentante.value, true);
         const fieldDate = this.addItem(date.name, date.value, true);
         const fieldMoneyValue = this.addItem(moneyValue.name, moneyValue.value, true);
+        const fieldTemAnuencia = this.addItem(temAnuencia.name, temAnuencia.value, true);
+        const fieldAnuenciaVencida = this.addItem(anuenciaVencida.name, anuenciaVencida.value, true);
 
-        const fieldWithBorder = $('<div>').addClass('field field-content').css('border-right', '1px solid #575963');
-        fieldWithBorder.append(fieldDate, fieldMoneyValue);
+        const fieldWithBorder = $('<div>').addClass('field field-content');
+        fieldWithBorder.append(fieldNomeApresentante, fieldCpfCnpj, fieldDate, fieldMoneyValue, fieldTemAnuencia, fieldAnuenciaVencida);
 
         this.content.append(fieldWithBorder);
     }
@@ -130,21 +135,40 @@ module.exports = controller => {
             if (cidade) result.addItem('Cidade', cidade);
 
             $('protesto', element).each((i, v) => {
-                let data = $('data', v).text();
+                const verifyAnuencia = (param) => param === 'true' ? 'Sim' : 'Não';
+                let data = moment($('data', v).text(), ['YYYY-MM-DD', 'DD-MM-YYYY']).format('DD/MM/YYYY');
                 let valor = $('valor', v).text();
+                let cpfCnpj = $('cpfCnpj', v).text();
+                let nomeApresentante = $('nomeApresentante', v).text();
+                let temAnuencia = $('temAnuencia', v).text();
+                let anuenciaVencida = $('anuenciaVencida', v).text();
 
-                if ((data && !/^\s*$/.test(data)) && (valor && !/^\s*$/.test(valor))) {
-                    fieldsCreator.addItemWithBorder({
-                        date: {
-                            name: 'Data do protesto',
-                            value: moment(data, ['YYYY-MM-DD', 'DD-MM-YYYY']).format('DD/MM/YYYY')
-                        },
-                        moneyValue: {
-                            name: 'Valor do protesto',
-                            value: numeral(valor.replace('.', ',')).format('$0,0.00')
-                        }
-                    });
-                }
+                fieldsCreator.addItemWithBorder({
+                    date: {
+                        name: 'Data do protesto',
+                        value: data === 'Invalid date' ? null : data
+                    },
+                    moneyValue: {
+                        name: 'Valor do protesto',
+                        value: valor.length ? numeral(valor.replace('.', ',')).format('$0,0.00') : null
+                    },
+                    cpfCnpj: {
+                        name: 'CPF/CNPJ',
+                        value: cpfCnpj
+                    },
+                    nomeApresentante: {
+                        name: 'Nome do Apresentante',
+                        value: nomeApresentante
+                    },
+                    temAnuencia: {
+                        name: 'Possui Anuência',
+                        value: verifyAnuencia(temAnuencia),
+                    },
+                    anuenciaVencida: {
+                        name: 'Anuência Vencida',
+                        value: verifyAnuencia(anuenciaVencida)
+                    }
+                });
 
                 /*result.addSeparator('Detalhes de Protesto',
                     'Informações a respeito de um dos títulos representados no cartório.',
@@ -167,10 +191,10 @@ module.exports = controller => {
                 fontWeight: 'bold',
                 marginBottom: '20px',
             }).text('Mostrar Protestos').append($('<br>'))
-            .append(collapseBtn);
+                .append(collapseBtn);
 
             const elementFields = fieldsCreator.element();
-
+            elementFields.hide();
             result.element().append(elementFields);
             botaoMostrarProtestos.insertAfter(nomeCartorio.parents().eq(1));
             collapseBtn.on('click', (ev) => {
@@ -183,6 +207,8 @@ module.exports = controller => {
                     elementFields.hide(500);
                 }
             });
+            collapseBtn.click();
+            collapseBtn.click();
             fieldsCreator.resetFields();
         });
 
