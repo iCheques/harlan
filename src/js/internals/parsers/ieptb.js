@@ -39,7 +39,7 @@ class FieldsCreator {
     }
 
     addItemWithBorder(params) {
-        const { date, moneyValue, cpfCnpj, nomeApresentante, temAnuencia, anuenciaVencida } = params;
+        const { date, moneyValue, cpfCnpj, nomeApresentante, temAnuencia, anuenciaVencida, dataVencimento } = params;
 
         const fieldCpfCnpj = this.addItem(cpfCnpj.name, cpfCnpj.value, true);
         const fieldNomeApresentante = this.addItem(nomeApresentante.name, nomeApresentante.value, true);
@@ -47,9 +47,19 @@ class FieldsCreator {
         const fieldMoneyValue = this.addItem(moneyValue.name, moneyValue.value, true);
         const fieldTemAnuencia = this.addItem(temAnuencia.name, temAnuencia.value, true);
         const fieldAnuenciaVencida = this.addItem(anuenciaVencida.name, anuenciaVencida.value, true);
+        const fieldDataVencimento = this.addItem(dataVencimento.name, dataVencimento.value, true);
 
         const fieldWithBorder = $('<div>').addClass('field field-content');
-        fieldWithBorder.append(fieldNomeApresentante, fieldCpfCnpj, fieldDate, fieldMoneyValue, fieldTemAnuencia, fieldAnuenciaVencida);
+
+        fieldWithBorder.append(
+            fieldNomeApresentante,
+            fieldCpfCnpj,
+            fieldDate,
+            fieldMoneyValue,
+            fieldDataVencimento,
+            fieldTemAnuencia,
+            fieldAnuenciaVencida
+        );
 
         this.content.append(fieldWithBorder);
     }
@@ -142,22 +152,23 @@ module.exports = controller => {
                 let nomeApresentante = $('nomeApresentante', v).text();
                 let temAnuencia = $('temAnuencia', v).text();
                 let anuenciaVencida = $('anuenciaVencida', v).text();
+                let dataVencimento = $('dataVencimento', v).text();
 
                 fieldsCreator.addItemWithBorder({
                     date: {
-                        name: 'Data do protesto',
+                        name: 'Data do Protesto',
                         value: data === 'Invalid date' ? null : data
                     },
                     moneyValue: {
-                        name: 'Valor do protesto',
+                        name: 'Valor do Protesto',
                         value: valor.length ? numeral(valor.replace('.', ',')).format('$0,0.00') : null
                     },
                     cpfCnpj: {
-                        name: 'CPF/CNPJ',
+                        name: 'CPF/CNPJ Protestado',
                         value: cpfCnpj
                     },
                     nomeApresentante: {
-                        name: 'Nome do Apresentante',
+                        name: 'Quem Protestou',
                         value: nomeApresentante
                     },
                     temAnuencia: {
@@ -167,6 +178,10 @@ module.exports = controller => {
                     anuenciaVencida: {
                         name: 'Anuência Vencida',
                         value: verifyAnuencia(anuenciaVencida)
+                    },
+                    dataVencimento: {
+                        name: 'Data de Vencimento',
+                        value: dataVencimento
                     }
                 });
 
@@ -194,8 +209,8 @@ module.exports = controller => {
                 .append(collapseBtn);
 
             const elementFields = fieldsCreator.element();
-            elementFields.hide();
             result.element().append(elementFields);
+            elementFields.hide();
             botaoMostrarProtestos.insertAfter(nomeCartorio.parents().eq(1));
             collapseBtn.on('click', (ev) => {
                 ev.preventDefault();
