@@ -21,7 +21,7 @@ module.exports = controller => {
 
     const pdfMonitoramento = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-monitoramento-pdf@1.0.2/index.js').fail(failAlert));
 
-    const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.61/index.js').fail(failAlert));
+    const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.62/index.js').fail(failAlert));
 
     const componenteVeiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-componente-veiculos@1.0.19/index.js').fail(failAlert));
 
