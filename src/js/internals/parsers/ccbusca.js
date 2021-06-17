@@ -376,6 +376,14 @@ module.exports = controller => {
                     }));
                 } else {
                     const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+                    if (idx === 'CPF' || idx === 'CNPJ') {
+                        item.on('click', (ev) => {
+                            ev.preventDefault();
+                            controller.call('credits::has', 1500, () => controller.call('ccbusca', item.find('.value').text()));
+
+                        });
+                        item.css('cursor','pointer');
+                    }
                     item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
                         fontSize: '12px',
                         textAlign: 'left'
@@ -493,6 +501,14 @@ module.exports = controller => {
                     }));
                 } else {
                     const item = result.addItem(idx, nodes[idx]).addClass('mdl-cell--2-col mdl-cell--1-col-phone');
+                    if (idx === 'CPF' || idx === 'CNPJ') {
+                        item.on('click', (ev) => {
+                            ev.preventDefault();
+                            controller.call('credits::has', 1500, () => controller.call('ccbusca', item.find('.value').text()));
+
+                        });
+                        item.css('cursor','pointer');
+                    }
                     item.find('.value').css('text-align', 'left').insertAfter(item.find('.name').css({
                         fontSize: '12px',
                         textAlign: 'left'
