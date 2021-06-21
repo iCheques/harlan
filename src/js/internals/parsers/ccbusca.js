@@ -379,7 +379,8 @@ module.exports = controller => {
                     if (idx === 'CPF' || idx === 'CNPJ') {
                         item.on('click', (ev) => {
                             ev.preventDefault();
-                            controller.call('credits::has', 1500, () => controller.call('ccbusca', item.find('.value').text()));
+                            $('form.main-search').find('input').val(item.find('.value').text());
+                            $('form.main-search').submit();
 
                         });
                         item.css('cursor','pointer');
@@ -504,7 +505,8 @@ module.exports = controller => {
                     if (idx === 'CPF' || idx === 'CNPJ') {
                         item.on('click', (ev) => {
                             ev.preventDefault();
-                            controller.call('credits::has', 1500, () => controller.call('ccbusca', item.find('.value').text()));
+                            $('form.main-search').find('input').val(item.find('.value').text());
+                            $('form.main-search').submit();
 
                         });
                         item.css('cursor','pointer');
