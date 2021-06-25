@@ -111,7 +111,11 @@ module.exports = controller => {
 
         const separatorProtestosEmCartorio = result.addSeparator('Protestos em Cartório', 'Confira os protestos deste Documento', 'Não foram encontradas ocorrências');
 
-        if(parseInt(totalDeRegistros)) separatorProtestosEmCartorio.css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)').find('.results-display').text(`Foram encontrados ${totalDeRegistros} protestos.`);
+        if (jdocument.find('ieptb-fallback').length) {
+            if (parseInt(totalDeRegistros)) separatorProtestosEmCartorio.css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)').find('.results-display').text(`A consulta de protestos falhou, mas foram encontrados ${totalDeRegistros} protestos no dia ${jdocument.find('ieptb-fallback-data').text()}.`);
+        } else {
+            if (parseInt(totalDeRegistros)) separatorProtestosEmCartorio.css('background', 'url(images/textures/brilliant.png),linear-gradient(180deg,#f70808,#fff 160%)').find('.results-display').text(`Foram encontrados ${totalDeRegistros} protestos.`);
+        }
 
         _.each(jdocument.find('BPQL > body > consulta > conteudo > cartorio'), element => {
             const cartorioSeparator = result.addSeparator('Protestos em Cartório',

@@ -480,6 +480,13 @@ module.exports = controller => {
                 appendMessage('consulta de protesto está desativada');
                 return;
             }
+
+            if ($('ieptb-fallback', ret).length) {
+                appendMessage('consulta de protesto falhou');
+                sectionDocumentGroup[1].append(controller.call('xmlDocument', ret, 'IEPTB', 'WS'));
+                return;
+            }
+
             if ($('ieptb-failed', ret).length) {
                 appendMessage('consulta de protesto falhou');
                 return;
