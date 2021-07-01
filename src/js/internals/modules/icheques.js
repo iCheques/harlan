@@ -8,40 +8,40 @@ module.exports = controller => {
         paragraph: 'Verifique se o endereço cdn.jsdelivr.net é liberado na sua rede interna.',
     });
 
-    // const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-veiculos/index.js').fail(failAlert));
-    const veiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-veiculos@1.1.38/index.js').fail(failAlert));
+    // const veiculosCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-icheques-veiculos/index.js').fail(failAlert));
+    const veiculosCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-veiculos/index.js').fail(failAlert));
 
-    const graficosAnaliticosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-graficos-analiticos@1.0.47/index.js').fail(failAlert));
+    const graficosAnaliticosCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-graficos-analiticos/index.js').fail(failAlert));
 
-    const consultaSimplesCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-consulta-simples@1.0.19/index.js').fail(failAlert));
+    const consultaSimplesCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-consulta-simples/index.js').fail(failAlert));
 
-    const followCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-follow-document@1.3.39/index.js').fail(failAlert));
+    const followCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-icheques-follow-document/index.js').fail(failAlert));
 
-    const statuspageCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-statuspage@latest/index.js').fail(failAlert));
+    const statuspageCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-icheques-statuspage/index.js').fail(failAlert));
 
-    const pdfMonitoramento = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-monitoramento-pdf@1.0.2/index.js').fail(failAlert));
+    const pdfMonitoramento = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-monitoramento-pdf/index.js').fail(failAlert));
 
-    const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-relatorio-analitico@1.0.62/index.js').fail(failAlert));
+    const relatorioAnalitico = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-icheques-relatorio-analitico/index.js').fail(failAlert));
 
-    const componenteVeiculosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-componente-veiculos@1.0.19/index.js').fail(failAlert));
+    const componenteVeiculosCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-componente-veiculos/index.js').fail(failAlert));
 
-    const contactLikeDislikeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-phone-like-dislike@1.0.3/index.js').fail(failAlert));
+    const contactLikeDislikeCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-phone-like-dislike/index.js').fail(failAlert));
 
-    const finderPhoneCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-phone@1.0.7/index.js').fail(failAlert));
+    const finderPhoneCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-finder-phone/index.js').fail(failAlert));
 
-    const admSubconta = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-adm-subcontas@1.0.6/index.js').fail(failAlert));
+    const admSubconta = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-adm-subcontas/index.js').fail(failAlert));
 
-    const refinCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-icheques-refin@1.0.82/index.js').fail(failAlert));
+    const refinCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-icheques-refin/index.js').fail(failAlert));
 
-    const processosJuridicosCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-processos-juridicos@1.0.30/index.js').fail(failAlert));
+    const processosJuridicosCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-processos-juridicos/index.js').fail(failAlert));
 
-    const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-finder-name-address@1.0.3/index.js').fail(failAlert));
+    const consultaSimplesPorNomeCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-finder-name-address/index.js').fail(failAlert));
 
-    const tutorialIntroJSCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-introjs@1.0.7/index.js').fail(failAlert));
+    const tutorialIntroJSCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-introjs/index.js').fail(failAlert));
 
-    const notifyCall = oneTime(() => $.getScript('https://cdn.jsdelivr.net/npm/harlan-credithub-notify@1.0.14/index.js').fail(failAlert));
+    const notifyCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-notify/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.1.8');
+    controller.registerCall('harlanVersion', () => '1.1.9');
 
     controller.call('SafariError');
     controller.call('LocationError');
