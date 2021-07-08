@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _, { isEqual } from 'underscore';
 import {
     CPF,
     CNPJ
@@ -622,7 +622,8 @@ module.exports = controller => {
                 let data = jdocument.find(init + nodes[idx]).first().text() || jdocument.find(init + nodes[idx].toUpperCase()).first().text();
                 if (/^\**$/.test(data))
                     continue;
-                if (idx === 'CPF' || idx === 'CNPJ') {
+                if (isEqual('dataNascimento') && !/FACTORING|SECURITIZADORA|FIDC|FGTS/i.test((controller.confs.user.tags || []).join())) continue;
+                if (idx === 'CPF' || idx === 'CNPJ' || idx === 'maeCpf') {
                     data = data.replace(/^0+/, '');
                     data = pad(11, data, '0');
                     if (CPF.isValid(data)) {
