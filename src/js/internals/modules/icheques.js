@@ -41,7 +41,7 @@ module.exports = controller => {
 
     const notifyCall = oneTime(() => $.getScript('https://cdn.credithub.com.br/plugins-harlan/harlan-credithub-notify/index.js').fail(failAlert));
 
-    controller.registerCall('harlanVersion', () => '1.1.13');
+    controller.registerCall('harlanVersion', () => '1.1.14');
 
     controller.call('SafariError');
     controller.call('LocationError');

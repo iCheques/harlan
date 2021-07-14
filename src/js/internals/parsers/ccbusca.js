@@ -467,7 +467,7 @@ module.exports = controller => {
         if ($empresas.length === 0) {
             return;
         }
-        console.log('Companys', companys);
+
         if (!companys.length) result.addSeparator('Quadro Societário', 'Sócios/Empresas a Qual Faz Parte', '');
         else result.addSeparator('', '', '').hide().find('.container').remove();
 
@@ -597,7 +597,7 @@ module.exports = controller => {
             CPF: 'cpf',
             CNPJ: 'cnpj',
             'Nome da Mãe': 'maeNome',
-            'CPF da Mãe': 'maeCpf',
+            //'CPF da Mãe': 'maeCpf',
             'Data de Nascimento': 'dataNascimento',
             Situação: 'situacao',
             'Motivo da Situacao': 'motivoSituacaoCadastral',
